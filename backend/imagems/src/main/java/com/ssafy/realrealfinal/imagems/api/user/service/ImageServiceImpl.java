@@ -1,5 +1,5 @@
 package com.ssafy.realrealfinal.imagems.api.user.service;
 
-public interface RankService {
+public class ImageServiceImpl implements ImageService {
 
 }
