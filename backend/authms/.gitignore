@@ -57,5 +57,6 @@ gradle-app.setting
 # Additions for ignoring .idea directory and application.yml
 .idea/
 application.yml
+*.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle
