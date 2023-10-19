@@ -1,8 +1,10 @@
 package com.ssafy.realrealfinal.authms.common.model;
 
 import com.ssafy.realrealfinal.authms.common.exception.ErrorCode;
+import lombok.Getter;
 
-public class BaseException extends RuntimeException  {
+@Getter
+public class BaseException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
@@ -17,9 +19,5 @@ public class BaseException extends RuntimeException  {
     public BaseException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
     }
 }
