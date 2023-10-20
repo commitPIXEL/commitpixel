@@ -44,13 +44,13 @@ public class GithubUtil {
     private String userInfoUri;
 
     /**
-     *인가코드로 깃허브의 accesstoken 발급받기
-     * 
+     * 인가코드로 깃허브의 accesstoken 발급받기
+     *
      * @param authorizeCode 인가코드
      * @return 토큰 정보
      */
     public OauthTokenRes getGithubOauthToken(String authorizeCode) {
-        log.info("getGithubOauthToken start. code: " + authorizeCode);
+        log.info("getGithubOauthToken start code: " + authorizeCode);
         HttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(TOKEN_URL);
         OauthTokenRes tokenResponse = null;
@@ -69,7 +69,7 @@ public class GithubUtil {
             ObjectMapper mapper = new ObjectMapper();
             tokenResponse = mapper.readValue(response.getEntity().getContent(),
                 OauthTokenRes.class);
-            log.info("getGithubOauthToken end : tokenResponse" + tokenResponse);
+            log.info("getGithubOauthToken end : " + tokenResponse);
         } catch (IOException e) {
             throw new GithubException();
         }
@@ -79,10 +79,12 @@ public class GithubUtil {
 
     /**
      * 깃허브 엑세스 토큰으로 깃허브의 유저 정보 요청하기 api 호출하기
+     *
      * @param oauthToken 깃허브 엑세스 토큰
      * @return 깃허브의 유저정보
      */
     public OauthUserRes getGithubUserInfo(String oauthToken) {
+        log.info("getGithubUserInfo start: " + oauthToken);
         CloseableHttpClient httpClient = HttpClients.createDefault();
         OauthUserRes oauthUserRes = null;
         try {
@@ -97,15 +99,16 @@ public class GithubUtil {
                 ObjectMapper objectMapper = new ObjectMapper();
                 oauthUserRes = objectMapper.readValue(responseBody,
                     OauthUserRes.class);
-                log.info("getGithubUserInfo end: userinfo " + oauthUserRes);
+                log.info("getGithubUserInfo end: " + oauthUserRes);
             } else { // 에러 처리
-                log.warn("getGithubUserInfo: 깃허브 유저 정보 요청 중 에러 발생");
+                log.warn("getGithubUserInfo mid: 깃허브 유저 정보 요청 중 에러 발생 " + response.getStatusLine()
+                    .getStatusCode());
                 throw new GithubException();
             }
 
             return oauthUserRes;
         } catch (Exception e) {
-            log.warn("getGithubUserInfo: 깃허브 유저 정보 요청 중 에러 발생", e);
+            log.warn("getGithubUserInfo mid: 깃허브 유저 정보 요청 중 에러 발생", e);
             throw new GithubException();
         }
     }

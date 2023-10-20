@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenRes login(String authorizeCode, String provider) {
         if (provider.equals("github")) {
-            log.info("login start. code: " + authorizeCode);
+            log.info("login start: code " + authorizeCode);
             OauthTokenRes jsonToken = githubUtil.getGithubOauthToken(authorizeCode);
             OauthUserRes oauthUserRes = githubUtil.getGithubUserInfo(jsonToken.getAccessToken());
             redisUtil.setDataWithExpire(oauthUserRes.getId().toString(), jsonToken.getAccessToken(),
@@ -57,12 +57,12 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void saveTokens(String providerId, String refreshJWTToken, String oauthAccessToken) {
-        log.info("UserServiceImpl_saveTokens_start: " + providerId + " " + refreshJWTToken + " "
+        log.info("saveTokens start: " + providerId + " " + refreshJWTToken + " "
             + oauthAccessToken);
 
         redisUtil.setDataWithExpire(refreshJWTToken, providerId, 1209600000L);
         redisUtil.setDataWithExpire(providerId, oauthAccessToken, 31536000L);
 
-        log.info("UserServiceImpl_saveTokens_end: token saved");
+        log.info("saveTokens end: success");
     }
 }

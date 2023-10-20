@@ -29,7 +29,7 @@ public class AuthController {
      */
     @GetMapping("/login/github")
     public ResponseEntity<?> githubLogin(@RequestParam String code, HttpServletResponse response) {
-        log.info("githubLogin start. code: " + code);
+        log.info("githubLogin start: code " + code);
         TokenRes tokenRes = authService.login(code, "github");
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshtoken",
                 tokenRes.getJwtRefreshToken())

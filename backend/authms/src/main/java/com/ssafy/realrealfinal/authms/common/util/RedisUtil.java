@@ -23,10 +23,10 @@ public class RedisUtil {
      * @return 값 (토큰)
      */
     public String getData(String key) {
-        log.info("RedisUtil_getData_start: " + key);
+        log.info("getData start: " + key);
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
         String token = valueOperations.get(key);
-        log.info("RedisUtil_getData_end: " + token);
+        log.info("getData end: " + token);
         return token;
     }
 
@@ -38,7 +38,7 @@ public class RedisUtil {
      * @param duration redis 만료기간
      */
     public void setDataWithExpire(String key, String value, Long duration) {
-        log.info("RedisUtil_setDataWithExpire_start: " + key + " " + value + " " + duration);
+        log.info("setDataWithExpire start: " + key + " " + value + " " + duration);
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
         Duration expireDuration = Duration.ofSeconds(duration);
         valueOperations.set(key, value, expireDuration);
@@ -47,7 +47,7 @@ public class RedisUtil {
         if (storedValue == null || !storedValue.equals(value)) {
             throw new RedisNotSavedException();
         }
-        log.info("RedisUtil_setDataWithExpire_end: token saved in redis");
+        log.info("setDataWithExpire end: success");
     }
 
     /**
@@ -56,13 +56,13 @@ public class RedisUtil {
      * @param key "token 분류" + userId
      */
     public void deleteData(String key) {
-        log.info("RedisUtil_deleteData_start: " + key);
+        log.info("deleteData start: " + key);
         try {
             stringRedisTemplate.delete(key);
         } catch (Exception e) {
             throw new RedisNotDeletedException();
         }
-        log.info("RedisUtil_deleteData_end: token deleted from redis");
+        log.info("deleteData end: success");
     }
 
 }

@@ -46,9 +46,9 @@ public class JwtUtil {
      * @return 생성된 token
      */
     public String createAccessToken(String payload) {
-        log.info("JwtProviderUtil_createAccessToken_start: " + payload);
+        log.info("createAccessToken start: " + payload);
         String token = createToken(payload, accessTokenValidityInMilliseconds);
-        log.info("JwtProviderUtil_createAccessToken_end: " + token);
+        log.info("createAccessToken end: " + token);
         return token;
     }
 
@@ -58,12 +58,12 @@ public class JwtUtil {
      * @return 생성된 refresh token
      */
     public String createRefreshToken() {
-        log.info("JwtProviderUtil_createRefreshToken_start");
+        log.info("createRefreshToken start");
         byte[] array = new byte[7];
         new Random().nextBytes(array);
         String generatedString = new String(array, StandardCharsets.UTF_8);
         String token = createToken(generatedString, refreshTokenValidityInMilliseconds);
-        log.info("JwtProviderUtil_createRefreshToken_end: " + token);
+        log.info("createRefreshToken end: " + token);
         return token;
     }
 
@@ -75,14 +75,15 @@ public class JwtUtil {
      * @return 만들어진 토큰
      */
     public String createToken(String payload, long expireLength) {
-        log.info("JwtProviderUtil_createToken_start: " + payload + " " + expireLength);
+        log.info("createToken start: " + payload + " " + expireLength);
         try {
             Claims claims = Jwts.claims().setSubject(payload);
             Date now = new Date();
             Date validity = new Date(now.getTime() + expireLength);
 
             byte[] apiKeySecretBytes = secretKey.getBytes(); // 문자열을 바이트 배열로 변환
-            Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName()); // Key로 변환
+            Key signingKey = new SecretKeySpec(apiKeySecretBytes,
+                SignatureAlgorithm.HS256.getJcaName()); // Key로 변환
 
             String token = Jwts.builder()
                 .setClaims(claims)
@@ -91,7 +92,7 @@ public class JwtUtil {
                 .signWith(signingKey) // 변환된 Key를 사용
                 .compact();
 
-            log.info("JwtProviderUtil_createToken_end: " + token);
+            log.info("createToken end: " + token);
             return token;
         } catch (Exception e) {
             throw new CreateTokenException();
@@ -105,7 +106,7 @@ public class JwtUtil {
      * @return providerId
      */
     public Integer getUserIdFromToken(String accessToken) {
-        log.info("JwtProviderUtil_getUserIdFromToken_start: " + accessToken);
+        log.info("getUserIdFromToken start: " + accessToken);
         try {
             Integer providerId = Integer.parseInt(Jwts.parserBuilder()
                 .setSigningKey(secretKey)
@@ -113,11 +114,11 @@ public class JwtUtil {
                 .parseClaimsJws(accessToken)
                 .getBody()
                 .getSubject());
-            log.info("JwtProviderUtil_getUserIdFromToken_end: " + providerId);
+            log.info("getUserIdFromToken end: " + providerId);
             return providerId;
         } catch (ExpiredJwtException e) {
             Integer providerId = Integer.parseInt(e.getClaims().getSubject());
-            log.info("JwtProviderUtil_getUserIdFromToken_end: " + providerId);
+            log.info("getUserIdFromToken end: " + providerId);
             return providerId;
         } catch (JwtException e) {
             throw new ExpiredTokenException();
@@ -133,20 +134,20 @@ public class JwtUtil {
      * @return 유효하면 true, 아니면 false 리턴
      */
     public Boolean validateToken(String token) {
-        log.info("JwtProviderUtil_validateToken_start: " + token);
+        log.info("validateToken start: " + token);
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
             Boolean result = !claimsJws.getBody().getExpiration().before(new Date());
-            log.info("JwtProviderUtil_validateToken_end: " + result);
+            log.info("validateToken end: " + result);
             return result;
         } catch (ExpiredJwtException exception) {
-            log.info("JwtProviderUtil_validateToken_end: " + false);
+            log.info("validateToken end: " + false);
             return false;
         } catch (Exception e) {
-            log.warn("JwtProviderUtil_validateToken_end: unexpected Exception occured");
+            log.warn("validateToken end: unexpected Exception occured");
             throw new UnexpectedTokenException();
         }
     }
@@ -157,7 +158,7 @@ public class JwtUtil {
      * @param refreshToken Refresh Token 문자열
      */
     public void refreshTokenExtractor(String refreshToken) {
-        log.info("JwtProviderUtil_refreshTokenExtractor_start: " + refreshToken);
+        log.info("refreshTokenExtractor start: " + refreshToken);
         // Token 유효성 검사
         if (refreshToken == null || refreshToken.trim().isEmpty()) {
             throw new EmptyTokenException();
@@ -165,7 +166,7 @@ public class JwtUtil {
         if (!validateToken(refreshToken)) {
             throw new ExpiredTokenException();
         }
-        log.info("JwtProviderUtil_refreshTokenExtractor_end: token validate success");
+        log.info("refreshTokenExtractor end: success");
     }
 
     /**
@@ -175,16 +176,16 @@ public class JwtUtil {
      * @return 새로 발급된 access token
      */
     public String recreateAccessToken(String refreshToken) {
-        log.info("JwtProviderUtil_recreateAccessToken_start: " + refreshToken);
+        log.info("recreateAccessToken start: " + refreshToken);
         refreshTokenExtractor(refreshToken);
         String data = redisUtil.getData(refreshToken); // userId
         if (data == null) { //리프레시도 만료된 경우.
-            log.info("JwtProviderUtil_recreateAccessToken_mid: refresh token expired: "
+            log.info("recreateAccessToken mid: refresh token expired: "
                 + refreshToken);
             throw new RefreshTokenExpiredException();
         }
         String newAccessToken = createAccessToken(data);
-        log.info("JwtProviderUtil_recreateAccessToken_end: " + newAccessToken);
+        log.info("recreateAccessToken_end: " + newAccessToken);
         return newAccessToken;
     }
 }
