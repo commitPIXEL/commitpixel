@@ -1,0 +1,4 @@
+spring:
+  profiles: default
+some:
+  common-property: common-value
