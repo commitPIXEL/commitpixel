@@ -1,31 +1,26 @@
 "use client"
 
+import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authorizationSlice";
 
 export default function LoginHandler() {
     const dispatch = useDispatch();
-    const code = new URL(window.location.href).searchParams.get("code");
-    console.log(code);
+    
+    useEffect(() => {
+        const code = new URL(window.location.href).searchParams.get("code");
+        console.log(code);
 
-    if(code) {
-        // fetch("API end point", {
-        //     method: 'Post',
-        // }).then((res) => {
-        //     const authHeader = res.headers.authorization;
-        //     if (authHeader) {
-        //         dispatch(login());
-        //         window.location.href = '/';
-        //     } else {
-        //         console.error('Authorization header is missing in the response.');
-        //     }
-
-        // }).catch((err) => {
-        //     console.log(err);
-        // })
-        console.log("백엔드에 토큰 요청!!");
-        // window.location.href = '/';
-    }
+        if(code) {
+            fetch('https://jsonplaceholder.typicode.com/todos/1').then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            })
+            console.log("백엔드에 토큰 요청!!");
+            // window.location.href = '/';
+        }
+    },[])
 
     return(
         <>

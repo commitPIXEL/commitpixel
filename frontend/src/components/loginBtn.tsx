@@ -1,7 +1,6 @@
 "use client"
 
 import GitHubIcon from '@mui/icons-material/GitHub';
-import Style from './loginBtn.module.css'
 
 interface loginProps {
     clientId: string,
@@ -18,7 +17,7 @@ export default function loginBtn({clientId, redirectUrl}: loginProps) {
 
     return(
         <>
-            <button className={Style.btn} onClick={oauthLogin}>
+            <button className="flex justify-around items-center space-x-4 font-bold bg-white rounded-md" onClick={oauthLogin}>
                 <GitHubIcon />
                 <p>Sign up with Github</p>
             </button>
