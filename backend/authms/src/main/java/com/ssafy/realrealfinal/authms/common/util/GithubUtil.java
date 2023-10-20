@@ -1,19 +1,16 @@
 package com.ssafy.realrealfinal.authms.common.util;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.authms.api.auth.response.OauthTokenRes;
 import com.ssafy.realrealfinal.authms.api.auth.response.OauthUserRes;
 import com.ssafy.realrealfinal.authms.common.exception.auth.GithubException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -24,11 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,6 +43,12 @@ public class GithubUtil {
     @Value("${spring.github.oauth2.user-info-uri}")
     private String userInfoUri;
 
+    /**
+     *인가코드로 깃허브의 accesstoken 발급받기
+     * 
+     * @param authorizeCode 인가코드
+     * @return 토큰 정보
+     */
     public OauthTokenRes getGithubOauthToken(String authorizeCode) {
         log.info("getGithubOauthToken start. code: " + authorizeCode);
         HttpClient client = HttpClients.createDefault();
@@ -78,9 +77,13 @@ public class GithubUtil {
 
     }
 
+    /**
+     * 깃허브 엑세스 토큰으로 깃허브의 유저 정보 요청하기 api 호출하기
+     * @param oauthToken 깃허브 엑세스 토큰
+     * @return 깃허브의 유저정보
+     */
     public OauthUserRes getGithubUserInfo(String oauthToken) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-//        ObjectMapper objectMapper = new ObjectMapper(); // ObjectMapper 인스턴스 생성
         OauthUserRes oauthUserRes = null;
         try {
             HttpGet httpGet = new HttpGet(userInfoUri); // GET 요청 생성

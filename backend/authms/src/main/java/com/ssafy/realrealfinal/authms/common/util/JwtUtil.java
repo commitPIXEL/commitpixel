@@ -1,10 +1,19 @@
 package com.ssafy.realrealfinal.authms.common.util;
 
+import com.ssafy.realrealfinal.authms.common.exception.auth.CreateTokenException;
+import com.ssafy.realrealfinal.authms.common.exception.auth.EmptyTokenException;
+import com.ssafy.realrealfinal.authms.common.exception.auth.ExpiredTokenException;
+import com.ssafy.realrealfinal.authms.common.exception.auth.InvalidTokenException;
+import com.ssafy.realrealfinal.authms.common.exception.auth.RefreshTokenExpiredException;
+import com.ssafy.realrealfinal.authms.common.exception.auth.UnexpectedTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Random;
@@ -18,6 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
+    //TODO: 기간 설정 다시 확인하기.
     @Value("${jwt.access-token.expire-length}")
     private long accessTokenValidityInMilliseconds;
 
@@ -70,12 +80,17 @@ public class JwtUtil {
             Claims claims = Jwts.claims().setSubject(payload);
             Date now = new Date();
             Date validity = new Date(now.getTime() + expireLength);
+
+            byte[] apiKeySecretBytes = secretKey.getBytes(); // 문자열을 바이트 배열로 변환
+            Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName()); // Key로 변환
+
             String token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256,  )
+                .signWith(signingKey) // 변환된 Key를 사용
                 .compact();
+
             log.info("JwtProviderUtil_createToken_end: " + token);
             return token;
         } catch (Exception e) {
@@ -87,23 +102,23 @@ public class JwtUtil {
      * 토큰에 담긴 정보 추출 메서드 payload의 sub에 userId가 담겨있으므로 추출
      *
      * @param accessToken 정보 추출할 토큰. (우리는 refresh token에 정보를 담지 않아 access만 가능하다)
-     * @return userId (providerId 아님)
+     * @return providerId
      */
-    public Long getUserIdFromToken(String accessToken) {
+    public Integer getUserIdFromToken(String accessToken) {
         log.info("JwtProviderUtil_getUserIdFromToken_start: " + accessToken);
         try {
-            Long userId = Long.parseLong(Jwts.parserBuilder()
+            Integer providerId = Integer.parseInt(Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody()
                 .getSubject());
-            log.info("JwtProviderUtil_getUserIdFromToken_end: " + userId);
-            return userId;
+            log.info("JwtProviderUtil_getUserIdFromToken_end: " + providerId);
+            return providerId;
         } catch (ExpiredJwtException e) {
-            Long userId = Long.parseLong(e.getClaims().getSubject());
-            log.info("JwtProviderUtil_getUserIdFromToken_end: " + userId);
-            return userId;
+            Integer providerId = Integer.parseInt(e.getClaims().getSubject());
+            log.info("JwtProviderUtil_getUserIdFromToken_end: " + providerId);
+            return providerId;
         } catch (JwtException e) {
             throw new ExpiredTokenException();
         } catch (Exception e) {
