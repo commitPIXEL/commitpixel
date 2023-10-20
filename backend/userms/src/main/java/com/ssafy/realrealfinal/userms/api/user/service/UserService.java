@@ -1,9 +1,9 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
-import com.ssafy.realrealfinal.userms.api.user.response.GithubCreditRes;
+import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 
 public interface UserService {
 
-    GithubCreditRes updateGithubCredit(String accessToken);
+    CreditRes refreshCredit(String accessToken, String githubNickname);
 
 }

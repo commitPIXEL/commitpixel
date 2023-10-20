@@ -8,12 +8,12 @@ import lombok.ToString;
 @ToString
 public class CreditRes {
 
-    private Integer usedPixel;
+    private Integer totalPixel;
     private Integer availablePixel;
 
     @Builder
-    public CreditRes(Integer usedPixel, Integer availablePixel) {
-        this.usedPixel = usedPixel;
+    public CreditRes(Integer totalPixel, Integer availablePixel) {
+        this.totalPixel = totalPixel;
         this.availablePixel = availablePixel;
     }
 }
