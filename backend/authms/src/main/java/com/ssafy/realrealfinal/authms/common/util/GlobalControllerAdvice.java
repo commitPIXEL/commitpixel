@@ -1,4 +1,4 @@
-package com.ssafy.realrealfinal.authms.config;
+package com.ssafy.realrealfinal.authms.common.util;
 
 import com.ssafy.realrealfinal.authms.common.model.BaseException;
 import lombok.extern.slf4j.Slf4j;
