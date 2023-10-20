@@ -1,111 +1,293 @@
 "use client";
 
-import { useSelector } from "react-redux";
-
-import {
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import useSocket from "@/app/hooks/useSocket";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { height, imageUrl, width } from "../config";
+import Panzoom from "panzoom";
+import { pick } from "@/store/slices/colorSlice";
 
-type CanvasProps = {
-  canvasWidth: number;
-  canvasHeight: number;
-};
+const CanvasContainer = () => {
+  const dispatch = useDispatch();
+  const { socket, setSocket, connectToSocket } = useSocket();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const canvasWrapper = useRef<HTMLDivElement>(null);
 
-export default function Canvas(props: CanvasProps) {
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const color = useSelector((state:RootState) => state.color.color);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [parentWidth, setParentWidth] = useState<number>(0);
-  const [parentHeight, setParentHeight] = useState<number>(0);
-  const [zoomLevel, setZoomLevel] = useState<number>(1);
 
-  useEffect(() => {
-    const parent = canvasRef.current?.parentElement;
-    if(parent !== undefined && parent !== null){
-      setParentWidth(parent.offsetWidth);
-      setParentHeight(parent.offsetHeight);
-    }
-  }, []);
-
-  const handleCanvasClick = (e: any) => {
-    console.log("canvas clicked");
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      const context = canvas.getContext("2d");
-      const rect = canvas.getBoundingClientRect();
-
-      // 화면상의 canvas 크기와 실제 canvas 픽셀 크기의 비율을 계산
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-
-      // 비율을 사용하여 실제 canvas 픽셀에 대한 마우스 위치를 계산
-      const x = ((e.clientX - rect.left) * scaleX) / zoomLevel;
-      const y = ((e.clientY - rect.top) * scaleY) / zoomLevel;
-
-      console.log("x:" + x + " y:" + y);
-      if (context !== null) {
-        console.log(color);
-        context.fillStyle = color;
-        let pixelSize = 1;
-        if(zoomLevel > 1) {
-          pixelSize = zoomLevel * 5;
-        }
-        // 여기에서 픽셀의 크기를 줌 레벨에 따라 조정합니다.
-        context.fillRect(x, y, pixelSize * scaleX * zoomLevel, pixelSize * scaleY * zoomLevel);
+  // 픽셀 그리기
+  const setPixel = useCallback((
+    x: number,
+    y: number,
+    color: {
+      r: number,
+      g: number,
+      b: number,
+    }, emit = false
+  ) => {
+    if(ctx && socket) {
+      ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
+      ctx.fillRect(x, y, 1, 1);
+      if (emit) {
+        socket?.emit("pixel", [x, y, color.r, color.g, color.b]);
       }
     }
+  }, [ctx, socket]);
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    document.body.addEventListener('mousedown', handleMouseDown);
+  
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      document.body.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
+  // 웹소켓으로 pixel 받기
+  useEffect(() => {
+    if (socket) {
+      socket.on("pixel", (pixel) => {
+        const [x, y, r, g, b] = pixel;
+        setPixel(x, y, { r, g, b });
+      });
+    }
+  }, [socket, setPixel]);
+
+  useEffect(() => {
+    if(imageUrl){
+      const img = new Image(width, height);
+      img.src = imageUrl;
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        ctx?.drawImage(img, 0, 0);
+      };
+    }
+  }, [ctx, socket]);
+
+  useEffect(() => {
+    const div = ref.current;
+    const initialZoom = 0.5;
+    if (div) {
+      const panzoom = Panzoom(div, {
+        zoomDoubleClickSpeed: 1,
+        initialZoom: initialZoom,
+      });
+      panzoom.moveTo(
+        window.innerWidth / 4 - (width / 4) * initialZoom,
+        window.innerHeight / 4 - (height / 4) * initialZoom,
+      );
+
+      return () => {
+        panzoom.dispose();
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrapper = canvasWrapper.current;
+    if (canvas && wrapper) {
+      const ctx = canvas.getContext("2d");
+      setCtx(ctx);
+
+      // 마우스 클릭으로 픽셀 색칠하기
+      const putPixel = (e: MouseEvent) => {
+        e.preventDefault();
+        if ( e.ctrlKey && ctx) {
+          const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+          const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+          const hex = rgbtoHex(r, g, b);
+            dispatch(pick({
+              hex: hex,
+              rgb: { r: r, g: g, b: b, a: 1 }
+            }));
+        } else {
+          const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+          const r = color.rgb.r;
+          const g = color.rgb.g;
+          const b = color.rgb.b;
+          setPixel(x, y, { r, g, b }, true);
+        }
+      }
+
+      // 마우스 클릭으로 색깔 복사하기
+      const copyColor = (e: MouseEvent) => {
+        e.preventDefault();
+        if (ctx) {
+          if (e.button === 1) {
+            const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+            const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+            const hex = rgbtoHex(r, g, b);
+            dispatch(pick({
+              hex: hex,
+              rgb: { r: r, g: g, b: b, a: 1 }
+            }));
+          }
+        }
+      };
+
+      const setCursor = (e: MouseEvent) => {
+        const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+        setCursorPos({ x, y });
+      };
+
+      wrapper.addEventListener("contextmenu", putPixel);
+      wrapper.addEventListener("auxclick", copyColor);
+      wrapper.addEventListener("mousemove", setCursor);
+      return () => {
+        wrapper.removeEventListener("contextmenu", putPixel);
+        wrapper.removeEventListener("auxclick", copyColor);
+        wrapper.removeEventListener("contextmenu", setCursor);
+      };
+    }
+  }, [color, setPixel]);
+
+  const toHex = (rgbData: number) => {
+    let hex = rgbData.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+  const rgbtoHex = (r: number, g: number, b: number) => {
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
 
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if(e.deltaY < 0) {
-        setZoomLevel(prev => Math.min(prev + 0.1, 3));
-      } else {
-        setZoomLevel(prev => Math.max(prev - 0.1, 1));
-      }
-    };
-  
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.addEventListener("wheel", handleWheel);
-    }
-  
-    return () => {
-      if (canvas) {
-        canvas.removeEventListener("wheel", handleWheel);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas && canvas.getContext) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.save();
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 지우기
-        ctx.scale(zoomLevel, zoomLevel); // 줌 레벨에 따라 확대/축소
-        // TODO: 여기에 그림을 그리는 코드를 추가하십시오.
-        ctx.restore();
-      }
-    }
-  }, [zoomLevel]);
-
   return (
-    <div className="col-span-3 h-[90%] aspect-square bg-white flex flex-col justify-center items-center">
-      <canvas
-        onClick={handleCanvasClick}
-        ref={canvasRef}
-        width={props.canvasWidth}
-        height={props.canvasHeight}
-        style={{
-          width: `${parentWidth}px`,
-          height: `${parentHeight}px`
-        }}
-      ></canvas>
+    <div className="col-span-3 max-h-full">
+      {!socket && (
+        <div className="flex flex-col items-center justify-center gap-2">
+          <span>Not connected</span>
+          <button
+            className="px-8 py-2 border"
+            onClick={() => {
+              const socket = connectToSocket();
+              setSocket(socket);
+            }}
+          >
+            Reconnect
+          </button>
+        </div>
+      )}
+      {socket && (
+        <>
+          <div className="overflow-hidden bg-bgColor" style={{
+    maxWidth: '100vw',
+    maxHeight: '90vh'
+  }} >
+            <div className="w-max" ref={ref}>
+              <div className="bg-gray-200" style={{ padding: 0.5 }} ref={canvasWrapper}>
+                <canvas
+                  id="canvas"
+                  width={width}
+                  height={height}
+                  className="canvas"
+                  ref={canvasRef}
+                >
+                  Canvas not supported on your browser.
+                </canvas>
+              </div>
+            </div>
+          </div>
+          <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 px-4 py-2 bg-gray-200 bg-opacity-50 backdrop-blur-sm ">
+            <div className="flex items-center gap-4">
+              <span className="text-lg font-medium">Controls</span>
+              <div className="flex items-center gap-2">
+                <svg
+                  width="23"
+                  height="42"
+                  viewBox="0 0 23 42"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.4999 41C8.00642 41 1.01944 38.5238 1.01944 28.6191C1.01944 16.2381 0.0666756 10.5238 11.4999 10.5238"
+                    stroke="black"
+                  />
+                  <path
+                    d="M21.9805 22.9048C17.9293 24.3124 14.7539 24.9972 11.5 24.9685M1.01953 22.9048C5.15525 24.2501 8.36405 24.9407 11.5 24.9685M11.5 10.5238V24.9685"
+                    stroke="black"
+                  />
+                  <path
+                    d="M11.5001 10.5238C10.5473 5.7619 18.1694 6.71429 11.5001 1"
+                    stroke="black"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M11.5001 41C14.9936 41 21.9806 38.5238 21.9806 28.6191C21.9806 16.2381 22.9333 10.5238 11.5001 10.5238"
+                    stroke="black"
+                  />
+                  <rect
+                    x="9"
+                    y="14"
+                    width="5"
+                    height="8"
+                    rx="2.5"
+                    fill="black"
+                  />
+                </svg>
+                Copy color
+              </div>
+              <div className="flex items-center gap-2">
+                <svg
+                  width="23"
+                  height="42"
+                  viewBox="0 0 23 42"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.4999 41C8.00642 41 1.01944 38.5238 1.01944 28.6191C1.01944 16.2381 0.0666756 10.5238 11.4999 10.5238"
+                    stroke="black"
+                  />
+                  <path
+                    d="M21.9805 22.9048C17.9293 24.3124 14.7539 24.9972 11.5 24.9685M1.01953 22.9048C5.15525 24.2501 8.36405 24.9407 11.5 24.9685M11.5 10.5238V24.9685"
+                    stroke="black"
+                  />
+                  <path
+                    d="M11.5001 10.5238C10.5473 5.7619 18.1694 6.71429 11.5001 1"
+                    stroke="black"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M11.5001 41C14.9936 41 21.9806 38.5238 21.9806 28.6191C21.9806 16.2381 22.9333 10.5238 11.5001 10.5238"
+                    stroke="black"
+                  />
+                  <path
+                    d="M13.4055 21.9524V12.4286C20.0749 14.3333 19.1221 20.0476 19.1221 21L13.4055 21.9524Z"
+                    fill="black"
+                  />
+                </svg>
+                Place pixel
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <div className="text-lg font-medium">Cursor position</div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-bold">X:</span>
+                  <span className="text-sm font-light">{cursorPos.x}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-bold">Y:</span>
+                  <span className="text-sm font-light">{cursorPos.y}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
+
+export default CanvasContainer;

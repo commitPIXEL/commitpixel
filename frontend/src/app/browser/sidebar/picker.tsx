@@ -10,7 +10,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    pick: (color: string) => void;
+    pick: (color: object) => void;
 }
 
 // 전체 props의 타입을 결합합니다.
@@ -22,8 +22,12 @@ class Picker extends React.Component<Props> {
     };
 
     handleChange = (color: any) => {
-        this.setState({background: color.hex});
-        this.props.pick(color.hex);
+        this.setState({background: color});
+        const colorData = {
+            hex: color.hex,
+            rgb: color.rgb
+        }
+        this.props.pick( colorData );
     };
 
     render() {
@@ -35,7 +39,7 @@ class Picker extends React.Component<Props> {
 }
 
 // Redux state를 컴포넌트의 props로 매핑
-const mapStateToProps = (state: any): StateProps => ({ // 여기서 `any`는 실제 Redux state의 타입으로 교체해야 합니다.
+const mapStateToProps = (state: any): StateProps => ({
     colorFromRedux: state.color
 });
 

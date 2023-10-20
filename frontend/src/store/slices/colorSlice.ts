@@ -1,9 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialColor = "#000000";
 
 const initialState = {
-  color: initialColor,
+  color: {
+    hex: "#000000",
+    rgb: {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: 1,
+    }
+  }
 };
 
 const colorSlice = createSlice({
