@@ -11,7 +11,7 @@ import { pick } from "@/store/slices/colorSlice";
 const CanvasContainer = () => {
   const dispatch = useDispatch();
   const { socket, setSocket, connectToSocket } = useSocket();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null); 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
 
