@@ -6,13 +6,13 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class GithubCreditRes {
+public class CreditRes {
 
     private Integer usedPixel;
     private Integer availablePixel;
 
     @Builder
-    public GithubCreditRes(Integer usedPixel, Integer availablePixel) {
+    public CreditRes(Integer usedPixel, Integer availablePixel) {
         this.usedPixel = usedPixel;
         this.availablePixel = availablePixel;
     }
