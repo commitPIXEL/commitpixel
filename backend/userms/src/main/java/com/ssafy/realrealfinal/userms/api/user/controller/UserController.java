@@ -21,13 +21,13 @@ public class UserController {
     private final UserService userService;
 
     /**
-     *
-     * @param accessToken
-     * @return
+     * 크레딧 업데이트
+     * @param accessToken 깃허브 액세스 토큰
+     * @return CreditRes, HttpStatus.OK
      */
     @GetMapping("/refreshcredit")
-    public ResponseEntity<?> refrestCredit(@RequestHeader(value = "accesstoken") String accessToken, @RequestParam String githubNickname) {
-        CreditRes creditRes = userService.refreshCredit(accessToken, githubNickname);
+    public ResponseEntity<?> refrestCredit(@RequestHeader(value = "accesstoken") String accessToken) {
+        CreditRes creditRes = userService.refreshCredit(accessToken);
         return new ResponseEntity<>(creditRes, HttpStatus.OK);
     }
 
