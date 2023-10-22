@@ -26,7 +26,7 @@ public class GithubUtil {
      * @param userName
      * @return
      */
-    public Mono<Integer> getCommit(String accessToken, String userName) {
+    public Integer getCommit(String accessToken, String userName) {
 
         // webclient로 github api 호출
         Mono<JsonNode> githubEventList = githubWebClient
@@ -53,7 +53,8 @@ public class GithubUtil {
             .count()
             // 최근 90일 이내 아무런 이벤트가 없다면 0 리턴
             .defaultIfEmpty(0L)
-            .map(Long::intValue);
+            .map(Long::intValue)
+            .block();
     }
 
 }
