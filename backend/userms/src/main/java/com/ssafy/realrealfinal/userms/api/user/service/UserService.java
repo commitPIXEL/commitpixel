@@ -4,6 +4,8 @@ import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 
 public interface UserService {
 
-    CreditRes refreshCredit(String accessToken, String githubNickname);
+    CreditRes refreshCredit(String accessToken);
+
+    void updateUsedPixel(String userId);
 
 }
