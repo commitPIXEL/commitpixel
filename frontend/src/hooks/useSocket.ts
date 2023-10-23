@@ -1,5 +1,5 @@
 import { io, Socket } from "socket.io-client";
-import { socketUrl} from "../config";
+import { socketUrl} from "../app/config";
 import { useEffect, useState } from "react";
 
 const useSocket = () => {

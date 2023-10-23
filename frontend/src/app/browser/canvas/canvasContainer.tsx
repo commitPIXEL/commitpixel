@@ -2,11 +2,12 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import useSocket from "@/app/hooks/useSocket";
+import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { height, imageUrl, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
+import { setTool } from "@/store/slices/toolSlice";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -15,9 +16,11 @@ const CanvasContainer = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
 
+  const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const color = useSelector((state:RootState) => state.color.color);
+  const tool = useSelector((state:RootState) => state.tool.tool);
 
   // 픽셀 그리기
   const setPixel = useCallback((
@@ -88,6 +91,8 @@ const CanvasContainer = () => {
         window.innerHeight / 4 - (height / 4) * initialZoom,
       );
 
+      setPanzoomInstance(panzoom);
+
       return () => {
         panzoom.dispose();
       };
@@ -104,6 +109,7 @@ const CanvasContainer = () => {
       // 마우스 클릭으로 픽셀 색칠하기
       const putPixel = (e: MouseEvent) => {
         e.preventDefault();
+        // 우클릭 + Ctrl 키 = 색깔 복사
         if ( e.ctrlKey && ctx) {
           const [x, y] = [e.offsetX - 1, e.offsetY - 1];
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
@@ -112,6 +118,7 @@ const CanvasContainer = () => {
               hex: hex,
               rgb: { r: r, g: g, b: b, a: 1 }
             }));
+        // 우클릭 = 픽셀 색칠
         } else {
           const [x, y] = [e.offsetX - 1, e.offsetY - 1];
           const r = color.rgb.r;
@@ -142,16 +149,62 @@ const CanvasContainer = () => {
         setCursorPos({ x, y });
       };
 
+      const canvasClick = (e: MouseEvent) => {
+        e.preventDefault();
+        const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+        let r, g, b;
+        if(tool === null) return;
+        switch (tool) {
+          case "panning":
+            break;
+          case "painting":
+            panzoomInstance.pause();
+            r = color.rgb.r;
+            g = color.rgb.g;
+            b = color.rgb.b;
+            setPixel(x, y, { r, g, b }, true);
+            break;
+          case "copying":
+            if (ctx) {
+              panzoomInstance.pause();
+              const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+              const hex = rgbtoHex(r, g, b);
+              dispatch(
+                pick({
+                  hex: hex,
+                  rgb: { r: r, g: g, b: b, a: 1 },
+                })
+              );
+              dispatch(setTool("painting"));
+            }
+            break;
+          default:
+            break;
+        }
+      };
+
+      const onMouseUp = (e: MouseEvent) => {
+        if(tool === "painting" || tool === "copying") {
+          panzoomInstance.resume();
+        }
+      };
+
+
       wrapper.addEventListener("contextmenu", putPixel);
       wrapper.addEventListener("auxclick", copyColor);
       wrapper.addEventListener("mousemove", setCursor);
+      wrapper.addEventListener("mousedown", canvasClick);
+      wrapper.addEventListener("mouseup", onMouseUp);
+
       return () => {
         wrapper.removeEventListener("contextmenu", putPixel);
         wrapper.removeEventListener("auxclick", copyColor);
         wrapper.removeEventListener("contextmenu", setCursor);
+        wrapper.removeEventListener("mousedown", canvasClick);
+        wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
-  }, [color, setPixel]);
+  }, [color, setPixel, tool, panzoomInstance]);
 
   const toHex = (rgbData: number) => {
     let hex = rgbData.toString(16);
@@ -179,13 +232,14 @@ const CanvasContainer = () => {
         </div>
       )}
       {socket && (
-        <>
+        <div className="w-full h-full flex flex-col col-span-3">
+          <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
           <div className="overflow-hidden bg-bgColor" style={{
     maxWidth: '100vw',
-    maxHeight: '90vh'
+    maxHeight: '85vh'
   }} >
             <div className="w-max" ref={ref}>
-              <div className="bg-gray-200" style={{ padding: 0.5 }} ref={canvasWrapper}>
+              <div className="bg-gray-300" style={{ padding: 0.5 }} ref={canvasWrapper}>
                 <canvas
                   id="canvas"
                   width={width}
@@ -270,21 +324,8 @@ const CanvasContainer = () => {
                 Place pixel
               </div>
             </div>
-            <div className="flex flex-col">
-              <div className="text-lg font-medium">Cursor position</div>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-bold">X:</span>
-                  <span className="text-sm font-light">{cursorPos.x}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-bold">Y:</span>
-                  <span className="text-sm font-light">{cursorPos.y}</span>
-                </div>
-              </div>
-            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
