@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         updateTotalCredit(userId, commitNum + solvedNum);
         CreditRes creditRes = getTotalAndAvailableCredit(userId);
 
-        log.info("refreshCredit end: " + creditRes.toString());
+        log.info("refreshCredit end: " + creditRes);
         return creditRes;
     }
 

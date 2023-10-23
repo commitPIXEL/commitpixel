@@ -28,7 +28,7 @@ public class UserController {
     public ResponseEntity<?> refreshCredit(@RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshCredit start: " + accessToken);
         CreditRes creditRes = userService.refreshCredit(accessToken);
-        log.info("refreshCredit end: " + creditRes.toString());
+        log.info("refreshCredit end: " + creditRes);
         return ResponseEntity.ok().body(creditRes);
     }
 
