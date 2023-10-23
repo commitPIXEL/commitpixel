@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Picker from "./picker/picker";
 import LoginBtn from "@/components/loginBtn";
+import BoardBtn from "@/components/boardBtn"
 import Menu from "./picker/menu/pickerMenu";
 
 const Sidebar = () => {
@@ -10,6 +10,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col col-span-1 bg-bgColor w-full h-full pt-10 pb-10 pr-10 overflow-y-scroll">
+      <BoardBtn />
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           className="bg-mainColor rounded h-10"
@@ -18,7 +19,6 @@ const Sidebar = () => {
           <Typography className="font-bold text-lg">색깔</Typography>
         </AccordionSummary>
         <AccordionDetails className="flex flex-col justify-center items-center pt-4">
-          <Picker />
           <Menu />
         </AccordionDetails>
       </Accordion>
