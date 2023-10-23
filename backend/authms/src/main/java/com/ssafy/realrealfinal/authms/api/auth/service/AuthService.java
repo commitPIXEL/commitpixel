@@ -7,4 +7,8 @@ public interface AuthService {
     TokenRes login(String code, String github);
 
     void saveTokens(String providerId, String refreshJWTToken, String oauthAccessToken);
+
+    void logout(String refreshToken);
+
+    Integer getProviderIDFromAccessToken(String accessToken);
 }

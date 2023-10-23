@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenRes login(String authorizeCode, String provider) {
         if (provider.equals("github")) {
-            log.info("login start: code " + authorizeCode);
+            log.info("login start: " + authorizeCode);
             OauthTokenRes jsonToken = githubUtil.getGithubOauthToken(authorizeCode);
             OauthUserRes oauthUserRes = githubUtil.getGithubUserInfo(jsonToken.getAccessToken());
             redisUtil.setDataWithExpire(oauthUserRes.getId().toString(), jsonToken.getAccessToken(),
@@ -64,5 +64,32 @@ public class AuthServiceImpl implements AuthService {
         redisUtil.setDataWithExpire(providerId, oauthAccessToken, 31536000L);
 
         log.info("saveTokens end: success");
+    }
+
+    /**
+     * 로그아웃. 토큰 삭제 만약 Redis에서 단순한 삭제 작업만 수행하고 있고, 다른 데이터베이스 작업과 연계되지 않는 경우, @Transactional 어노테이션을
+     * 사용할 필요는 없을 수 있습니다.
+     *
+     * @param refreshToken refreshToken
+     */
+    @Override
+    public void logout(String refreshToken) {
+        log.info("logout start" + refreshToken);
+        redisUtil.deleteData(refreshToken);
+        log.info("logout end: success");
+    }
+
+    /**
+     * MS 통신을 위해 외부 MS에서 요청이 들어올 때 토큰에서 providerId를 추출해서 리턴하는 역할
+     *
+     * @param accessToken decode 위한 JWT 엑세스 토큰
+     * @return providerId
+     */
+    @Override
+    public Integer getProviderIDFromAccessToken(String accessToken) {
+        log.info("getProviderIDFromAccessToken start: " + accessToken);
+        Integer providerId = jwtUtil.getProviderIdFromToken(accessToken);
+        log.info("getProviderIDFromAccessToken end: " + providerId);
+        return providerId;
     }
 }

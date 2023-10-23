@@ -105,7 +105,7 @@ public class JwtUtil {
      * @param accessToken 정보 추출할 토큰. (우리는 refresh token에 정보를 담지 않아 access만 가능하다)
      * @return providerId
      */
-    public Integer getUserIdFromToken(String accessToken) {
+    public Integer getProviderIdFromToken(String accessToken) {
         log.info("getUserIdFromToken start: " + accessToken);
         try {
             Integer providerId = Integer.parseInt(Jwts.parserBuilder()
