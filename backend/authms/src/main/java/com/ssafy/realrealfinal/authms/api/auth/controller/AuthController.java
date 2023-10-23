@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,47 +51,23 @@ public class AuthController {
     /**
      * 로그아웃. redis, cookie에서 JWT 토큰 정보 삭제
      *
-     * @param request (쿠키에 담긴 토큰 추출해서 확인)
+     * @param coookie  refreshtoken
+     * @param response 쿠키 지울거
      * @return "success"
      */
     @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> logout(
+        @CookieValue(value = "refreshtoken", required = false) Cookie coookie,
+        HttpServletResponse response) {
         log.info("logout start");
-        String refreshToken = getRefreshTokenFromCookies(request);
+        String refreshToken = coookie.getValue();
         authService.logout(refreshToken);
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                cookie.setMaxAge(0); // 쿠키 삭제
-                cookie.setPath("/"); // 이 경로에 설정된 쿠키를 삭제
-                response.addCookie(cookie); // 응답에 쿠키를 다시 추가
-            }
-        }
+        coookie.setMaxAge(0); // 쿠키 삭제
+        coookie.setPath("/"); // 이 경로에 설정된 쿠키를 삭제
+        response.addCookie(coookie); // 응답에 쿠키를 다시 추가
+
         log.info("logout end: success");
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * request에서 쿠키에서 refreshtoken 추출
-     *
-     * @param request 쿠키 정보 위해.
-     * @return refresh token
-     */
-    private String getRefreshTokenFromCookies(HttpServletRequest request) {
-        String refreshToken = null;
-
-        log.info("getRefreshTokenFromCookies start");
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        log.info("getRefreshTokenFromCookies end: " + refreshToken);
-        return refreshToken;
     }
 
     /**
