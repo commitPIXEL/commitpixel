@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
      * @param accessToken
-     * @return 누적 사용 픽셀 수
+     * @return Integer 누적 사용 픽셀 수
      */
     @Override
     public Integer updateUsedPixel(String accessToken) {
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 전체 크레딧 업데이트
      * @param userId
-     * @param additionalCredit
+     * @param additionalCredit 추가 크레딧 수
      */
     private void updateTotalCredit(String userId, Integer additionalCredit) {
         log.info("updateTotalCredit start: " + userId + ", " + additionalCredit);
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 전체 크레딧, 사용 가능 크레딧 반환
      * @param userId
-     * @return
+     * @return CreditRes
      */
     private CreditRes getTotalAndAvailableCredit(String userId) {
         log.info("getTotalAndAvailableCredit start: " + userId);
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
      * 없다면(최초 가입) 0으로 set
      * @param userId
      * @param type
-     * @return
+     * @return Integer 크레딧
      */
     private Integer getCredit(String userId, String type) {
         Integer credit = redisUtil.getData(userId, type);
