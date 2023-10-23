@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -26,9 +25,24 @@ public class UserController {
      * @return CreditRes, HttpStatus.OK
      */
     @GetMapping("/refreshcredit")
-    public ResponseEntity<?> refrestCredit(@RequestHeader(value = "accesstoken") String accessToken) {
+    public ResponseEntity<?> refreshCredit(@RequestHeader(value = "accesstoken") String accessToken) {
+        log.info("refreshCredit start: " + accessToken);
         CreditRes creditRes = userService.refreshCredit(accessToken);
+        log.info("refreshCredit end: " + creditRes.toString());
         return new ResponseEntity<>(creditRes, HttpStatus.OK);
+    }
+
+    /**
+     * 픽셀 찍을 때마다 누적 픽셀 수 업데이트
+     * @param accessToken
+     * @return
+     */
+    @GetMapping("/usedpixel")
+    public ResponseEntity<Integer> updateUsedPixel(@RequestHeader(value = "accesstoken") String accessToken) {
+        log.info("updateUsedPixel start: " + accessToken);
+        Integer usedPixel = userService.updateUsedPixel(accessToken);
+        log.info("updateUsedPixel end: " + usedPixel);
+        return new ResponseEntity<>(usedPixel, HttpStatus.OK);
     }
 
 }

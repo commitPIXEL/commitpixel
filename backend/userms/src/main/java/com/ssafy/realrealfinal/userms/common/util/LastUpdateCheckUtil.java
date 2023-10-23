@@ -26,9 +26,10 @@ public class LastUpdateCheckUtil {
      * @return
      */
     public Boolean isPossibleToUpdate(String userId) {
-        // 없는 사용자라면 false 리턴
+        // 없는 사용자라면 map에 추가 후 true 리턴
         if (!lastUpdateMap.containsKey(userId)) {
-            return false;
+            updateTime(userId);
+            return true;
         }
         long lastUpdateTime = lastUpdateMap.get(userId);
         long currentTime = System.currentTimeMillis();

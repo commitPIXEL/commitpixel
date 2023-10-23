@@ -6,6 +6,6 @@ public interface UserService {
 
     CreditRes refreshCredit(String accessToken);
 
-    void updateUsedPixel(String userId);
+    Integer updateUsedPixel(String accessToken);
 
 }

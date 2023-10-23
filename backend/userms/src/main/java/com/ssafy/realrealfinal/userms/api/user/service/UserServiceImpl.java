@@ -17,50 +17,95 @@ public class UserServiceImpl implements UserService {
     private final GithubUtil githubUtil;
     private final LastUpdateCheckUtil lastUpdateCheckUtil;
     private final RedisUtil redisUtil;
+    private final String TOTAL_CREDIT_KEY = "total";
+    private final String USED_PIXEL_KEY = "used";
 
     /**
      * 커밋 수와 문제 수 불러오기
      * @param accessToken
-     * @return
+     * @return CreditRes
      */
     @Override
     public CreditRes refreshCredit(String accessToken) {
-        String userId = "유저 테이블에서 토큰으로 확인한 providerId";
-        // treemap 속 유저의 마지막 업데이트 시간으로부터 15분이 안 지났다면 null 리턴 (혹은 그냥 지금 redis에 저장한 값 그대로?)
+        log.info("refreshCredit start: " + accessToken);
+
+        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
         if (!lastUpdateCheckUtil.isPossibleToUpdate(userId)) {
-            return null;
+            return getTotalAndAvailableCredit(userId);
         }
-        // 유저 이름으로 Github REST API 호출
-        String userName = "유저 테이블에서 토큰으로 확인한 userName";
+        String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
         Integer commitNum = githubUtil.getCommit(accessToken, userName);
-        // TODO: Solved.ac에서 문제수 가져오는 로직 구현
-        Integer solvedNum = 0;
+        Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
+
         updateTotalCredit(userId, commitNum + solvedNum);
-        // CreditRes {누적 사용 픽셀 수, 사용할 수 있는 픽셀 수} 리턴
-        return getTotalAndAvailableCredit(userId);
+        CreditRes creditRes = getTotalAndAvailableCredit(userId);
+
+        log.info("refreshCredit end: " + creditRes.toString());
+        return creditRes;
     }
 
     /**
      * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
-     * @param userId
+     * @param accessToken
+     * @return 누적 사용 픽셀 수
      */
     @Override
-    public void updateUsedPixel(String userId) {
-        // 누적 사용 픽셀 수 + 1
-        Integer usedPixel = redisUtil.getData(userId, "used");
-        redisUtil.setData(userId, "used", usedPixel + 1);
+    public Integer updateUsedPixel(String accessToken) {
+        log.info("updateUsedPixel start: " + accessToken);
+
+        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
+        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+
+        log.info("updateUsedPixel end: " + updatedUsedPixel);
+        return updatedUsedPixel;
     }
 
-    public CreditRes getTotalAndAvailableCredit(String userId) {
-        // TODO: 사용자의 전체 크레딧과 누적 사용 픽셀 수 조회 후 사용 가능 픽셀 수 리턴
-        Integer totalCredit = redisUtil.getData(userId, "total");
-        Integer usedPixel = redisUtil.getData(userId, "used");
-        return new CreditRes(totalCredit, totalCredit - usedPixel);
+    /**
+     * 전체 크레딧 업데이트
+     * @param userId
+     * @param additionalCredit
+     */
+    private void updateTotalCredit(String userId, Integer additionalCredit) {
+        log.info("updateTotalCredit start: " + userId + ", " + additionalCredit);
+
+        Integer totalCredit = getCredit(userId, TOTAL_CREDIT_KEY);
+        redisUtil.setData(userId, TOTAL_CREDIT_KEY, totalCredit + additionalCredit);
+
+        log.info("updateTotalCredit end");
     }
 
-    public void updateTotalCredit(String userId, Integer additionalCredit) {
-        // 전체 크레딧에 API 리턴 값 더하기
-        Integer totalCredit = redisUtil.getData(userId, "total");
-        redisUtil.setData(userId, "total", totalCredit + additionalCredit);
+    /**
+     * 전체 크레딧, 사용 가능 크레딧 반환
+     * @param userId
+     * @return
+     */
+    private CreditRes getTotalAndAvailableCredit(String userId) {
+        log.info("getTotalAndAvailableCredit start: " + userId);
+
+        Integer totalCredit = getCredit(userId, TOTAL_CREDIT_KEY);
+        Integer usedPixel = getCredit(userId, USED_PIXEL_KEY);
+        CreditRes creditRes = new CreditRes(totalCredit, totalCredit - usedPixel);
+
+        log.info("getTotalAndAvailableCredit end: " + creditRes);
+        return creditRes;
     }
+
+    /**
+     * 크레딧(전체, 누적) 반환 메서드
+     * 없다면(최초 가입) 0으로 set
+     * @param userId
+     * @param type
+     * @return
+     */
+    private Integer getCredit(String userId, String type) {
+        Integer credit = redisUtil.getData(userId, type);
+        if (credit == null) {
+            redisUtil.setData(userId, type, 0);
+            return 0;
+        }
+        return credit;
+    }
+
 }
