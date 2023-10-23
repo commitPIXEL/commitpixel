@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -15,18 +16,21 @@ import reactor.core.publisher.Mono;
 @Component
 public class GithubUtil {
 
+    @Value("${github.url}")
+    private String GITHUB_URL;
+
     private final WebClient githubWebClient = WebClient
         .builder()
-        .baseUrl("https://api.github.com")
+        .baseUrl(GITHUB_URL)
         .defaultHeader("Accept", "application/vnd.github.v3+json")
         .build();
 
     /**
-     * @param accessToken
+     * @param githubAccessToken
      * @param userName
      * @return
      */
-    public Integer getCommit(String accessToken, String userName) {
+    public Integer getCommit(String githubAccessToken, String userName) {
 
         // webclient로 github api 호출
         Mono<JsonNode> githubEventList = githubWebClient
@@ -35,7 +39,7 @@ public class GithubUtil {
                 .path("/users/{username}/events")
                 .queryParam("per_page", 100)
                 .build(userName))
-            .header("Authorization", "Bearer " + accessToken)
+            .header("Authorization", "Bearer " + githubAccessToken)
             .retrieve()
             .bodyToMono(JsonNode.class);
 
