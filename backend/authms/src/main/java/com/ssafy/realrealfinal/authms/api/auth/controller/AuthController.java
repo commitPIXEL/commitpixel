@@ -2,11 +2,15 @@ package com.ssafy.realrealfinal.authms.api.auth.controller;
 
 import com.ssafy.realrealfinal.authms.api.auth.response.TokenRes;
 import com.ssafy.realrealfinal.authms.api.auth.service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +37,7 @@ public class AuthController {
         TokenRes tokenRes = authService.login(code, "github");
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshtoken",
                 tokenRes.getJwtRefreshToken())
-            .path("/") // too-t.com 하위 url 모두 저장 유지
+            .path("/") // 하위 url 모두 저장 유지
             .httpOnly(true)
             .secure(true)
             .sameSite("None")
@@ -44,5 +48,40 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 로그아웃. redis, cookie에서 JWT 토큰 정보 삭제
+     *
+     * @param coookie  refreshtoken
+     * @param response 쿠키 지울거
+     * @return "success"
+     */
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(
+        @CookieValue(value = "refreshtoken", required = false) Cookie coookie,
+        HttpServletResponse response) {
+        log.info("logout start");
+        String refreshToken = coookie.getValue();
+        authService.logout(refreshToken);
+        coookie.setMaxAge(0); // 쿠키 삭제
+        coookie.setPath("/"); // 이 경로에 설정된 쿠키를 삭제
+        response.addCookie(coookie); // 응답에 쿠키를 다시 추가
+
+        log.info("logout end: success");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 외부 MS 요청이 들어올 때 token에서
+     *
+     * @param accessToken 엑세스 토큰
+     * @return providerId
+     */
+    @GetMapping
+    public Integer getProviderIdByAccessToken(String accessToken) {
+        log.info("getProviderIdByJWT start: " + accessToken);
+        Integer providerId = authService.getProviderIDFromAccessToken(accessToken);
+        log.info("getProviderIdByJWT end: " + providerId);
+        return providerId;
+    }
 
 }
