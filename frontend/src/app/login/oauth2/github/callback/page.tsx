@@ -1,7 +1,8 @@
 "use client"
 
+import axios from 'axios';
 import { useEffect } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/slices/authorizationSlice";
 
 export default function LoginHandler() {
@@ -12,13 +13,19 @@ export default function LoginHandler() {
         console.log(code);
 
         if(code) {
-            fetch('https://jsonplaceholder.typicode.com/todos/1').then((res) => {
+            axios.get(`http://localhost:8080/auth/login/github?code=${code}`)
+            .then((res) => {
                 console.log(res);
-            }).catch((err) => {
+                console.log(res.headers);
+                if(res.status === 200) {
+                    const accesstoken: string = res.headers.accesstoken;
+                    dispatch(login(accesstoken));
+                    window.location.href = '/';
+                }
+            })
+            .catch((err) => {
                 console.log(err);
             })
-            console.log("백엔드에 토큰 요청!!");
-            // window.location.href = '/';
         }
     },[])
 
