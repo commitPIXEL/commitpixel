@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
             return getTotalAndAvailableCredit(userId);
         }
         String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
-        Integer commitNum = githubUtil.getCommit(accessToken, userName);
+        String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
+        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName);
         Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
 
         updateTotalCredit(userId, commitNum + solvedNum);
