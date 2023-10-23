@@ -21,7 +21,7 @@ public class UserController {
 
     /**
      * 크레딧 업데이트
-     * @param accessToken 깃허브 액세스 토큰
+     * @param accessToken jwt 액세스 토큰
      * @return CreditRes, HttpStatus.OK
      */
     @GetMapping("/refreshcredit")
@@ -29,7 +29,7 @@ public class UserController {
         log.info("refreshCredit start: " + accessToken);
         CreditRes creditRes = userService.refreshCredit(accessToken);
         log.info("refreshCredit end: " + creditRes.toString());
-        return new ResponseEntity<>(creditRes, HttpStatus.OK);
+        return ResponseEntity.ok().body(creditRes);
     }
 
     /**
@@ -42,7 +42,7 @@ public class UserController {
         log.info("updateUsedPixel start: " + accessToken);
         Integer usedPixel = userService.updateUsedPixel(accessToken);
         log.info("updateUsedPixel end: " + usedPixel);
-        return new ResponseEntity<>(usedPixel, HttpStatus.OK);
+        return ResponseEntity.ok().body(usedPixel);
     }
 
 }
