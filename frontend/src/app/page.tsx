@@ -4,6 +4,7 @@ import Browser from "./browser/browser";
 import Mobile from "./mobile/mobile";
 
 export default function Home() {
+
   return (
     <>
       <BrowserView>
