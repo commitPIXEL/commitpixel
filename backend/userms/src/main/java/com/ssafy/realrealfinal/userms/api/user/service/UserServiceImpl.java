@@ -1,9 +1,11 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
+import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
 import com.ssafy.realrealfinal.userms.common.util.RedisUtil;
+import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
     private final GithubUtil githubUtil;
     private final LastUpdateCheckUtil lastUpdateCheckUtil;
     private final RedisUtil redisUtil;
+    private final BoardRepository boardRepository;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
 
@@ -109,4 +112,20 @@ public class UserServiceImpl implements UserService {
         return credit;
     }
 
+
+    /**
+     * 건의사항 추가
+     * @param accessToken
+     * @param boardReq
+     * @return true, false
+     */
+    public boolean addBoard(String accessToken, BoardReq boardReq) {
+        // 1) accessToken 유효성 검사 및 providerId 가져오기
+        // 2) ① 결과에 따른 조건문 처리
+        // 3-1) 만료: 예외처리 응답
+        // 3-2) providerId로 유저 정보 가져오고 매퍼로 Entity 반환
+        // boardRepository.save(board);
+
+        return true;
+    }
 }

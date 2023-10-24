@@ -31,6 +31,10 @@ dependencies {
     implementation 'org.json:json:20230227'
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+    //openfeign 추가하면 나는 오류 해결 위해
+    implementation 'commons-fileupload:commons-fileupload:2.0.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
