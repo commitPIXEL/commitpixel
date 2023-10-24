@@ -5,10 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
-@ToString
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
+@Table(name = "\"user\"")
 public class User {
 
     @Id
