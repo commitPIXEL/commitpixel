@@ -1,5 +1,6 @@
 import { ReduxProvider } from '@/store/reduxProvider'
 import './globals.css'
+import '../../public/static/fonts/style.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={inter.className}>
         <ReduxProvider>
           {children}

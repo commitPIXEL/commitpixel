@@ -1,3 +1,4 @@
+@charset "utf-8";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,4 +25,16 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
 } */
+
+#canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
