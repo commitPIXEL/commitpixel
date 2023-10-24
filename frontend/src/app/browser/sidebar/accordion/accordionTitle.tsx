@@ -7,7 +7,7 @@ const AccordionTitle = ({title, isProfile}: {
 }) => {
   return (
     <AccordionSummary
-          className="w-full bg-mainColor flex justify-between items-center rounded h-10 line-clamp-1"
+          className="w-full !bg-mainColor flex justify-between items-center !rounded h-10 line-clamp-1"
           expandIcon={<ExpandMoreIcon />}
         >
           { isProfile ?
