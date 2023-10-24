@@ -37,6 +37,14 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
 //    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.12.571'
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.571'
+// OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+//openfeign 추가하면 나는 오류 해결 위해
+    implementation 'commons-fileupload:commons-fileupload:2.0.0'
+
+
+
 
 }
+
 
