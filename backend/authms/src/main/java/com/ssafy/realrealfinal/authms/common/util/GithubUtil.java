@@ -3,7 +3,7 @@ package com.ssafy.realrealfinal.authms.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.authms.api.auth.response.OauthTokenRes;
-import com.ssafy.realrealfinal.authms.api.auth.response.OauthUserRes;
+import com.ssafy.realrealfinal.authms.api.auth.dto.OauthUser;
 import com.ssafy.realrealfinal.authms.common.exception.auth.GithubException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,10 +83,10 @@ public class GithubUtil {
      * @param oauthToken 깃허브 엑세스 토큰
      * @return 깃허브의 유저정보
      */
-    public OauthUserRes getGithubUserInfo(String oauthToken) {
+    public OauthUser getGithubUserInfo(String oauthToken) {
         log.info("getGithubUserInfo start: " + oauthToken);
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        OauthUserRes oauthUserRes = null;
+        OauthUser oauthUserRes = null;
         try {
             HttpGet httpGet = new HttpGet(userInfoUri); // GET 요청 생성
             httpGet.addHeader("Authorization", "Bearer " + oauthToken); // 헤더에 토큰 설정
@@ -95,10 +95,10 @@ public class GithubUtil {
 
             if (response.getStatusLine().getStatusCode() == 200) { // 성공적으로 응답을 받은 경우
                 String responseBody = EntityUtils.toString(response.getEntity());
-                // 응답 본문을 OauthUserRes 클래스로 변환
+                // 응답 본문을 OauthUser 클래스로 변환
                 ObjectMapper objectMapper = new ObjectMapper();
                 oauthUserRes = objectMapper.readValue(responseBody,
-                    OauthUserRes.class);
+                    OauthUser.class);
                 log.info("getGithubUserInfo end: " + oauthUserRes);
             } else { // 에러 처리
                 log.warn("getGithubUserInfo mid: 깃허브 유저 정보 요청 중 에러 발생 " + response.getStatusLine()
