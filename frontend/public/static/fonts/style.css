@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "DNFBitBitv2";
+  src: url("DNFBitBitv2.woff2") format("woff2"), url("DNFBitBitv2.woff") format("woff");
+}
+
+* {
+  font-family: DNFBitBitv2 !important;
+  font-weight: light;
+}
