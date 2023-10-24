@@ -3,7 +3,6 @@ package com.ssafy.realrealfinal.authms.api.auth.controller;
 import com.ssafy.realrealfinal.authms.api.auth.response.TokenRes;
 import com.ssafy.realrealfinal.authms.api.auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +75,7 @@ public class AuthController {
      * @param accessToken 엑세스 토큰
      * @return providerId
      */
-    @GetMapping
+    @GetMapping("/token")
     public Integer getProviderIdByAccessToken(String accessToken) {
         log.info("getProviderIdByJWT start: " + accessToken);
         Integer providerId = authService.getProviderIDFromAccessToken(accessToken);

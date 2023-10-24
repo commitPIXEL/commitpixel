@@ -40,6 +40,9 @@ dependencies {
     // Mapstruct
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    // OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+
 
 }
 
