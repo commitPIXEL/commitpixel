@@ -1,3 +1,4 @@
+@charset "utf-8";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,4 +33,8 @@ body {
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }

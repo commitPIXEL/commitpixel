@@ -206,6 +206,12 @@ const CanvasContainer = () => {
     }
   }, [color, setPixel, tool, panzoomInstance]);
 
+  useEffect(() => {
+    if ((tool == "panning" || tool === null || tool === undefined) && panzoomInstance?.isPaused()){
+      panzoomInstance.resume();
+    }
+  }, [tool]);
+
   const toHex = (rgbData: number) => {
     let hex = rgbData.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
