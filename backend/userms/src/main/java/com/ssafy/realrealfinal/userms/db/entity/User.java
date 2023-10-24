@@ -1,11 +1,8 @@
 package com.ssafy.realrealfinal.userms.db.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Getter
 @ToString
@@ -23,9 +20,11 @@ public class User {
     private String solvedAcId;
 
     @Column(name = "github_nickname")
+    @NotNull
     private String githubNickname;
 
     @Column(name = "profile_image")
+    @NotNull
     private String profileImage;
 
     @Column(name = "url")
@@ -33,4 +32,14 @@ public class User {
 
     @Column(name = "provider_id")
     private String providerId;
+
+    @Builder
+    public User(Integer id, String solvedAcId, String githubNickname, String profileImage, String url, String providerId) {
+        this.id = id;
+        this.solvedAcId = solvedAcId;
+        this.githubNickname = githubNickname;
+        this.profileImage = profileImage;
+        this.url = url;
+        this.providerId = providerId;
+    }
 }
