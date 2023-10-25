@@ -18,9 +18,11 @@ import java.io.IOException;
 public class ImageServiceImpl implements ImageService {
 
     @Override
-    public byte[] convertImage(MultipartFile file, Integer type) {
+    public byte[] convertImage(String accessToken, MultipartFile file, Integer type) {
 
-        log.info("convertImage start: " + type);
+        log.info("convertImage start: " + accessToken + type);
+
+        // TODO: 로그인 된 사용자인지 accessToken으로 확인
 
         int pixelSize = getPixelSize(type);
         try {
