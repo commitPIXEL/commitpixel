@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, Input } from "@mui/material";
 import AccordionTitle from "./accordionTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil} from "@fortawesome/free-solid-svg-icons";
-import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 const UserInfoAccordion = () => {
   const urlInputRef = useRef<HTMLInputElement | null>(null);

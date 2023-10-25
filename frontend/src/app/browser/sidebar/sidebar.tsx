@@ -2,6 +2,7 @@ import LoginBtn from "@/components/loginBtn";
 import BoardBtn from "@/components/boardBtn"
 import PickerAccordion from "./accordion/pickerAccorion";
 import UserInfoAccordion from "./accordion/userInfoAccordion";
+import RankAccordion from "./accordion/rankAccordion";
 
 const Sidebar = () => {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
@@ -11,6 +12,8 @@ const Sidebar = () => {
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-[90%] pr-10 overflow-y-scroll">
       <UserInfoAccordion />
       <PickerAccordion />
+      <RankAccordion title="URL 랭킹" type="url" />
+      <RankAccordion title="Pixel 랭킹" type="pixel" />
       <LoginBtn
         clientId={clientId as string}
         redirectUrl={redirectUrl as string}
