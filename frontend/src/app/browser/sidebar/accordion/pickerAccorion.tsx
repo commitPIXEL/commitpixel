@@ -5,13 +5,13 @@ import Menu from "../picker/menu/pickerMenu";
 
 const PickerAccordion = () => {
   return (
-    <Accordion defaultExpanded={true} className="!rounded">
-        <AccordionTitle title="색깔" />
-        <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
-          <Picker />
-          <Menu />
-        </AccordionDetails>
-      </Accordion>
+    <Accordion defaultExpanded={true} className="!rounded mb-6">
+      <AccordionTitle title="색깔" />
+      <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
+        <Picker />
+        <Menu />
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
