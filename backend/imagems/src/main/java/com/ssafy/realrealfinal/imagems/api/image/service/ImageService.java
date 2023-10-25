@@ -7,6 +7,6 @@ import java.net.MalformedURLException;
 
 public interface ImageService {
 
-    String convertImage(MultipartFile file);
+    byte[] convertImage(MultipartFile file, Integer type);
 
 }
