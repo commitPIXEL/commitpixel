@@ -22,7 +22,9 @@ public class ImageController {
 
     @PostMapping("/convert")
     public ResponseEntity<byte[]> convertImage(@RequestParam(name = "file") MultipartFile file, @RequestParam Integer type) {
+        log.info("convertImage start: " + type);
         byte[] convertedImage = imageService.convertImage(file, type);
+        log.info("convertImage end: 이미지 변환 완료");
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.IMAGE_JPEG)
