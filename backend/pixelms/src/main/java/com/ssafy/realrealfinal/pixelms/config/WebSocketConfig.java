@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebSocketConfig {
+
     @Bean
     public SocketIOServer socketIoServer() {
         //Configuration 충돌 해결을 위해 풀패키지 이름 사용
@@ -16,8 +17,9 @@ public class WebSocketConfig {
         config.setPort(3001);
         return new SocketIOServer(config);
     }
+
     @Bean
-    public SpringAnnotationScanner springAnnotationScanner(SocketIOServer socketIOServer){
+    public SpringAnnotationScanner springAnnotationScanner(SocketIOServer socketIOServer) {
         return new SpringAnnotationScanner(socketIOServer);
     }
 }
