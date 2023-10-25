@@ -8,6 +8,7 @@ import { height, imageUrl, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
+import { rgbToHex } from "../utils";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -128,6 +129,15 @@ const CanvasContainer = () => {
         }
       }
 
+      const toHex = (rgbData: number) => {
+        let hex = rgbData.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+    
+      const rgbtoHex = (r: number, g: number, b: number) => {
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      };
+
       // 마우스 클릭으로 색깔 복사하기
       const copyColor = (e: MouseEvent) => {
         e.preventDefault();
@@ -204,22 +214,13 @@ const CanvasContainer = () => {
         wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
-  }, [color, setPixel, tool, panzoomInstance]);
+  }, [color, setPixel, tool, panzoomInstance, rgbToHex]);
 
   useEffect(() => {
     if ((tool == "panning" || tool === null || tool === undefined) && panzoomInstance?.isPaused()){
       panzoomInstance.resume();
     }
-  }, [tool]);
-
-  const toHex = (rgbData: number) => {
-    let hex = rgbData.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  }
-
-  const rgbtoHex = (r: number, g: number, b: number) => {
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-  };
+  }, [tool, panzoomInstance]);
 
   return (
     <div className="col-span-3 max-h-full">
