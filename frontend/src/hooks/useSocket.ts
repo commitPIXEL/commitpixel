@@ -6,8 +6,8 @@ const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
 
   const connectToSocket = () => {
-    if(true) {
-      const socket = io("ws://localhost:3001", {
+    if(true && socketUrl) {
+      const socket = io("socketUrl", {
         reconnection: false,
       });
       

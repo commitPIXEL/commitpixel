@@ -11,15 +11,15 @@ const RankAccordion = ({title, type}: {
       <AccordionTitle title={title} />
       <AccordionDetails className="min-h-0 flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full max-h-[200px] flex flex-col no-scrollbar overflow-y-auto">
-          {type === "url" ? urlData.map((item) => <RankItem rankInfo={item} isUrl={true} />) : 
-          pixelData.map((item) => <RankItem rankInfo={item} />)}
+          {type === "url" ? urlData.map((item) => <RankItem key={item.rank} rankInfo={item} isUrl={true} />) : 
+          pixelData.map((item) => <RankItem key={item.rank} rankInfo={item} />)}
         </div>
       </AccordionDetails>
     </Accordion>
   );
 };
 
-const pixelData = [
+const pixelData = [ 
   {
     rank:1,
     content: "githubNick",
