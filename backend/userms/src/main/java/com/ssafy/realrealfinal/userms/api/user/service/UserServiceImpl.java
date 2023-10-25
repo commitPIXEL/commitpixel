@@ -120,12 +120,10 @@ public class UserServiceImpl implements UserService {
      * @return true, false
      */
     public boolean addBoard(String accessToken, BoardReq boardReq) {
-        // 1) accessToken 유효성 검사 및 providerId 가져오기
-        // 2) ① 결과에 따른 조건문 처리
-        // 3-1) 만료: 예외처리 응답
-        // 3-2) providerId로 유저 정보 가져오고 매퍼로 Entity 반환
+        log.info("addBoard start: " + accessToken + ", " + boardReq);
+        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        // Board board = "userId와 boardReq를 entity로 변환" // TODO: boardMapper 사용
         // boardRepository.save(board);
-
         return true;
     }
 }

@@ -48,11 +48,11 @@ public class UserController {
     }
 
     /**
-     * 건의사항 추가
+     * 건의사항 추가 - 일반 건의사항(0), url건의사항(1)
      *
      * @param accessToken jwt 액세스 토큰
      * @param boardReq 건의사항
-     * @return true(건의사항 추가 성공), false(건의사항 추가 실패)
+     * @return 200 Ok(건의사항 추가 성공), 409 Conflict(url 중복), 예외처리 (accesstoken 만료)
      */
     @PostMapping("/board")
     public ResponseEntity<?> addBoard(@RequestHeader(value = "accesstoken") String accessToken, @RequestBody BoardReq boardReq) {
