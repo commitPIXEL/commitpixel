@@ -39,8 +39,8 @@ dependencies {
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.571'
 // OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
-    // opencv
-    implementation group: 'org.openpnp', name: 'opencv', version: '4.5.1-1'
+    // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
+    implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 }
 
 
