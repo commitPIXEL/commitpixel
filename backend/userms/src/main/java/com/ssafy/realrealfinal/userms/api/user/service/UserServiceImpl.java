@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 커밋 수와 문제 수 불러오기
+     *
      * @param accessToken
      * @return CreditRes
      */
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
+     *
      * @param accessToken
      * @return Integer 누적 사용 픽셀 수
      */
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 전체 크레딧 업데이트
+     *
      * @param userId
      * @param additionalCredit 추가 크레딧 수
      */
@@ -86,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 전체 크레딧, 사용 가능 크레딧 반환
+     *
      * @param userId
      * @return CreditRes
      */
@@ -101,8 +105,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 크레딧(전체, 누적) 반환 메서드
-     * 없다면(최초 가입) 0으로 set
+     * 크레딧(전체, 누적) 반환 메서드 없다면(최초 가입) 0으로 set
+     *
      * @param userId
      * @param type
      * @return Integer 크레딧
@@ -124,11 +128,9 @@ public class UserServiceImpl implements UserService {
      * @param boardReq    작성 내용
      */
     public void addBoard(String accessToken, BoardReq boardReq) {
-        log.info("addBoard start: " + accessToken + ", " + boardReq);
         String providerId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
         User user = userRepository.findByProviderId(providerId);
         Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
         boardRepository.save(board);
-        log.info("addBoard end: " + board);
     }
 }

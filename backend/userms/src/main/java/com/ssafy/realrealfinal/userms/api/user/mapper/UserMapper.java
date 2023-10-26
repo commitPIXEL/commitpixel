@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserMapper {
+
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     Board toBoard(BoardReq boardReq, User user);

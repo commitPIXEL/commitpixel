@@ -6,8 +6,8 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@MappedSuperclass
 @Table(name = "\"user\"")
+@Entity
 public class User {
 
     @Id
@@ -33,8 +33,8 @@ public class User {
     private String providerId;
 
     @Builder
-    public User(Integer id, String solvedAcId, String githubNickname, String profileImage, String url, String providerId) {
-        this.id = id;
+    public User(String solvedAcId, String githubNickname, String profileImage, String url,
+        String providerId) {
         this.solvedAcId = solvedAcId;
         this.githubNickname = githubNickname;
         this.profileImage = profileImage;

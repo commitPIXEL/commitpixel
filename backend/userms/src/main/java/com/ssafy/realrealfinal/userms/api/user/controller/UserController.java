@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
@@ -24,11 +24,13 @@ public class UserController {
 
     /**
      * 크레딧 업데이트
+     *
      * @param accessToken jwt 액세스 토큰
      * @return CreditRes, HttpStatus.OK
      */
-    @PostMapping("/refreshcredit")
-    public ResponseEntity<?> refreshCredit(@RequestHeader(value = "accesstoken") String accessToken) {
+    @GetMapping("/refreshcredit")
+    public ResponseEntity<?> refreshCredit(
+        @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshCredit start: " + accessToken);
         CreditRes creditRes = userService.refreshCredit(accessToken);
         log.info("refreshCredit end: " + creditRes);
@@ -37,11 +39,13 @@ public class UserController {
 
     /**
      * 픽셀 찍을 때마다 누적 픽셀 수 업데이트
+     *
      * @param accessToken
      * @return
      */
     @GetMapping("/usedpixel")
-    public ResponseEntity<Integer> updateUsedPixel(@RequestHeader(value = "accesstoken") String accessToken) {
+    public ResponseEntity<Integer> updateUsedPixel(
+        @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("updateUsedPixel start: " + accessToken);
         Integer usedPixel = userService.updateUsedPixel(accessToken);
         log.info("updateUsedPixel end: " + usedPixel);
@@ -52,11 +56,12 @@ public class UserController {
      * 건의사항 추가 - 일반 건의사항(0), url건의사항(1)
      *
      * @param accessToken jwt 액세스 토큰
-     * @param boardReq 건의사항
+     * @param boardReq    건의사항
      * @return 200 Ok(건의사항 추가 성공), 409 Conflict(url 중복), 예외처리 (accesstoken 만료)
      */
     @PostMapping("/board")
-    public ResponseEntity<?> addBoard(@RequestHeader(value = "accesstoken") String accessToken, @RequestBody BoardReq boardReq) {
+    public ResponseEntity<?> addBoard(@RequestHeader(value = "accesstoken") String accessToken,
+        @RequestBody BoardReq boardReq) {
         log.info("addBoard start: " + accessToken);
         userService.addBoard(accessToken, boardReq);
         log.info("addBoard end: " + SUCCESS);

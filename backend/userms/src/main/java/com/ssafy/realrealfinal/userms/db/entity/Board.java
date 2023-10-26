@@ -36,8 +36,7 @@ public class Board {
     private String content;
 
     @Builder
-    public Board(Integer id, User user, Integer type, String content) {
-        this.id = id;
+    public Board(User user, Integer type, String content) {
         this.user = user;
         this.type = type;
         this.content = content;

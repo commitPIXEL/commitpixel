@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class BoardReq {
+
     private Integer type;
     private String content;
 
