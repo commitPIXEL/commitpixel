@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final String SUCCESS = "success";
 
     /**
      * 크레딧 업데이트
@@ -57,9 +58,9 @@ public class UserController {
     @PostMapping("/board")
     public ResponseEntity<?> addBoard(@RequestHeader(value = "accesstoken") String accessToken, @RequestBody BoardReq boardReq) {
         log.info("addBoard start: " + accessToken);
-        boolean isAdded = userService.addBoard(accessToken, boardReq);
-        log.info("addBoard end: " + isAdded);
-        return ResponseEntity.ok().body(isAdded);
+        userService.addBoard(accessToken, boardReq);
+        log.info("addBoard end: " + SUCCESS);
+        return ResponseEntity.ok().build();
     }
 
 }

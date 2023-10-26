@@ -9,5 +9,5 @@ public interface UserService {
 
     Integer updateUsedPixel(String accessToken);
 
-    boolean addBoard(String accessToken, BoardReq boardReq);
+    void addBoard(String accessToken, BoardReq boardReq);
 }

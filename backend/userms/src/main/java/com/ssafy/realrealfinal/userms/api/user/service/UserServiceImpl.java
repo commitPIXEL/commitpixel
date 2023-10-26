@@ -1,15 +1,18 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
+import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
 import com.ssafy.realrealfinal.userms.common.util.RedisUtil;
+import com.ssafy.realrealfinal.userms.db.entity.Board;
+import com.ssafy.realrealfinal.userms.db.entity.User;
 import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
+import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final GithubUtil githubUtil;
     private final LastUpdateCheckUtil lastUpdateCheckUtil;
     private final RedisUtil redisUtil;
+    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
@@ -115,15 +119,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 건의사항 추가
-     * @param accessToken
-     * @param boardReq
-     * @return true, false
+     *
+     * @param accessToken 작성자 확인
+     * @param boardReq    작성 내용
      */
-    public boolean addBoard(String accessToken, BoardReq boardReq) {
+    public void addBoard(String accessToken, BoardReq boardReq) {
         log.info("addBoard start: " + accessToken + ", " + boardReq);
-        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-        // Board board = "userId와 boardReq를 entity로 변환" // TODO: boardMapper 사용
-        // boardRepository.save(board);
-        return true;
+        String providerId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        User user = userRepository.findByProviderId(providerId);
+        Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
+        boardRepository.save(board);
+        log.info("addBoard end: " + board);
     }
 }

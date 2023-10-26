@@ -30,13 +30,13 @@ public class Board {
 
 
     @Column(name = "type")
-    private long type;
+    private Integer type;
 
     @Column(name = "content")
     private String content;
 
     @Builder
-    public Board(Integer id, User user, long type, String content) {
+    public Board(Integer id, User user, Integer type, String content) {
         this.id = id;
         this.user = user;
         this.type = type;
