@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
+import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 
 public interface UserService {
@@ -8,4 +9,5 @@ public interface UserService {
 
     Integer updateUsedPixel(String accessToken);
 
+    void addBoard(String accessToken, BoardReq boardReq);
 }
