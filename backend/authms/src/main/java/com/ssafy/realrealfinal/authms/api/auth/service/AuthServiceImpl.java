@@ -2,11 +2,11 @@ package com.ssafy.realrealfinal.authms.api.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.realrealfinal.authms.api.auth.dto.OauthUserDto;
-//import com.ssafy.realrealfinal.authms.api.auth.feignClient.AuthClient;
+import com.ssafy.realrealfinal.authms.api.auth.response.OauthUserRes;
 import com.ssafy.realrealfinal.authms.api.auth.mapper.AuthMapper;
 import com.ssafy.realrealfinal.authms.api.auth.response.OauthTokenRes;
 import com.ssafy.realrealfinal.authms.api.auth.response.TokenRes;
+import com.ssafy.realrealfinal.authms.common.exception.auth.JsonifyException;
 import com.ssafy.realrealfinal.authms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.authms.common.util.JwtUtil;
 import com.ssafy.realrealfinal.authms.common.util.RedisUtil;
@@ -23,9 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final GithubUtil githubUtil;
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
-    //    private final AuthClient authClient;
     private final KafkaTemplate<String, String> kafkaTemplate;
-//    private final KafkaTemplate<String, OauthUserDto> kafkaTemplate;
 
     /**
      * jwt,redis 접근, 로그인 후 토큰 발급 메서드
@@ -39,21 +37,20 @@ public class AuthServiceImpl implements AuthService {
         if (provider.equals("github")) {
             log.info("login start: " + authorizeCode);
             OauthTokenRes jsonToken = githubUtil.getGithubOauthToken(authorizeCode);
-            OauthUserDto oauthUserRes = githubUtil.getGithubUserInfo(jsonToken.getAccessToken());
+            OauthUserRes oauthUserRes = githubUtil.getGithubUserInfo(jsonToken.getAccessToken());
             redisUtil.setDataWithExpire(oauthUserRes.getId().toString(), jsonToken.getAccessToken(),
                 31536000L); //365days
-            //TODO:로그인 처리하기 (유저로 보내서)
-            // OauthUserDto 객체를 JSON 문자열로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
+            // OauthUserRes 객체를 JSON 문자열로 변환
             try {
+                ObjectMapper objectMapper = new ObjectMapper();
                 String jsonMessage = objectMapper.writeValueAsString(oauthUserRes);
                 // 변환된 JSON 문자열을 Kafka topic에 보냄
                 kafkaTemplate.send("login-topic", jsonMessage);
+                log.info("login mid: kafka json data: " + jsonMessage);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new JsonifyException();
             }
 
-//            authClient.login(oauthUserRes);
             String jwtRefreshToken = jwtUtil.createRefreshToken();
             String jwtAccessToken = jwtUtil.createAccessToken(jwtRefreshToken);
             saveTokens(oauthUserRes.getId().toString(), jwtRefreshToken,
