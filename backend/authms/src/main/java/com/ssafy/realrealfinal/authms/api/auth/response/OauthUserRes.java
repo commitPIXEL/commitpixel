@@ -1,4 +1,4 @@
-package com.ssafy.realrealfinal.authms.api.auth.dto;
+package com.ssafy.realrealfinal.authms.api.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OauthUser {
+public class OauthUserRes {
 
     private String login;
     private Integer id;
@@ -18,7 +18,7 @@ public class OauthUser {
     private String url;
 
     @Builder
-    public OauthUser(String login, Integer id, String avatar_url, String url) {
+    public OauthUserRes(String login, Integer id, String avatar_url, String url) {
         this.login = login;
         this.id = id;
         this.avatar_url = avatar_url;
