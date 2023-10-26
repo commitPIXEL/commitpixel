@@ -1,13 +1,18 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
+import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
+import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
 import com.ssafy.realrealfinal.userms.common.util.RedisUtil;
+import com.ssafy.realrealfinal.userms.db.entity.Board;
+import com.ssafy.realrealfinal.userms.db.entity.User;
+import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
+import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,11 +22,14 @@ public class UserServiceImpl implements UserService {
     private final GithubUtil githubUtil;
     private final LastUpdateCheckUtil lastUpdateCheckUtil;
     private final RedisUtil redisUtil;
+    private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
 
     /**
      * 커밋 수와 문제 수 불러오기
+     *
      * @param accessToken
      * @return CreditRes
      */
@@ -47,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
+     *
      * @param accessToken
      * @return Integer 누적 사용 픽셀 수
      */
@@ -65,6 +74,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 전체 크레딧 업데이트
+     *
      * @param userId
      * @param additionalCredit 추가 크레딧 수
      */
@@ -79,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 전체 크레딧, 사용 가능 크레딧 반환
+     *
      * @param userId
      * @return CreditRes
      */
@@ -94,8 +105,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 크레딧(전체, 누적) 반환 메서드
-     * 없다면(최초 가입) 0으로 set
+     * 크레딧(전체, 누적) 반환 메서드 없다면(최초 가입) 0으로 set
+     *
      * @param userId
      * @param type
      * @return Integer 크레딧
@@ -109,4 +120,17 @@ public class UserServiceImpl implements UserService {
         return credit;
     }
 
+
+    /**
+     * 건의사항 추가
+     *
+     * @param accessToken 작성자 확인
+     * @param boardReq    작성 내용
+     */
+    public void addBoard(String accessToken, BoardReq boardReq) {
+        String providerId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        User user = userRepository.findByProviderId(providerId);
+        Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
+        boardRepository.save(board);
+    }
 }
