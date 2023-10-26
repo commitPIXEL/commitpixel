@@ -13,4 +13,10 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     Board toBoard(BoardReq boardReq, User user);
+
+    User toNewUser(String githubNickname, String profileImage, Integer providerId, String url);
+
+    @Mapping(source = "githubNickname", target = "githubNickname")
+    @Mapping(source = "profileImage", target = "profileImage")
+    User toUser(String githubNickname, String profileImage, User user);
 }

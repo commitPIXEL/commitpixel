@@ -30,11 +30,11 @@ public class User {
     private String url;
 
     @Column(name = "provider_id")
-    private String providerId;
+    private Integer providerId;
 
     @Builder
     public User(String solvedAcId, String githubNickname, String profileImage, String url,
-        String providerId) {
+        Integer providerId) {
         this.solvedAcId = solvedAcId;
         this.githubNickname = githubNickname;
         this.profileImage = profileImage;
