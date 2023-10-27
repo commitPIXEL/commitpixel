@@ -92,6 +92,9 @@ const CanvasContainer = () => {
         window.innerHeight / 4 - (height / 4) * initialZoom,
       );
 
+      panzoom.setMaxZoom(50);
+      panzoom.setMinZoom(0.3);
+
       setPanzoomInstance(panzoom);
 
       return () => {
