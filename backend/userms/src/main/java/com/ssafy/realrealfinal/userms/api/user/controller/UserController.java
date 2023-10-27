@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -40,7 +41,7 @@ public class UserController {
     /**
      * 픽셀 찍을 때마다 누적 픽셀 수 업데이트
      *
-     * @param accessToken
+     * @param accessToken jwt 액세스 토큰
      * @return
      */
     @GetMapping("/usedpixel")
@@ -67,5 +68,18 @@ public class UserController {
         log.info("addBoard end: " + SUCCESS);
         return ResponseEntity.ok().build();
     }
+
+
+    @GetMapping("/solvedac/auth")
+    public ResponseEntity<?> authSolvedAc(@RequestParam String solvedAcId,
+        @RequestParam Integer providerId) {
+        log.info("authSolvedAc start: " + solvedAcId + " " + providerId);
+        userService.authSolvedAc(solvedAcId, providerId);
+        log.info("authSolvedAc end: success");
+        return ResponseEntity.ok().build();
+
+
+    }
+
 
 }
