@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "\"user\"")
 @Entity
@@ -15,7 +16,7 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
-    @Column(name = "solvedac_id")
+    @Column(name = "solvedac_id", unique = true)
     private String solvedAcId;
 
     @Column(name = "github_nickname")
@@ -31,6 +32,10 @@ public class User {
 
     @Column(name = "provider_id")
     private Integer providerId;
+
+    public void setSolvedAcId(String solvedAcId) {
+        this.solvedAcId = solvedAcId;
+    }
 
     @Builder
     public User(String solvedAcId, String githubNickname, String profileImage, String url,
