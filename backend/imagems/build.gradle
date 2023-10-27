@@ -43,4 +43,18 @@ dependencies {
     implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 }
 
+ext {
+    set('springCloudVersion', "2022.0.4")
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.4"
+    }
+}
 
