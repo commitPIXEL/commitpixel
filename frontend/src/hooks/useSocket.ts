@@ -7,7 +7,7 @@ const useSocket = () => {
 
   const connectToSocket = () => {
     if(true && socketUrl) {
-      const socket = io("socketUrl", {
+      const socket = io(socketUrl, {
         reconnection: false,
       });
       
