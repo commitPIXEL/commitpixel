@@ -20,6 +20,8 @@ const CanvasContainer = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
+  const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
+
 
   // 픽셀 그리기
   const setPixel = useCallback((
@@ -89,6 +91,9 @@ const CanvasContainer = () => {
         window.innerWidth / 4 - (width / 4) * initialZoom,
         window.innerHeight / 4 - (height / 4) * initialZoom,
       );
+
+      panzoom.setMaxZoom(50);
+      panzoom.setMinZoom(0.3);
 
       setPanzoomInstance(panzoom);
 
@@ -166,6 +171,7 @@ const CanvasContainer = () => {
           case "panning":
             break;
           case "painting":
+            audio.play();
             panzoomInstance.pause();
             r = color.rgb.r;
             g = color.rgb.g;
