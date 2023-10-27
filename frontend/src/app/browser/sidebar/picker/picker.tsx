@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { SketchPicker } from "react-color";
 import { connect } from "react-redux";
 import { pick } from "@/store/slices/colorSlice";
+import dynamic from "next/dynamic";
 
 interface StoreState {
     color: Icolor;
@@ -18,11 +18,12 @@ interface Icolor {
     };
 };
 
-// 전체 props의 타입을 결합합니다.
 interface Iprops {
     color?: Icolor;
     pick: (color: Icolor) => void;
-}
+};
+
+const SketchPicker = dynamic(() => import("react-color").then((mod) => mod.SketchPicker), { ssr: false});
 
 class Picker extends React.Component<Iprops> {
     state = {
