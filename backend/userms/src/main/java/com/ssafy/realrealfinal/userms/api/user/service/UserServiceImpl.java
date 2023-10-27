@@ -16,6 +16,7 @@ import com.ssafy.realrealfinal.userms.db.entity.Board;
 import com.ssafy.realrealfinal.userms.db.entity.User;
 import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
 import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -48,17 +49,17 @@ public class UserServiceImpl implements UserService {
     public CreditRes refreshCredit(String accessToken) {
         log.info("refreshCredit start: " + accessToken);
 
-        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-        if (!lastUpdateCheckUtil.isPossibleToUpdate(userId)) {
-            return getTotalAndAvailableCredit(userId);
+        Integer providerId = 1; // TODO: userRepository 사용
+        if (!lastUpdateCheckUtil.isPossibleToUpdate(String.valueOf(providerId))) {
+            return getTotalAndAvailableCredit(providerId);
         }
         String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
         Integer commitNum = githubUtil.getCommit(githubAccessToken, userName);
         Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
 
-        updateTotalCredit(userId, commitNum + solvedNum);
-        CreditRes creditRes = getTotalAndAvailableCredit(userId);
+        updateTotalCredit(providerId, commitNum + solvedNum);
+        CreditRes creditRes = getTotalAndAvailableCredit(providerId);
 
         log.info("refreshCredit end: " + creditRes);
         return creditRes;
@@ -70,30 +71,31 @@ public class UserServiceImpl implements UserService {
      * @param accessToken jwt 토큰
      * @return Integer 누적 사용 픽셀 수
      */
-    @Override
-    public Integer updateUsedPixel(String accessToken) {
-        log.info("updateUsedPixel start: " + accessToken);
-
-        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
-        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-
-        log.info("updateUsedPixel end: " + updatedUsedPixel);
-        return updatedUsedPixel;
-    }
+//    @Override
+//    public Integer updateUsedPixel(String accessToken) {
+//        log.info("updateUsedPixel start: " + accessToken);
+//
+//        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+//        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+//        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
+//        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+//
+//        log.info("updateUsedPixel end: " + updatedUsedPixel);
+//        return updatedUsedPixel;
+//    }
 
     /**
      * 전체 크레딧 업데이트
      *
-     * @param userId           providerId
+     * @param providerId       providerId
      * @param additionalCredit 추가 크레딧 수
      */
-    private void updateTotalCredit(String userId, Integer additionalCredit) {
-        log.info("updateTotalCredit start: " + userId + ", " + additionalCredit);
+    private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
+        log.info("updateTotalCredit start: " + providerId + ", " + additionalCredit);
 
-        Integer totalCredit = getCredit(userId, TOTAL_CREDIT_KEY);
-        redisUtil.setData(userId, TOTAL_CREDIT_KEY, totalCredit + additionalCredit);
+        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
+        redisUtil.setData(String.valueOf(providerId), TOTAL_CREDIT_KEY,
+            totalCredit + additionalCredit);
 
         log.info("updateTotalCredit end");
     }
@@ -101,14 +103,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 전체 크레딧, 사용 가능 크레딧 반환
      *
-     * @param userId providerId
+     * @param providerId providerId
      * @return CreditRes
      */
-    private CreditRes getTotalAndAvailableCredit(String userId) {
-        log.info("getTotalAndAvailableCredit start: " + userId);
-
-        Integer totalCredit = getCredit(userId, TOTAL_CREDIT_KEY);
-        Integer usedPixel = getCredit(userId, USED_PIXEL_KEY);
+    private CreditRes getTotalAndAvailableCredit(Integer providerId) {
+        log.info("getTotalAndAvailableCredit start: " + providerId);
+        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
+        Integer usedPixel = getCredit(providerId, USED_PIXEL_KEY);
         CreditRes creditRes = new CreditRes(totalCredit, totalCredit - usedPixel);
 
         log.info("getTotalAndAvailableCredit end: " + creditRes);
@@ -118,17 +119,24 @@ public class UserServiceImpl implements UserService {
     /**
      * 크레딧(전체, 누적) 반환 메서드 없다면(최초 가입) 0으로 set
      *
-     * @param userId providerId
-     * @param type   전체크레딧 또는 누적 사용픽셀수를 의미. total, used
+     * @param providerId providerId
+     * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
      * @return Integer 크레딧
      */
-    private Integer getCredit(String userId, String type) {
-        Integer credit = redisUtil.getData(userId, type);
-        if (credit == null) {
-            redisUtil.setData(userId, type, 0);
+    private Integer getCredit(Integer providerId, String type) {
+        log.info("getCredit start: " + providerId + " " + type);
+        String key = String.valueOf(providerId);
+        Integer credit = 0;
+        try {
+            redisUtil.getData(key, type);
+            log.info("getCredit end: " + credit);
+            return credit;
+        } catch (Exception e) {
+            redisUtil.setData(key, type, 0);
+            log.warn("getCredit end: " + 0);
             return 0;
         }
-        return credit;
+
     }
 
 
@@ -188,24 +196,56 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             user = UserMapper.INSTANCE.toNewUser(githubNickname, profileImage, providerId, url);
             userRepository.save(user);
+            //TODO: 깃허브 커밋수 가져와서 넣어두는 작업 (7일치)
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
         log.info("login end: " + user);
     }
 
+    /**
+     * solvedAc 연동 본인인증 확인 절차
+     *
+     * @param solvedAcId solved 아이디
+     * @param providerId 깃허브 providerid. 추후 token으로 바뀔 예정
+     */
     @Override
     @Transactional
     public void authSolvedAc(String solvedAcId, Integer providerId) {
         log.info("authSolvedAc start: " + solvedAcId + " " + providerId);
-        solvedAcUtil.authId(solvedAcId);
+        Integer solvedCount = solvedAcUtil.authorizeSolvedAc(solvedAcId);
         User isUsed = userRepository.findBySolvedAcId(solvedAcId);
-        if (isUsed!=null) {
+        if (isUsed != null) {
             throw new SolvedAcAuthException();
         }
         User user = userRepository.findByProviderId(providerId);
         user.setSolvedAcId(solvedAcId);
-        System.out.println(user);
+
+        String key = "solvedProblem" + providerId;
+        redisUtil.setData(key, solvedAcId, solvedCount);
+        int total = getCredit(providerId, "total") + solvedCount;
+        redisUtil.setData(String.valueOf(providerId), "total", total);
         log.info("authSolvedAc end: success");
+    }
+
+    /**
+     * 새로고침 때 solvedAc 새로 푼 문제수만 가져오기
+     *
+     * @param providerId 깃허브 provider id
+     * @return 새로 푼 문제수 (차이)
+     */
+    public Integer solvedAcNewSolvedProblem(Integer providerId) {
+        log.info("solvedAcNewSolvedProblem start: " + providerId);
+        String key = "solvedProblem" + providerId;
+        Map<String, String> data = redisUtil.getSolvedAcData(key);
+        String solvedAcId = null;
+        Integer solvedProblem = 0;
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            solvedAcId = entry.getKey();
+            solvedProblem = Integer.parseInt(entry.getValue());
+        }
+        solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
+        log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
+        return solvedProblem;
     }
 }
