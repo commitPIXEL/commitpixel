@@ -240,7 +240,7 @@ const CanvasContainer = () => {
           </button>
         </div>
       )}
-      {!socket && (
+      {socket && (
         <div className="w-full h-full flex flex-col col-span-3">
           <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
           <div className="overflow-hidden bg-bgColor" style={{
