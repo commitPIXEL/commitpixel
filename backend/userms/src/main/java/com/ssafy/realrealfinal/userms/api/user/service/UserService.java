@@ -7,7 +7,7 @@ public interface UserService {
 
     CreditRes refreshCredit(String accessToken);
 
-    Integer updateUsedPixel(String accessToken);
+//    Integer updateUsedPixel(String accessToken);
 
     void addBoard(String accessToken, BoardReq boardReq);
     void login(String oauthUserInfo);

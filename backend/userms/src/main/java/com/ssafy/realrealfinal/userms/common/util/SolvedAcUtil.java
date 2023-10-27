@@ -24,15 +24,21 @@ public class SolvedAcUtil {
     @Value("${solvedac.message}")
     private String message;
 
-
-    public void authId(String authId) {
-        log.info("authId start: "+authId);
+    /**
+     * 인증. 입력받은 아이디로 bio 조회해서 문자열 존재하는지 확인
+     *
+     * @param solvedAcId solved 아이디
+     * @return 푼 문제수
+     */
+    public Integer authorizeSolvedAc(String solvedAcId) {
+        log.info("authorizeSolvedAc start: " + solvedAcId);
         //다르면 예외던지기.
-        HttpClient client = HttpClients.createDefault();
         String bio = null;
+        Integer solvedCount = null;
         try {
+            HttpClient client = HttpClients.createDefault();
             URIBuilder uriBuilder = new URIBuilder(AUTH_URL);
-            uriBuilder.addParameter("handle", authId);
+            uriBuilder.addParameter("handle", solvedAcId);
 
             // GET 요청 설정
             HttpGet httpGet = new HttpGet(uriBuilder.build());
@@ -46,19 +52,57 @@ public class SolvedAcUtil {
 
             // JSONObject에서 "bio" 값 추출
             bio = json.getString("bio");
-            System.out.println(bio);
+            solvedCount = json.getInt("solvedCount");
 
         } catch (Exception e) {
-            log.warn("authId mid: FAIL");
+            log.warn("authorizeSolvedAc mid: FAIL");
             throw new APIRequestException();
         }
         if (!bio.contains(message)) {
-            log.warn("authId mid: bio mismatch");
+            log.warn("authorizeSolvedAc mid: bio mismatch");
             throw new SolvedAcAuthException();
         }
 
-        log.info("authId end: success");
-
+        log.info("authorizeSolvedAc end: " + solvedCount);
+        return solvedCount;
     }
+
+    /**
+     * 새로 푼 문제 가져오기용
+     *
+     * @param solvedAcId 아이디
+     * @return 푼 문제수
+     */
+    public int getSolvedCount(String solvedAcId) {
+        log.info("getSolvedCount start: " + solvedAcId);
+        //다르면 예외던지기.
+        Integer solvedCount = null;
+        try {
+            HttpClient client = HttpClients.createDefault();
+            URIBuilder uriBuilder = new URIBuilder(AUTH_URL);
+            uriBuilder.addParameter("handle", solvedAcId);
+
+            // GET 요청 설정
+            HttpGet httpGet = new HttpGet(uriBuilder.build());
+            HttpResponse response = client.execute(httpGet);
+
+            // 응답에서 HTTP 엔티티 받기
+            String result = EntityUtils.toString(response.getEntity());
+
+            // 문자열을 JSONObject로 변환
+            JSONObject json = new JSONObject(result);
+
+            // JSONObject에서 "solvedCount" 값 추출
+            solvedCount = json.getInt("solvedCount");
+
+        } catch (Exception e) {
+            log.warn("getSolvedCount mid: FAIL");
+            throw new APIRequestException();
+        }
+
+        log.info("getSolvedCount end: " + solvedCount);
+        return solvedCount;
+    }
+
 
 }
