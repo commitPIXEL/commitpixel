@@ -28,6 +28,8 @@ const useSocket = () => {
         alert("Error connecting to socket");
       });
       return socket;
+    } else {
+      console.log("socketUrl is empty");
     }
   }
     

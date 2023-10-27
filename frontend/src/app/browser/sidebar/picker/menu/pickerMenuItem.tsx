@@ -19,7 +19,7 @@ const MenuItem = ({icon, toolName}: {
     }
   }
   return (
-    <div onClick={handleToolClick} className={`flex justify-center items-center cursor-pointer text-xl border rounded-full aspect-square w-10 ${isUsing}`}>
+    <div onClick={handleToolClick} className={`flex justify-center items-center ml-1 mr-1 p-2 cursor-pointer text-xl border rounded-full aspect-square w-10 ${isUsing}`}>
       <FontAwesomeIcon icon={icon} />
     </div>
   );
