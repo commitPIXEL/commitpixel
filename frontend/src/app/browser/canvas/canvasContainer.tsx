@@ -110,51 +110,13 @@ const CanvasContainer = () => {
       const ctx = canvas.getContext("2d");
       setCtx(ctx);
 
-      // 마우스 클릭으로 픽셀 색칠하기
-      const putPixel = (e: MouseEvent) => {
-        e.preventDefault();
-        // 우클릭 + Ctrl 키 = 색깔 복사
-        if ( e.ctrlKey && ctx) {
-          const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-          const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-          const hex = rgbtoHex(r, g, b);
-            dispatch(pick({
-              hex: hex,
-              rgb: { r: r, g: g, b: b, a: 1 }
-            }));
-        // 우클릭 = 픽셀 색칠
-        } else {
-          const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-          const r = color.rgb.r;
-          const g = color.rgb.g;
-          const b = color.rgb.b;
-          setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
-        }
-      }
-
       const toHex = (rgbData: number) => {
         let hex = rgbData.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
-      }
+      };
     
       const rgbtoHex = (r: number, g: number, b: number) => {
         return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-      };
-
-      // 마우스 클릭으로 색깔 복사하기
-      const copyColor = (e: MouseEvent) => {
-        e.preventDefault();
-        if (ctx) {
-          if (e.button === 1) {
-            const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-            const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-            const hex = rgbtoHex(r, g, b);
-            dispatch(pick({
-              hex: hex,
-              rgb: { r: r, g: g, b: b, a: 1 }
-            }));
-          }
-        }
       };
 
       const setCursor = (e: MouseEvent) => {
@@ -203,16 +165,11 @@ const CanvasContainer = () => {
         }
       };
 
-
-      wrapper.addEventListener("contextmenu", putPixel);
-      wrapper.addEventListener("auxclick", copyColor);
       wrapper.addEventListener("mousemove", setCursor);
       wrapper.addEventListener("mousedown", canvasClick);
       wrapper.addEventListener("mouseup", onMouseUp);
 
       return () => {
-        wrapper.removeEventListener("contextmenu", putPixel);
-        wrapper.removeEventListener("auxclick", copyColor);
         wrapper.removeEventListener("contextmenu", setCursor);
         wrapper.removeEventListener("mousedown", canvasClick);
         wrapper.removeEventListener("mouseup", onMouseUp);
@@ -246,12 +203,19 @@ const CanvasContainer = () => {
       {socket && (
         <div className="w-full h-full flex flex-col col-span-3">
           <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
-          <div className="overflow-hidden bg-bgColor" style={{
-    maxWidth: '100vw',
-    maxHeight: '85vh'
-  }} >
+          <div
+            className="overflow-hidden bg-bgColor"
+            style={{
+              maxWidth: "100vw",
+              maxHeight: "85vh",
+            }}
+          >
             <div className="w-max" ref={ref}>
-              <div className="bg-slate-200" style={{ padding: 0.5 }} ref={canvasWrapper}>
+              <div
+                className="bg-slate-200"
+                style={{ padding: 0.5 }}
+                ref={canvasWrapper}
+              >
                 <canvas
                   id="canvas"
                   width={width}
