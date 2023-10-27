@@ -1,8 +1,8 @@
 package com.ssafy.realrealfinal.pixelms.common.util;
 
 import com.ssafy.realrealfinal.pixelms.common.model.BaseException;
-import com.ssafy.realrealfinal.pixelms.common.model.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler(BaseException.class)
-    public CommonResponse<?> onBaseException(BaseException e) {
-
+    public ResponseEntity<?> onBaseException(BaseException e) {
         log.info("GlobalControllerAdvice_onBaseException: codeName = " + e.getErrorCode().name()
             + " codeMessage = " + e.getMessage());
 
-        return CommonResponse.fail(e.getErrorCode().name(), e.getMessage());
+        return new ResponseEntity<>(e.getErrorCode().getMessage(), e.getErrorCode().getHttpStatus());
     }
 }

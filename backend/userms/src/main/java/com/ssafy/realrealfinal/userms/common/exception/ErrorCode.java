@@ -1,20 +1,18 @@
 package com.ssafy.realrealfinal.userms.common.exception;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@RequiredArgsConstructor
 public enum ErrorCode {
 
-    UNEXPECTED_ERROR(HttpStatus.BAD_REQUEST, "0"); // 예시
+    UNEXPECTED_ERROR("0", HttpStatus.BAD_REQUEST),
+    JSON_FAILED("FAILED TO CONVERT JSON TO VAR", HttpStatus.CONFLICT),
+    SOLVEDAC_AUTH_FAILED("FAILED TO AUTHORIZE SOLVEDAC", HttpStatus.BAD_REQUEST),
+    API_REQUEST_FAILED("FAILED WHILE REQUESTING API REQUEST (BACKEND)", HttpStatus.CONFLICT );
 
-    private final HttpStatus httpStatus;
     private final String message;
-
-    ErrorCode(HttpStatus httpStatus, String message) {
-        this.httpStatus = httpStatus;
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
+    private final HttpStatus httpStatus;
 }
