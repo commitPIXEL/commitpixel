@@ -56,3 +56,6 @@ dependencyManagement {
     }
 }
 
+jar.enabled = false
+
+
