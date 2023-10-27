@@ -1,3 +1,4 @@
+"use client";
 import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav";
 import Sidebar from "./sidebar/sidebar";
