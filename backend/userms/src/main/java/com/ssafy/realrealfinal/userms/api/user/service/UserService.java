@@ -12,4 +12,5 @@ public interface UserService {
     void addBoard(String accessToken, BoardReq boardReq);
     void login(String oauthUserInfo);
 
+    void authSolvedAc(String solvedAcId, Integer providerId);
 }

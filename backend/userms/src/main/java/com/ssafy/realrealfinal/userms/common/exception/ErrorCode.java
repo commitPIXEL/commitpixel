@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     UNEXPECTED_ERROR("0", HttpStatus.BAD_REQUEST),
-    JSON_FAILED("FAILED TO CONVERT JSON TO VAR", HttpStatus.CONFLICT);
+    JSON_FAILED("FAILED TO CONVERT JSON TO VAR", HttpStatus.CONFLICT),
+    SOLVEDAC_AUTH_FAILED("FAILED TO AUTHORIZE SOLVEDAC", HttpStatus.BAD_REQUEST),
+    API_REQUEST_FAILED("FAILED WHILE REQUESTING API REQUEST (BACKEND)", HttpStatus.CONFLICT );
 
     private final String message;
     private final HttpStatus httpStatus;
