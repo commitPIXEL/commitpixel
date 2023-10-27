@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -44,14 +45,14 @@ public class UserController {
      * @param accessToken jwt 액세스 토큰
      * @return
      */
-    @GetMapping("/usedpixel")
-    public ResponseEntity<Integer> updateUsedPixel(
-        @RequestHeader(value = "accesstoken") String accessToken) {
-        log.info("updateUsedPixel start: " + accessToken);
-        Integer usedPixel = userService.updateUsedPixel(accessToken);
-        log.info("updateUsedPixel end: " + usedPixel);
-        return ResponseEntity.ok().body(usedPixel);
-    }
+//    @GetMapping("/usedpixel")
+//    public ResponseEntity<Integer> updateUsedPixel(
+//        @RequestHeader(value = "accesstoken") String accessToken) {
+//        log.info("updateUsedPixel start: " + accessToken);
+//        Integer usedPixel = userService.updateUsedPixel(accessToken);
+//        log.info("updateUsedPixel end: " + usedPixel);
+//        return ResponseEntity.ok().body(usedPixel);
+//    }
 
     /**
      * 건의사항 추가 - 일반 건의사항(0), url건의사항(1)
@@ -69,8 +70,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
-    @GetMapping("/solvedac/auth")
+    /**
+     * solved 연동
+     *
+     * @param solvedAcId 사용자가 직접 입력한 아이디
+     * @param providerId 추후 header token으로 변경할 예정.
+     * @return 인증 성공/실패
+     */
+    @PatchMapping("/solvedac/auth")
     public ResponseEntity<?> authSolvedAc(@RequestParam String solvedAcId,
         @RequestParam Integer providerId) {
         log.info("authSolvedAc start: " + solvedAcId + " " + providerId);
