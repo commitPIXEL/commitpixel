@@ -7,7 +7,7 @@ const useSocket = () => {
 
   const connectToSocket = () => {
     if(true && socketUrl) {
-      const socket = io("socketUrl", {
+      const socket = io(socketUrl, {
         reconnection: false,
       });
       
@@ -28,6 +28,8 @@ const useSocket = () => {
         alert("Error connecting to socket");
       });
       return socket;
+    } else {
+      console.log("socketUrl is empty");
     }
   }
     

@@ -11,7 +11,7 @@ const Nav = () => {
       <div className="flex flex-col justify-center">
         <div className="text-xl font-bold">commit</div>
         <div className="text-xl font-bold">Pixel</div>
-      </div>
+      </div> 
     </div>
   );
 }
