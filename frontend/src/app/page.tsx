@@ -5,7 +5,6 @@ import Mobile from "./mobile/mobile";
 import { useEffect, useState } from "react";
 import { setDevice } from "@/store/slices/deviceSlice";
 import { RootState } from "@/store";
-import { setTool } from "@/store/slices/toolSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
