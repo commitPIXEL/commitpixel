@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 커밋 수와 문제 수 불러오기
-     *
+     * 15분 간격
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
@@ -49,13 +49,16 @@ public class UserServiceImpl implements UserService {
     public CreditRes refreshCredit(String accessToken) {
         log.info("refreshCredit start: " + accessToken);
 
-        Integer providerId = 1; // TODO: userRepository 사용
-        if (!lastUpdateCheckUtil.isPossibleToUpdate(String.valueOf(providerId))) {
+        Integer providerId = 1; // TODO: jwt accessToken으로 providerId 얻기
+        Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
+        // 마지막 업데이트 시간이 15분 미만이면 기존 정보 불러오기
+        if (lastUpdateStatus == -1) {
             return getTotalAndAvailableCredit(providerId);
         }
         String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName);
+        Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
+        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
         Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
 
         updateTotalCredit(providerId, commitNum + solvedNum);
@@ -117,8 +120,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 크레딧(전체, 누적) 반환 메서드 없다면(최초 가입) 0으로 set
-     *
+     * 크레딧(전체, 누적) 반환 메서드
+     * 없다면(최초 가입) 0으로 set
      * @param providerId providerId
      * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
      * @return Integer 크레딧
