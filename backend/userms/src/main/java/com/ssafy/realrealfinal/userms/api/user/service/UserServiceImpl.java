@@ -7,6 +7,7 @@ import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
+import com.ssafy.realrealfinal.userms.common.exception.user.RedisNotFoundException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
         Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
         Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
-
+        // 커밋 + 문제 수 합친 값으로 전체 크레딧 업데이트
         updateTotalCredit(providerId, commitNum + solvedNum);
         CreditRes creditRes = getTotalAndAvailableCredit(providerId);
 
@@ -86,11 +87,11 @@ public class UserServiceImpl implements UserService {
 //        log.info("updateUsedPixel end: " + updatedUsedPixel);
 //        return updatedUsedPixel;
 //    }
-
+    
     /**
      * 전체 크레딧 업데이트
-     *
-     * @param providerId       providerId
+     * 
+     * @param providerId
      * @param additionalCredit 추가 크레딧 수
      */
     private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
@@ -131,10 +132,10 @@ public class UserServiceImpl implements UserService {
         String key = String.valueOf(providerId);
         Integer credit = 0;
         try {
-            redisUtil.getData(key, type);
+            credit = redisUtil.getData(key, type);
             log.info("getCredit end: " + credit);
             return credit;
-        } catch (Exception e) {
+        } catch (RedisNotFoundException e) {
             redisUtil.setData(key, type, 0);
             log.warn("getCredit end: " + 0);
             return 0;
