@@ -2,6 +2,8 @@ package com.ssafy.realrealfinal.userms.common.util;
 
 
 import java.util.Map;
+
+import com.ssafy.realrealfinal.userms.common.exception.user.RedisNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
@@ -25,7 +27,7 @@ public class RedisUtil {
 //        return data;
 //    }
 
-    public Integer getData(String key, String type) throws Exception {
+    public Integer getData(String key, String type) throws RedisNotFoundException {
         log.info("getData start: " + key + " " + type);
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
 
