@@ -40,21 +40,6 @@ public class UserController {
     }
 
     /**
-     * 픽셀 찍을 때마다 누적 픽셀 수 업데이트
-     *
-     * @param accessToken jwt 액세스 토큰
-     * @return
-     */
-//    @GetMapping("/usedpixel")
-//    public ResponseEntity<Integer> updateUsedPixel(
-//        @RequestHeader(value = "accesstoken") String accessToken) {
-//        log.info("updateUsedPixel start: " + accessToken);
-//        Integer usedPixel = userService.updateUsedPixel(accessToken);
-//        log.info("updateUsedPixel end: " + usedPixel);
-//        return ResponseEntity.ok().body(usedPixel);
-//    }
-
-    /**
      * 건의사항 추가 - 일반 건의사항(0), url건의사항(1)
      *
      * @param accessToken jwt 액세스 토큰

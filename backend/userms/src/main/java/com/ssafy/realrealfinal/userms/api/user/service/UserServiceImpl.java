@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.realrealfinal.userms.api.user.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
@@ -37,12 +38,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final SolvedAcUtil solvedAcUtil;
+    private final WebSocketHandler webSocketHandler;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
 
     /**
      * 커밋 수와 문제 수 불러오기
      * 15분 간격
+     *
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
@@ -70,28 +73,40 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * KafkaListener 애노테이션을 이용해 메시지를 소비하는 메서드입니다. "usedPixelUser-topic" 토픽에서 메시지를 소비하며, 그룹 ID는
+     * "user-group"입니다.
+     * pixelms에서 kafka로 사용자의 providerId를 보내주면
+     * 그 사용자의 누적 사용 픽셀을 +1하고 웹소켓 클라이언트로 픽셀 수를 보냄
+     *
+     * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
+     */
+    @KafkaListener(topics = "usedPixelUser-topic", groupId = "user-group")
+    public void consumeUsedUserEvent(ConsumerRecord<Integer, Integer> record) {
+        Integer message = record.value();
+        updateUsedPixel(message);
+        // 웹소켓으로 누적 사용 픽셀 수 보냄
+        webSocketHandler.sendPixelCountToClients(getCredit(message, USED_PIXEL_KEY));
+    }
+
+    /**
      * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
      *
-     * @param accessToken jwt 토큰
-     * @return Integer 누적 사용 픽셀 수
+     * @param providerId
      */
     @Override
-    public Integer updateUsedPixel(String accessToken) {
-        log.info("updateUsedPixel start: " + accessToken);
+    public void updateUsedPixel(Integer providerId) {
+        log.info("updateUsedPixel start: " + providerId);
 
-        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
-        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+        Integer usedPixel = redisUtil.getData(String.valueOf(providerId), USED_PIXEL_KEY);
+        redisUtil.setData(String.valueOf(providerId), USED_PIXEL_KEY, usedPixel + 1);
 
-        log.info("updateUsedPixel end: " + updatedUsedPixel);
-        return updatedUsedPixel;
+        log.info("updateUsedPixel end");
     }
     
     /**
      * 전체 크레딧 업데이트
      * 
-     * @param providerId
+     * @param providerId 깃허브 providerId
      * @param additionalCredit 추가 크레딧 수
      */
     private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
@@ -107,7 +122,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 전체 크레딧, 사용 가능 크레딧 반환
      *
-     * @param providerId providerId
+     * @param providerId 깃허브 providerId
      * @return CreditRes
      */
     private CreditRes getTotalAndAvailableCredit(Integer providerId) {
@@ -123,6 +138,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 크레딧(전체, 누적) 반환 메서드
      * 없다면(최초 가입) 0으로 set
+     *
      * @param providerId providerId
      * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
      * @return Integer 크레딧
