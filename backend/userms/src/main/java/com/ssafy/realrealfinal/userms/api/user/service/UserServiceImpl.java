@@ -75,18 +75,18 @@ public class UserServiceImpl implements UserService {
      * @param accessToken jwt 토큰
      * @return Integer 누적 사용 픽셀 수
      */
-//    @Override
-//    public Integer updateUsedPixel(String accessToken) {
-//        log.info("updateUsedPixel start: " + accessToken);
-//
-//        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-//        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-//        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
-//        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-//
-//        log.info("updateUsedPixel end: " + updatedUsedPixel);
-//        return updatedUsedPixel;
-//    }
+    @Override
+    public Integer updateUsedPixel(String accessToken) {
+        log.info("updateUsedPixel start: " + accessToken);
+
+        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
+        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
+
+        log.info("updateUsedPixel end: " + updatedUsedPixel);
+        return updatedUsedPixel;
+    }
     
     /**
      * 전체 크레딧 업데이트
