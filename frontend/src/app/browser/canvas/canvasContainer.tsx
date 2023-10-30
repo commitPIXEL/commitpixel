@@ -60,13 +60,14 @@ const CanvasContainer = () => {
 
   // 웹소켓으로 pixel 받기
   useEffect(() => {
-    if (socket) {
+    if (socket && ctx) {
       socket.on("pixel", (pixel) => {
         const [x, y, r, g, b] = pixel;
-        setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
+        ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
+        ctx.fillRect(x, y, 1, 1);
       });
     }
-  }, [socket, setPixel]);
+  }, [socket]);
 
   useEffect(() => {
     if(imageUrl){
@@ -126,6 +127,8 @@ const CanvasContainer = () => {
 
       const canvasClick = (e: MouseEvent) => {
         e.preventDefault();
+        panzoomInstance.pause();
+        setTimeout(panzoomInstance.resume(), 200);
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         let r, g, b;
         if(tool === null) return;
@@ -133,6 +136,10 @@ const CanvasContainer = () => {
           case "panning":
             break;
           case "painting":
+            if(!panzoomInstance.isPaused) {
+              console.log("Panzoom is not paused");
+              break;
+            }
             audio.play();
             panzoomInstance.pause();
             r = color.rgb.r;
