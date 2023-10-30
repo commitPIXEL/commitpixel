@@ -45,12 +45,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 커밋 수와 문제 수 불러오기
      * 15분 간격
+     * pixelms에서 feign으로 호출해야 함 
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
     @Override
-    public CreditRes refreshCredit(String accessToken) {
+    public Integer refreshCredit(String accessToken) {
         log.info("refreshCredit start: " + accessToken);
 
         Integer providerId = 1; // TODO: jwt accessToken으로 providerId 얻기
@@ -59,106 +60,16 @@ public class UserServiceImpl implements UserService {
         if (lastUpdateStatus == -1) {
             return getTotalAndAvailableCredit(providerId);
         }
-        String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
+        String userName = "유저 테이블에서 providerId로 확인한 userName"; // TODO: userRepository 사용
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
         Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
         Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
-        // 커밋 + 문제 수 합친 값으로 전체 크레딧 업데이트
-        updateTotalCredit(providerId, commitNum + solvedNum);
-        CreditRes creditRes = getTotalAndAvailableCredit(providerId);
+        Integer refreshedCredit = commitNum + solvedNum;
 
-        log.info("refreshCredit end: " + creditRes);
-        return creditRes;
+        log.info("refreshCredit end: " + refreshedCredit);
+        return refreshedCredit;
     }
-
-    /**
-     * KafkaListener 애노테이션을 이용해 메시지를 소비하는 메서드입니다. "usedPixelUser-topic" 토픽에서 메시지를 소비하며, 그룹 ID는
-     * "user-group"입니다.
-     * pixelms에서 kafka로 사용자의 providerId를 보내주면
-     * 그 사용자의 누적 사용 픽셀을 +1하고 웹소켓 클라이언트로 픽셀 수를 보냄
-     *
-     * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
-     */
-    @KafkaListener(topics = "usedPixelUser-topic", groupId = "user-group")
-    public void consumeUsedUserEvent(ConsumerRecord<Integer, Integer> record) {
-        Integer message = record.value();
-        updateUsedPixel(message);
-        // 웹소켓으로 누적 사용 픽셀 수 보냄
-        webSocketHandler.sendPixelCountToClients(getCredit(message, USED_PIXEL_KEY));
-    }
-
-    /**
-     * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
-     *
-     * @param providerId
-     */
-    @Override
-    public void updateUsedPixel(Integer providerId) {
-        log.info("updateUsedPixel start: " + providerId);
-
-        Integer usedPixel = redisUtil.getData(String.valueOf(providerId), USED_PIXEL_KEY);
-        redisUtil.setData(String.valueOf(providerId), USED_PIXEL_KEY, usedPixel + 1);
-
-        log.info("updateUsedPixel end");
-    }
-    
-    /**
-     * 전체 크레딧 업데이트
-     * 
-     * @param providerId 깃허브 providerId
-     * @param additionalCredit 추가 크레딧 수
-     */
-    private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
-        log.info("updateTotalCredit start: " + providerId + ", " + additionalCredit);
-
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        redisUtil.setData(String.valueOf(providerId), TOTAL_CREDIT_KEY,
-            totalCredit + additionalCredit);
-
-        log.info("updateTotalCredit end");
-    }
-
-    /**
-     * 전체 크레딧, 사용 가능 크레딧 반환
-     *
-     * @param providerId 깃허브 providerId
-     * @return CreditRes
-     */
-    private CreditRes getTotalAndAvailableCredit(Integer providerId) {
-        log.info("getTotalAndAvailableCredit start: " + providerId);
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        Integer usedPixel = getCredit(providerId, USED_PIXEL_KEY);
-        CreditRes creditRes = new CreditRes(totalCredit, totalCredit - usedPixel);
-
-        log.info("getTotalAndAvailableCredit end: " + creditRes);
-        return creditRes;
-    }
-
-    /**
-     * 크레딧(전체, 누적) 반환 메서드
-     * 없다면(최초 가입) 0으로 set
-     *
-     * @param providerId providerId
-     * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
-     * @return Integer 크레딧
-     */
-    private Integer getCredit(Integer providerId, String type) {
-        log.info("getCredit start: " + providerId + " " + type);
-        String key = String.valueOf(providerId);
-        Integer credit = 0;
-        try {
-            credit = redisUtil.getData(key, type);
-            log.info("getCredit end: " + credit);
-            return credit;
-        } catch (RedisNotFoundException e) {
-            redisUtil.setData(key, type, 0);
-            log.warn("getCredit end: " + 0);
-            return 0;
-        }
-
-    }
-
 
     /**
      * 건의사항 추가

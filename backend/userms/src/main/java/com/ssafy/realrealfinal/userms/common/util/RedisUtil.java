@@ -17,26 +17,12 @@ public class RedisUtil {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-//    public Integer getData(String key, String type) {
-//        log.info("getData start: " + key + " " + type);
-//        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
-//        log.warn("getData mid: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//        log.warn("getData mid: " + hashOperations.toString());
-//        Integer data = Integer.parseInt(hashOperations.get(key, type));
-//        log.info("getData end: " + data);
-//        return data;
-//    }
-
     public Integer getData(String key, String type) throws RedisNotFoundException {
         log.info("getData start: " + key + " " + type);
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
-
-        log.warn("getData mid: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        log.warn("getData mid: " + hashOperations.get(key, type));
         Integer data = Integer.parseInt(hashOperations.get(key, type));
         log.info("getData end: " + data);
         return data;
-
     }
 
 

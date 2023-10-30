@@ -5,11 +5,10 @@ import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 
 public interface UserService {
 
-    CreditRes refreshCredit(String accessToken);
-
-    void updateUsedPixel(Integer providerId);
+    Integer refreshCredit(String accessToken);
 
     void addBoard(String accessToken, BoardReq boardReq);
+
     void login(String oauthUserInfo);
 
     void authSolvedAc(String solvedAcId, Integer providerId);
