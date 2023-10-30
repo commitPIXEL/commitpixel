@@ -62,12 +62,13 @@ const CanvasContainer = () => {
   useEffect(() => {
     if (socket && ctx) {
       socket.on("pixel", (pixel) => {
+        console.log(pixel);
         const [x, y, r, g, b] = pixel;
         ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
       });
     }
-  }, [socket]);
+  }, [socket, ctx]);
 
   useEffect(() => {
     if(imageUrl){
