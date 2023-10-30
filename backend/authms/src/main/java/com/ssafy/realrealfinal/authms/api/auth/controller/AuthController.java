@@ -85,8 +85,11 @@ public class AuthController {
     }
 
 
-    @GetMapping("feigntest")
-    String withBody(@RequestBody String test) {
-        return test + " connected by feign";
+    @GetMapping("/feigntest")
+    String feignTest(@RequestBody String test) {
+        log.info("feignTest start: " + test);
+        String result = test + " connected by feign";
+        log.info("feignTest end: " + result);
+        return result;
     }
 }
