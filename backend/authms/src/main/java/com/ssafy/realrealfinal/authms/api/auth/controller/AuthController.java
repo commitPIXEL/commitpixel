@@ -76,7 +76,7 @@ public class AuthController {
      * @return providerId
      */
     @GetMapping("/token")
-    public Integer getProviderIdByAccessToken(String accessToken) {
+    public Integer getProviderIdByAccessToken(@RequestParam String accessToken) {
         log.info("getProviderIdByJWT start: " + accessToken);
         Integer providerId = authService.getProviderIDFromAccessToken(accessToken);
         log.info("getProviderIdByJWT end: " + providerId);
