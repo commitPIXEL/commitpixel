@@ -43,7 +43,7 @@ const BoardBtn = () => {
                         <MenuItem value={1}>url 등록하기</MenuItem>    
                     </Select>
                 </FormControl>
-                {type ? <WhiteListInput handleClose={handleClose} reqMethod='POST' reqUrl='/user/board' /> : <BoardInput handleClose={handleClose} reqMethod='POST' reqUrl='/user/board' />}
+                {type ? <WhiteListInput handleClose={handleClose} reqMethod='POST' reqUrl='/user/board' type={type} /> : <BoardInput handleClose={handleClose} reqMethod='POST' reqUrl='/user/board' type={type} />}
             </Box>
         </Modal>
     </>
