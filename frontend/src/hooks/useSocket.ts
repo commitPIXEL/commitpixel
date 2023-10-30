@@ -8,6 +8,7 @@ const useSocket = () => {
   const connectToSocket = () => {
     if(true && socketUrl) {
       const socket = io(socketUrl, {
+        transports: ["websocket"],
         reconnection: false,
       });
       
