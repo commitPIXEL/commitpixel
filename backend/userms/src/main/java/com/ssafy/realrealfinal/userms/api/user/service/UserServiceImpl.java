@@ -7,6 +7,8 @@ import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
+import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
+import com.ssafy.realrealfinal.userms.common.exception.user.GetPixelDataException;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
@@ -210,7 +212,7 @@ public class UserServiceImpl implements UserService {
     /**
      * solvedAc 연동 본인인증 확인 절차
      *
-     * @param solvedAcId solved 아이디
+     * @param solvedAcId  solved 아이디
      * @param accessToken 깃허브 providerid. 추후 token으로 바뀔 예정
      */
     @Override
@@ -231,6 +233,25 @@ public class UserServiceImpl implements UserService {
         int total = getCredit(providerId, "total") + solvedCount;
         redisUtil.setData(String.valueOf(providerId), "total", total);
         log.info("authSolvedAc end: success");
+    }
+
+    @Override
+    public UserInfoRes getUserInfo(String accessToken) {
+        log.info("getUserInfo start: " + accessToken);
+        Integer providerId = authFeignClient.withQueryString(accessToken);
+        User user = userRepository.findByProviderId(providerId);
+        Integer totalPixel = 0;
+        Integer availablePixel = 0;
+        try {
+            totalPixel = redisUtil.getData(String.valueOf(providerId), "total");
+            availablePixel = totalPixel - redisUtil.getData(String.valueOf(providerId), "used");
+        } catch (Exception e) {
+            throw new GetPixelDataException();
+        }
+        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user, totalPixel,
+            availablePixel);
+        log.info("getUserInfo end: " + userInfoRes);
+        return userInfoRes;
     }
 
     /**
