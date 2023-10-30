@@ -3,11 +3,12 @@
 import {useState} from 'react';
 import Button from '@mui/material/Button';
 import Loading from './loading';
-import FetchWithAuth from '@/app/utils/fetchWithAuth';
+import useFetchWithAuth from '@/hooks/useFetch';
 
-const BoardInput: React.FC<{handleClose: () => void, reqMethod: string, reqUrl: string}> = ({handleClose, reqMethod, reqUrl}) => {
+const BoardInput: React.FC<{handleClose: () => void, reqMethod: string, reqUrl: string, type: number}> = ({handleClose, reqMethod, reqUrl, type}) => {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
+    const FetchWithAuth = useFetchWithAuth();
     
     const contentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(event.target.value);
@@ -17,7 +18,7 @@ const BoardInput: React.FC<{handleClose: () => void, reqMethod: string, reqUrl: 
         if(content.trim().length === 0) return;
 
         setLoading(true);
-        await FetchWithAuth(reqUrl, {method: reqMethod, body: JSON.stringify({content: content})})
+        await FetchWithAuth(reqUrl, {method: reqMethod, body: JSON.stringify({type: type, content: content})})
         .then(res => {
             console.log("res 값")
             console.log(res);
