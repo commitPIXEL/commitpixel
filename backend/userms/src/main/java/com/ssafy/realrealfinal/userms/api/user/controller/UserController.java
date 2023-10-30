@@ -91,7 +91,7 @@ public class UserController {
     }
 
     @GetMapping("/feigntest")
-    public ResponseEntity<?> feignTest(@RequestParam String test) {
+    public ResponseEntity<?> feignTest(@RequestBody String test) {
         String result = authFeignClient.withBody(test);
         return ResponseEntity.ok(result);
     }
