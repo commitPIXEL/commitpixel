@@ -99,7 +99,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/info")
+    @GetMapping("/")
     public ResponseEntity<?> getUserInfo(@RequestHeader(value = "accesstoken") String accessToken) {
         log.info("getUserInfo start: ");
         UserInfoRes userInfoRes = userService.getUserInfo(accessToken);
