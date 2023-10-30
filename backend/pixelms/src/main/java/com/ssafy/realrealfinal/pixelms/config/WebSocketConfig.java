@@ -16,7 +16,9 @@ public class WebSocketConfig {
         config.setHostname("0.0.0.0");
         config.setPort(3001);
         config.setOrigin("*");
-        config.setAllowHeaders("*");
+        // 타임아웃 설정
+        config.setPingTimeout(600000);  // 600초
+        config.setPingInterval(25000); // 25초
         return new SocketIOServer(config);
     }
 
