@@ -10,7 +10,8 @@ public interface UserService {
 //    Integer updateUsedPixel(String accessToken);
 
     void addBoard(String accessToken, BoardReq boardReq);
+
     void login(String oauthUserInfo);
 
-    void authSolvedAc(String solvedAcId, Integer providerId);
+    void authSolvedAc(String solvedAcId, String accessToken);
 }

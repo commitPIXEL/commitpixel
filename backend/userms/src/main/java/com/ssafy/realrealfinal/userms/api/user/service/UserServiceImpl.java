@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
@@ -39,6 +40,8 @@ public class UserServiceImpl implements UserService {
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
 
+    private final AuthFeignClient authFeignClient;
+
     /**
      * 커밋 수와 문제 수 불러오기
      *
@@ -49,7 +52,8 @@ public class UserServiceImpl implements UserService {
     public CreditRes refreshCredit(String accessToken) {
         log.info("refreshCredit start: " + accessToken);
 
-        Integer providerId = 1; // TODO: userRepository 사용
+        Integer providerId = authFeignClient.withQueryString(
+            accessToken); // TODO: userRepository 사용
         if (!lastUpdateCheckUtil.isPossibleToUpdate(String.valueOf(providerId))) {
             return getTotalAndAvailableCredit(providerId);
         }
@@ -207,12 +211,13 @@ public class UserServiceImpl implements UserService {
      * solvedAc 연동 본인인증 확인 절차
      *
      * @param solvedAcId solved 아이디
-     * @param providerId 깃허브 providerid. 추후 token으로 바뀔 예정
+     * @param accessToken 깃허브 providerid. 추후 token으로 바뀔 예정
      */
     @Override
     @Transactional
-    public void authSolvedAc(String solvedAcId, Integer providerId) {
-        log.info("authSolvedAc start: " + solvedAcId + " " + providerId);
+    public void authSolvedAc(String solvedAcId, String accessToken) {
+        log.info("authSolvedAc start: " + solvedAcId + " " + accessToken);
+        Integer providerId = authFeignClient.withQueryString(accessToken);
         Integer solvedCount = solvedAcUtil.authorizeSolvedAc(solvedAcId);
         User isUsed = userRepository.findBySolvedAcId(solvedAcId);
         if (isUsed != null) {

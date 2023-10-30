@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.controller;
 
+import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
@@ -23,6 +24,7 @@ public class UserController {
 
     private final UserService userService;
     private final String SUCCESS = "success";
+    private final AuthFeignClient authFeignClient;
 
     /**
      * 크레딧 업데이트
@@ -73,19 +75,27 @@ public class UserController {
     /**
      * solved 연동
      *
-     * @param solvedAcId 사용자가 직접 입력한 아이디
-     * @param providerId 추후 header token으로 변경할 예정.
+     * @param solvedAcId  사용자가 직접 입력한 아이디
+     * @param accessToken 추후 header token으로 변경할 예정.
      * @return 인증 성공/실패
      */
     @PatchMapping("/solvedac/auth")
-    public ResponseEntity<?> authSolvedAc(@RequestParam String solvedAcId,
-        @RequestParam Integer providerId) {
-        log.info("authSolvedAc start: " + solvedAcId + " " + providerId);
-        userService.authSolvedAc(solvedAcId, providerId);
+    public ResponseEntity<?> authSolvedAc(@RequestHeader(value = "accesstoken") String accessToken,
+        @RequestParam String solvedAcId) {
+        log.info("authSolvedAc start: " + solvedAcId + " " + accessToken);
+        userService.authSolvedAc(solvedAcId, accessToken);
         log.info("authSolvedAc end: success");
         return ResponseEntity.ok().build();
 
 
+    }
+
+    @PostMapping("/feigntest")
+    public ResponseEntity<?> feignTest(@RequestBody String test) {
+        log.info("feignTest start: " + test);
+        String result = authFeignClient.withBody(test);
+        log.info("feignTest end: " + result);
+        return ResponseEntity.ok(result);
     }
 
 
