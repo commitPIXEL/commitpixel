@@ -13,7 +13,7 @@ public class WebSocketConfig {
     public SocketIOServer socketIoServer() {
         //Configuration 충돌 해결을 위해 풀패키지 이름 사용
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
-        config.setHostname("");
+        config.setHostname("0.0.0.0");
         config.setPort(3001);
         config.setOrigin("*");
         // 타임아웃 설정
