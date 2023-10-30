@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
+import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,5 +99,11 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-
+    @GetMapping("/")
+    public ResponseEntity<?> getUserInfo(@RequestHeader(value = "accesstoken") String accessToken) {
+        log.info("getUserInfo start: ");
+        UserInfoRes userInfoRes = userService.getUserInfo(accessToken);
+        log.info("getUserInfo end: " + userInfoRes);
+        return ResponseEntity.ok(userInfoRes);
+    }
 }
