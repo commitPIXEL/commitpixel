@@ -90,9 +90,11 @@ public class UserController {
 
     }
 
-    @GetMapping("/feigntest")
+    @PostMapping("/feigntest")
     public ResponseEntity<?> feignTest(@RequestBody String test) {
+        log.info("feignTest start: " + test);
         String result = authFeignClient.withBody(test);
+        log.info("feignTest end: " + result);
         return ResponseEntity.ok(result);
     }
 

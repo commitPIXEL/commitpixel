@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name="auth",url = "http://k9a709.p.ssafy.io:8181")
 public interface AuthFeignClient {
 
-//    @GetMapping("auth/token")
-//    Integer withQueryString(@RequestParam String accessToken);
+    @GetMapping("auth/token")
+    Integer withQueryString(@RequestParam String accessToken);
 
     @PostMapping("auth/feigntest")
     String withBody(@RequestBody String test);
