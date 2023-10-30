@@ -46,7 +46,7 @@ public class WebSocketHandler {
             return;
         }
         for (SocketIOClient clientSession : CLIENTS.values()) {
-            if (clientSession.isChannelOpen()) {
+            if (!client.getSessionId().equals(clientSession.getSessionId())&&clientSession.isChannelOpen()) {
                 clientSession.sendEvent("pixel", pixelDtoList);
             }
         }
