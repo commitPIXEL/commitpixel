@@ -18,5 +18,5 @@ public interface UserService {
 
     UserInfoRes getUserInfo(String accessToken);
 
-    void checkWhitelist(String accessToken);
+    void updateUrl(String accessToken, String url);
 }

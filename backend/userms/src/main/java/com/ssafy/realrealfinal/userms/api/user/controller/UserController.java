@@ -76,14 +76,16 @@ public class UserController {
     /**
      * 사용자 url 변경
      *
+     * @param accessToken jwt 액세스 토큰
      * @param url
      * @return 200 Ok(url 변경 성공), 404 NOT_FOUND(변경 url whitelist에 없음)
      */
-    @GetMapping("/whitelist")
-    public ResponseEntity<?> updateUrl(String url) {
+    @PatchMapping("/whitelist")
+    public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
+        String url) {
         log.info("updateUrl start: " + url);
-        userService.checkWhitelist(url);
-        log.info("addBoard end: " + SUCCESS);
+        userService.updateUrl(accessToken, url);
+        log.info("updateUrl end: " + SUCCESS);
         return ResponseEntity.ok().build();
     }
 

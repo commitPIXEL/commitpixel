@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         //"유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
         if (boardReq.getType() == 1) {
             String url = boardReq.getContent();
-            Whitelist whitelist = whitelistRepository.findByUrl(url);
+            Whitelist whitelist = whitelistRepository.findFirstByUserUrl(url);
             if (whitelist != null) {
                 throw new WhitelistNotSavedException();
             }
@@ -271,17 +271,18 @@ public class UserServiceImpl implements UserService {
      *
      * @param url 사용자 요청 url
      */
-    public void checkWhitelist(String url) {
-        log.info("checkWhitelist start: " + url);
-        if (url.startsWith("https://github.com/")) {
-            return;
-        }
-
-        Whitelist whitelist = whitelistRepository.findByUrl(url);
+    public void updateUrl(String accessToken, String url) {
+        log.info("updateUrl start: " + url);
+        Whitelist whitelist = whitelistRepository.findFirstByUserUrl(url);
         if (whitelist == null) {
             throw new WhitelistNotFoundException();
         }
-        log.info("chcekUrl end: " + whitelist);
+        log.info("updateUrl mid: " + whitelist);
+        Integer providerId = authFeignClient.withQueryString(accessToken);
+        User user = userRepository.findByProviderId(providerId);
+        user.updateUrl(url);
+        userRepository.save(user);
+        log.info("updateUrl end: " + user);
     }
 
     /**
