@@ -2,7 +2,7 @@ import { faEyeDropper, faHand, faPaintBrush } from "@fortawesome/free-solid-svg-
 import MenuItem from "./pickerMenuItem";
 
 const Menu = () => {
-  return <div className="mt-6 flex justify-between items-center w-[70%]">
+  return <div className="mt-2 mb-6 flex justify-between items-center w-[70%]">
     <MenuItem icon={faPaintBrush} toolName="painting" />
     <MenuItem icon={faEyeDropper} toolName="copying" />
   </div>;
