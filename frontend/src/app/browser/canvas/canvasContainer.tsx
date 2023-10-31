@@ -118,6 +118,9 @@ const CanvasContainer = () => {
 
       const canvasClick = (e: MouseEvent) => {
         if(e.button !== 0) return;
+        if(e.detail == 2) {
+          e.preventDefault();
+        }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         if(tool === null || tool === undefined) {
           console.log("url 요청 웹소켓 전송 시도");
