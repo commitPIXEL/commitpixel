@@ -17,4 +17,6 @@ public interface UserService {
     void authSolvedAc(String solvedAcId, String accessToken);
 
     UserInfoRes getUserInfo(String accessToken);
+
+    void checkWhitelist(String accessToken);
 }

@@ -11,14 +11,18 @@ import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.GetPixelDataException;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
+import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotFoundException;
+import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotSavedException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
 import com.ssafy.realrealfinal.userms.common.util.RedisUtil;
 import com.ssafy.realrealfinal.userms.common.util.SolvedAcUtil;
 import com.ssafy.realrealfinal.userms.db.entity.Board;
 import com.ssafy.realrealfinal.userms.db.entity.User;
+import com.ssafy.realrealfinal.userms.db.entity.Whitelist;
 import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
 import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
+import com.ssafy.realrealfinal.userms.db.repository.WhitelistRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final WhitelistRepository whitelistRepository;
     private final SolvedAcUtil solvedAcUtil;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
@@ -155,6 +160,13 @@ public class UserServiceImpl implements UserService {
     public void addBoard(String accessToken, BoardReq boardReq) {
         Integer providerId = 1;
         //"유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        if (boardReq.getType() == 1) {
+            String url = boardReq.getContent();
+            Whitelist whitelist = whitelistRepository.findByUrl(url);
+            if (whitelist != null) {
+                throw new WhitelistNotSavedException();
+            }
+        }
         User user = userRepository.findByProviderId(providerId);
         Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
         boardRepository.save(board);
@@ -252,6 +264,24 @@ public class UserServiceImpl implements UserService {
             availablePixel);
         log.info("getUserInfo end: " + userInfoRes);
         return userInfoRes;
+    }
+
+    /**
+     * 사용자가 요청한 url이 Whitelist에 있는지 확인
+     *
+     * @param url 사용자 요청 url
+     */
+    public void checkWhitelist(String url) {
+        log.info("checkWhitelist start: " + url);
+        if (url.startsWith("https://github.com/")) {
+            return;
+        }
+
+        Whitelist whitelist = whitelistRepository.findByUrl(url);
+        if (whitelist == null) {
+            throw new WhitelistNotFoundException();
+        }
+        log.info("chcekUrl end: " + whitelist);
     }
 
     /**
