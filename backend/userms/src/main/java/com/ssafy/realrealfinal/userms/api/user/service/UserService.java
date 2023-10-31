@@ -1,11 +1,10 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
-import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 
 public interface UserService {
 
-    Integer refreshCredit(String accessToken);
+    Integer refreshCreditFromClient(String accessToken);
 
     void addBoard(String accessToken, BoardReq boardReq);
 

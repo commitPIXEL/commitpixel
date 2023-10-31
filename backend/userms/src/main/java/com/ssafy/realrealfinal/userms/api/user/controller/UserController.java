@@ -1,7 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.controller;
 
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
-import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +33,9 @@ public class UserController {
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshCredit start: " + accessToken);
-        CreditRes creditRes = userService.refreshCredit(accessToken);
-        log.info("refreshCredit end: " + creditRes);
-        return ResponseEntity.ok().body(creditRes);
+        Integer refreshedCredit = userService.refreshCreditFromClient(accessToken);
+        log.info("refreshCredit end: " + refreshedCredit);
+        return ResponseEntity.ok().body(refreshedCredit);
     }
 
     /**

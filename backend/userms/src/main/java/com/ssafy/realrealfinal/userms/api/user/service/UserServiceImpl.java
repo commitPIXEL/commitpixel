@@ -43,16 +43,44 @@ public class UserServiceImpl implements UserService {
     /**
      * 커밋 수와 문제 수 불러오기
      * 15분 간격
-     * pixelms에서 feign으로 호출해야 함 
+     * pixelms에서 kafka로 호출해야 함 
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
     @Override
-    public Integer refreshCredit(String accessToken) {
-        log.info("refreshCredit start: " + accessToken);
+    public Integer refreshCreditFromClient(String accessToken) {
+        log.info("refreshCreditFromClient start: " + accessToken);
 
         Integer providerId = 1; // TODO: jwt accessToken으로 providerId 얻기
+        Integer refreshedCredit = refreshCredit(providerId);
+
+        log.info("refreshCreditFromClient end: " + refreshedCredit);
+        return refreshedCredit;
+    }
+
+    /**
+     * 서버 내에서 호출
+     *
+     * @param providerId
+     * @return
+     */
+    public Integer refreshCreditFromServer(Integer providerId) {
+        log.info("refreshCreditFromServer start: " + providerId);
+
+        Integer refreshedCredit = refreshCredit(providerId);
+
+        log.info("refreshCreditFromServer end: " + refreshedCredit);
+        return refreshedCredit;
+    }
+
+    /**
+     * refreshCreditFromClient와 refreshCreditFromServer의 공통 로직
+     *
+     * @param providerId
+     * @return
+     */
+    private Integer refreshCredit(Integer providerId) {
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
         // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
         if (lastUpdateStatus == -1) {
@@ -62,7 +90,8 @@ public class UserServiceImpl implements UserService {
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
         Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
-        Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
+        // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
+        Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer refreshedCredit = commitNum + solvedNum;
 
         log.info("refreshCredit end: " + refreshedCredit);
@@ -125,10 +154,10 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             user = UserMapper.INSTANCE.toNewUser(githubNickname, profileImage, providerId, url);
             userRepository.save(user);
-            //TODO: 깃허브 커밋수 가져와서 넣어두는 작업 (7일치)
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
+        refreshCreditFromServer(providerId);
         log.info("login end: " + user);
     }
 
@@ -152,8 +181,8 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount;
-        redisUtil.setData(String.valueOf(providerId), "total", total);
+//        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount; // 없는 redis입니다!!!
+//        redisUtil.setData(String.valueOf(providerId), "total", total); // 없는 redis입니다!!!
         log.info("authSolvedAc end: success");
     }
 
