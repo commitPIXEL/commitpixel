@@ -4,7 +4,11 @@ import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,17 +28,17 @@ public class PixelServiceImpl implements PixelService {
     public void updateUsedPixel(Integer providerId) {
         log.info("updateUsedPixel start: " + providerId);
 
-        Integer usedPixel = redisUtil.getData(String.valueOf(providerId), USED_PIXEL_KEY);
+        Integer usedPixel = redisUtil.getIntegerData(String.valueOf(providerId), USED_PIXEL_KEY);
         redisUtil.setData(String.valueOf(providerId), USED_PIXEL_KEY, usedPixel + 1);
 
         log.info("updateUsedPixel end");
     }
 
     /**
-     * 가용 픽셀 수 반환
+     * 사용자가 픽셀 찍고 나서 남은 사용 가능한 픽셀 수 반환
      *
      * @param providerId
-     * @return
+     * @return 가용 픽셀 수
      */
     @Override
     public Integer getAvailableCredit(Integer providerId) {
@@ -61,7 +65,7 @@ public class PixelServiceImpl implements PixelService {
         String key = String.valueOf(providerId);
         Integer credit = 0;
         try {
-            credit = redisUtil.getData(key, type);
+            credit = redisUtil.getIntegerData(key, type);
             log.info("getCredit end: " + credit);
             return credit;
         } catch (RedisNotFoundException e) {
@@ -75,7 +79,7 @@ public class PixelServiceImpl implements PixelService {
     /**
      * 전체 크레딧 업데이트
      *
-     * @param providerId 깃허브 providerId
+     * @param providerId       providerId
      * @param additionalCredit 추가 크레딧 수
      */
     private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
@@ -88,5 +92,21 @@ public class PixelServiceImpl implements PixelService {
         log.info("updateTotalCredit end");
     }
 
+    /**
+     * KafkaListener 애노테이션을 이용해 메시지를 소비하는 메서드입니다.
+     * "total-credit-topic" 토픽에서 메시지를 소비하며,
+     * 그룹 ID는 "pixel-group"입니다.
+     *
+     * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
+     */
+    @KafkaListener(topics = "total-credit-topic", groupId = "pixel-group")
+    public void consumeLoginEvent(ConsumerRecord<String, Map<Integer, Integer>> record) {
+        Map<Integer, Integer> map = record.value();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer providerId = entry.getKey();
+            Integer totalCredit = entry.getValue();
+            updateTotalCredit(providerId, totalCredit);
+        }
+    }
 
 }
