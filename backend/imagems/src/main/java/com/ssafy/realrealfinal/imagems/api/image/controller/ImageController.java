@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.BufferedImage;
-
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/image")
@@ -34,21 +32,22 @@ public class ImageController {
             .body(convertedImage);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<byte[]> test() throws Exception {
-        log.info("test start");
-
-
+    /**
+     * 요청시 s3에 저장된 이미지 24시간 치 데이터를 gif로 만들어서 반환
+     *
+     * @return gif
+     */
+    @GetMapping("/timelapse")
+    public ResponseEntity<byte[]> timelapse(){
+        log.info("timelapse start");
         byte[] gifBytes = imageService.getGIF();
-
-        log.info("test end");
+        log.info("timelapse end: SUCCESS");
 
         // 바이트 배열을 HTTP 응답 본문으로 설정하고 응답을 반환.
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_GIF) // 컨텐츠 타입을 GIF로 설정
             .body(gifBytes);
     }
-
 
 
 }
