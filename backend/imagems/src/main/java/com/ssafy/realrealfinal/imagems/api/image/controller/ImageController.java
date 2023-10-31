@@ -1,7 +1,7 @@
 package com.ssafy.realrealfinal.imagems.api.image.controller;
 
 import com.ssafy.realrealfinal.imagems.api.image.service.ImageService;
-import com.ssafy.realrealfinal.imagems.common.util.TimelapseUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -10,11 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +19,6 @@ import java.io.File;
 public class ImageController {
 
     private final ImageService imageService;
-    private final TimelapseUtil timelapseUtil;
 
     @PostMapping("/convert")
     public ResponseEntity<byte[]> convertImage(
@@ -39,49 +34,21 @@ public class ImageController {
             .body(convertedImage);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<?> test() throws Exception {
-        // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
-        BufferedImage first = ImageIO.read(new File("C:\\Users\\SSAFY\\Downloads\\1.png"));
-        first = convertToIndexed(first); // 색상 모델을 조절.
+    @GetMapping("/test")
+    public ResponseEntity<byte[]> test() throws Exception {
+        log.info("test start");
 
-        // GIF 파일을 저장할 출력 스트림을 생성.
-        ImageOutputStream output = new FileImageOutputStream(new File("/tmp/example.gif"));
 
-        // GifSequenceWriter 객체를 생성. 이 객체는 GIF 이미지 시퀀스를 작성하는 데 사용됨.
-        TimelapseUtil writer = new TimelapseUtil(output, first.getType(), 250, true);
+        byte[] gifBytes = imageService.getGIF();
 
-        // 첫 번째 이미지를 GIF 시퀀스에 작성.
-        writer.writeToSequence(first);
+        log.info("test end");
 
-        // 작성할 추가 이미지의 파일 객체 배열을 생성.
-        File[] images = new File[]{
-            new File("C:\\Users\\SSAFY\\Downloads\\1.png"),
-            new File("C:\\Users\\SSAFY\\Downloads\\2.png"),
-            new File("C:\\Users\\SSAFY\\Downloads\\3.png"),
-        };
-
-        // 각 이미지에 대해
-        for (File image : images) {
-            // 이미지를 읽고 BufferedImage 객체로 로드.
-            BufferedImage next = ImageIO.read(image);
-            next = convertToIndexed(next); // 색상 모델을 조절.
-
-            // 해당 이미지를 GIF 시퀀스에 작성.
-            writer.writeToSequence(next);
-        }
-
-        // writer와 출력 스트림을 닫아 리소스를 해제.
-        writer.close();
-        output.close();
-
-        return ResponseEntity.ok().build();
+        // 바이트 배열을 HTTP 응답 본문으로 설정하고 응답을 반환.
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_GIF) // 컨텐츠 타입을 GIF로 설정
+            .body(gifBytes);
     }
 
-    public static BufferedImage convertToIndexed(BufferedImage src) {
-        BufferedImage dest = new BufferedImage(src.getWidth(), src.getHeight(),
-            BufferedImage.TYPE_BYTE_INDEXED);
-        dest.getGraphics().drawImage(src, 0, 0, null);
-        return dest;
-    }
+
+
 }

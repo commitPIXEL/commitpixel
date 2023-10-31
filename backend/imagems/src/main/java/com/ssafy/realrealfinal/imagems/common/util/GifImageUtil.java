@@ -10,10 +10,10 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 
-// TimelapseUtil 클래스를 선언. 이 클래스는 GIF 이미지를 생성하는 데 사용됨.
+// GifImageUtil 클래스를 선언. 이 클래스는 GIF 이미지를 생성하는 데 사용됨.
 @RequiredArgsConstructor
 @Component
-public class TimelapseUtil {
+public class GifImageUtil {
 
     // 멤버 변수 선언. writer는 이미지를 쓰는 데 사용되고, params는 쓰기 매개 변수, metadata는 이미지 메타데이터를 포함.
     protected ImageWriter writer;
@@ -21,7 +21,7 @@ public class TimelapseUtil {
     protected IIOMetadata metadata;
 
     // 생성자. GIF 이미지의 설정을 초기화하는 데 사용됨.
-    public TimelapseUtil(ImageOutputStream out, int imageType, int delay, boolean loop)
+    public GifImageUtil(ImageOutputStream out, int imageType, int delay, boolean loop)
         throws IOException {
         // 이미지 작성자를 얻어 writer에 할당.
         writer = ImageIO.getImageWritersBySuffix("gif").next();
