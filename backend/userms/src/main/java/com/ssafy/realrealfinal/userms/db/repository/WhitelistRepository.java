@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface WhitelistRepository extends JpaRepository<Whitelist, Integer> {
 
     // WHERE:url의 url은 매개변수 url
-    // CONCAT(url, '%')의 url은 entity Whitelist의 url
-    @Query(value = "SELECT * FROM whitelist WHERE :url LIKE CONCAT(url, '%') LIMIT 1", nativeQuery = true)
+    // CONCAT(domain, '%')의 domain은 DB whitelist table의 컬럼 domain
+    @Query(value = "SELECT * FROM whitelist WHERE :url LIKE CONCAT(domain, '%') LIMIT 1", nativeQuery = true)
     Whitelist findFirstByUserUrl(String url);
 
 }
