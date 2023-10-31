@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.userms.api.user.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
-import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
-import com.ssafy.realrealfinal.userms.common.exception.user.RedisNotFoundException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
@@ -56,9 +54,9 @@ public class UserServiceImpl implements UserService {
 
         Integer providerId = 1; // TODO: jwt accessToken으로 providerId 얻기
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
-        // 마지막 업데이트 시간이 15분 미만이면 기존 정보 불러오기
+        // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
         if (lastUpdateStatus == -1) {
-            return getTotalAndAvailableCredit(providerId);
+            return 0;
         }
         String userName = "유저 테이블에서 providerId로 확인한 userName"; // TODO: userRepository 사용
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
@@ -154,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-        int total = getCredit(providerId, "total") + solvedCount;
+        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount;
         redisUtil.setData(String.valueOf(providerId), "total", total);
         log.info("authSolvedAc end: success");
     }
