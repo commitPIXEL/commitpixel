@@ -7,6 +7,7 @@ import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
+import { Snackbar } from "@mui/material";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const CanvasContainer = () => {
   const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [urlData, setUrlData] = useState<any>(null);
+  const [open, setOpen] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
@@ -52,7 +55,7 @@ const CanvasContainer = () => {
         ctx.fillRect(x, y, 1, 1);
       });
       socket.on("url", (urlData) => {
-        console.log(urlData);
+        setUrlData(urlData);
       });
     }
   }, [socket, ctx]);
@@ -146,6 +149,8 @@ const CanvasContainer = () => {
       const onMouseUp = (e: MouseEvent) => {
         if(tool === "painting" || tool === "copying") {
           panzoomInstance.resume();
+        } else {
+          setOpen(true);
         }
       };
 
@@ -160,6 +165,10 @@ const CanvasContainer = () => {
       };
     }
   }, [color, setPixel, tool, panzoomInstance, rgbToHex]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="col-span-3 max-h-full">
@@ -203,9 +212,24 @@ const CanvasContainer = () => {
                 >
                   캔버스를 지원하지 않는 브라우저입니다. 크롬으로 접속해주세요!
                 </canvas>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: cursorPos.y + 1,
+                    left: cursorPos.x + 1.25,
+                    width: 0,
+                    height: 0,
+                  }}
+                ></div>
               </div>
             </div>
           </div>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <div className="bg-white rounded p-4">
+              <div className="cursor-pointer">{urlData?.userId}</div> 
+              <div className="cursor-pointer" onClick={() => {window.open("https://www.naver.com/", "_blank")}}>{urlData?.url}</div> 
+            </div>
+          </Snackbar>
         </div>
       )}
     </div>
