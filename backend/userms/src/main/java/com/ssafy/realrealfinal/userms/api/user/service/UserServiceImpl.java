@@ -3,7 +3,6 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.realrealfinal.userms.api.user.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
