@@ -4,6 +4,7 @@ import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
+import TestCanvas from "./canvas/testCanvas";
 
 const Browser = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ const Browser = () => {
     <main onKeyDown={handleKeyDown} className="w-screen h-screen bg-bgColor">
           <Nav />
           <div className="grid grid-cols-4 w-full h-[92%] place-items-center">
+            {/* TODO: 개발 버전과 Test버전 캔버스 잘 구별하기 */}
             <CanvasContainer />
+            {/* <TestCanvas /> */}
             <Sidebar />
           </div>
     </main>
