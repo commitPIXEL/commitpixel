@@ -42,32 +42,17 @@ const CanvasContainer = () => {
     }
   }, [ctx, socket]);
 
-  useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 1) {
-        e.preventDefault();
-        return false;
-      }
-    };
-  
-    document.body.addEventListener('mousedown', handleMouseDown);
-  
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-    return () => {
-      document.body.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, []);
-
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
       socket.on("pixel", (pixel) => {
+        console.log(pixel);
         const [x, y, r, g, b] = pixel;
         ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
       });
     }
-  }, [socket]);
+  }, [socket, ctx]);
 
   useEffect(() => {
     if(imageUrl){
