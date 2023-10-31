@@ -28,27 +28,27 @@ public class GithubUtil {
         .build();
 
     /**
-     *
      * @param githubAccessToken 깃허브 토큰
-     * @param userName 깃허브 닉네임
-     * @param lastUpdateStatus 마지막 업데이트 상태
-     * @param lastUpdateTime 마지막 업데이트 일시
+     * @param userName          깃허브 닉네임
+     * @param lastUpdateStatus  마지막 업데이트 상태
+     * @param lastUpdateTime    마지막 업데이트 일시
      * @return 커밋 수
      */
-    public Integer getCommit(String githubAccessToken, String userName, Integer lastUpdateStatus, Long lastUpdateTime) {
+    public Integer getCommit(String githubAccessToken, String userName, Integer lastUpdateStatus,
+        Long lastUpdateTime) {
 
         log.info("getCommit start: " + userName + " " + lastUpdateStatus + " " + lastUpdateTime);
 
         // webclient로 github api 호출
         Mono<JsonNode> githubEventList = githubWebClient
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/users/{username}/events")
-                        .queryParam("per_page", 100)
-                        .build(userName))
-                .header("Authorization", "Bearer " + githubAccessToken)
-                .retrieve()
-                .bodyToMono(JsonNode.class);
+            .get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/users/{username}/events")
+                .queryParam("per_page", 100)
+                .build(userName))
+            .header("Authorization", "Bearer " + githubAccessToken)
+            .retrieve()
+            .bodyToMono(JsonNode.class);
 
         Integer commits = filterEvent(githubEventList, lastUpdateStatus, lastUpdateTime);
 
@@ -57,48 +57,41 @@ public class GithubUtil {
     }
 
     /**
-     *
      * @param githubEventList
      * @param lastUpdateStatus
      * @param lastUpdateTime
      * @return
      */
-    private Integer filterEvent(Mono<JsonNode> githubEventList, Integer lastUpdateStatus, Long lastUpdateTime) {
+    private Integer filterEvent(Mono<JsonNode> githubEventList, Integer lastUpdateStatus,
+        Long lastUpdateTime) {
         // 현재 시간 설정
         ZonedDateTime now = ZonedDateTime.now();
 
         // lastUpdateTime 설정
-        ZonedDateTime lastUpdateZonedDateTime = Instant.ofEpochMilli(lastUpdateTime).atZone(ZoneId.systemDefault());
-
-        // 현재와 lastUpdateTime 사이의 기간 계산
-        long daysBetween = Duration.between(lastUpdateZonedDateTime, now).toDays();
+        ZonedDateTime lastUpdateZonedDateTime = Instant.ofEpochMilli(lastUpdateTime)
+            .atZone(ZoneId.systemDefault());
 
         // type = PushEvent, 날짜 필터링 조건 설정
         return githubEventList
-                .flatMapMany(jsonNode -> Flux.fromIterable(jsonNode))
-                .filter(event -> "PushEvent".equals(event.path("type").asText()))
-                .filter(event -> {
-                    ZonedDateTime eventTime = ZonedDateTime.parse(
-                            event.path("created_at").asText(),
-                            DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            .flatMapMany(jsonNode -> Flux.fromIterable(jsonNode))
+            .filter(event -> "PushEvent".equals(event.path("type").asText()))
+            .filter(event -> {
+                ZonedDateTime eventTime = ZonedDateTime.parse(
+                    event.path("created_at").asText(),
+                    DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-                    if (lastUpdateStatus == 0) { // 최초 사용자라면 7일 이내 이벤트만
-                        return eventTime.isAfter(lastUpdateZonedDateTime.minusDays(7)) && eventTime.isBefore(lastUpdateZonedDateTime);
-                    } else if (lastUpdateStatus == 1) { // 기존 사용자이면서 마지막 업데이트로부터 15분 이후라면
-                        if (daysBetween > 7) { // 마지막 업데이트가 7일보다 오래전이라면
-                            return eventTime.isAfter(now.minusDays(7)) && eventTime.isBefore(now);
-                        } else {
-                            return eventTime.isAfter(lastUpdateZonedDateTime) && eventTime.isBefore(now);
-                        }
-                    } else {
-                        return false;
-                    }
-                })
-                .count()
-                // 최근 90일 이내 아무런 이벤트가 없다면 0 리턴
-                .defaultIfEmpty(0L)
-                .map(Long::intValue)
-                .block();
+                if (lastUpdateStatus == 0) { // 최초 사용자라면 7일 이내 이벤트만
+                    return eventTime.isAfter(lastUpdateZonedDateTime.minusDays(7))
+                        && eventTime.isBefore(lastUpdateZonedDateTime);
+                } else { // 기존 사용자이면서 마지막 업데이트로부터 15분 이후라면
+                    return eventTime.isAfter(lastUpdateZonedDateTime) && eventTime.isBefore(now);
+                }
+            })
+            .count()
+            // 최근 90일 이내 아무런 이벤트가 없다면 0 리턴
+            .defaultIfEmpty(0L)
+            .map(Long::intValue)
+            .block();
     }
 
 
