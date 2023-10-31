@@ -40,7 +40,7 @@ public class ImageController {
     @GetMapping("/timelapse")
     public ResponseEntity<byte[]> timelapse(){
         log.info("timelapse start");
-        byte[] gifBytes = imageService.getGIF();
+        byte[] gifBytes = imageService.getGif();
         log.info("timelapse end: SUCCESS");
 
         // 바이트 배열을 HTTP 응답 본문으로 설정하고 응답을 반환.

@@ -6,6 +6,6 @@ public interface ImageService {
 
     byte[] convertImage(String accessToken, MultipartFile file, Integer type);
 
-    byte[] getGIF();
+    byte[] getGif();
 
 }

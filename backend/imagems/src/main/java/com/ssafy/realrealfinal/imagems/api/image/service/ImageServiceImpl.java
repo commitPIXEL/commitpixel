@@ -72,7 +72,7 @@ public class ImageServiceImpl implements ImageService {
      * @return GIF로 전환할 정보
      */
     @Override
-    public byte[] getGIF() {
+    public byte[] getGif() {
         log.info("getGIF start");
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime twentyFourHoursAgo = now.minusHours(24);
