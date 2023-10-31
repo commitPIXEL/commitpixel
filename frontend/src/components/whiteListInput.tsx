@@ -5,11 +5,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Loading from './loading';
-import FetchWithAuth from '@/app/utils/fetchWithAuth';
+import useFetchWithAuth from '@/hooks/useFetch';
 
-const WhiteListInput: React.FC<{handleClose: () => void, reqMethod: string, reqUrl: string}> = ({handleClose, reqMethod, reqUrl}) => {
+const WhiteListInput: React.FC<{handleClose: () => void, reqMethod: string, reqUrl: string, type: number}> = ({handleClose, reqMethod, reqUrl, type}) => {
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
+    const customFetch = useFetchWithAuth();
     
     const urlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUrl(event.target.value);
@@ -19,17 +20,15 @@ const WhiteListInput: React.FC<{handleClose: () => void, reqMethod: string, reqU
         if(url.trim().length === 0) return;
 
         setLoading(true);
-        await FetchWithAuth(reqUrl, {method: reqMethod, body: JSON.stringify({content: url})})
-        .then(res => {
-            console.log("res 값")
-            console.log(res);
-        }).catch(err => {
-            console.log("err 발생");
-            console.log(err);
-        }).finally(() => {
+        try {
+            const data = await customFetch(reqUrl, {method: reqMethod, body: JSON.stringify({type: type, content: url})});
+            console.log(data);
+        } catch(err) {
+            console.error("Error:", err);
+        } finally {
             setLoading(false);
-            window.alert("건의사항이 제출되었습니다!!");
-        }); 
+            console.log("통신 끝!");
+        }
     }
 
     return(
