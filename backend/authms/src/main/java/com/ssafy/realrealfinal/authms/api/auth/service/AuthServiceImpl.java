@@ -107,4 +107,13 @@ public class AuthServiceImpl implements AuthService {
         log.info("getProviderIDFromAccessToken end: " + providerId);
         return providerId;
     }
+
+    @Override
+    public String getGithubTokenFromJwtAccessToken(String accessToken) {
+        log.info("getGithubTokenFromJwtAccessToken start: " + accessToken);
+        String providerId = String.valueOf(jwtUtil.getProviderIdFromToken(accessToken));
+        String githubAccessToken = redisUtil.getData(providerId);
+        log.info("getGithubTokenFromJwtAccessToken end: " + githubAccessToken);
+        return githubAccessToken;
+    }
 }
