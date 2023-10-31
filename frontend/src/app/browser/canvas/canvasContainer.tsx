@@ -51,6 +51,9 @@ const CanvasContainer = () => {
         ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
       });
+      socket.on("url", (urlData) => {
+        console.log(urlData);
+      });
     }
   }, [socket, ctx]);
 
@@ -113,6 +116,10 @@ const CanvasContainer = () => {
       const canvasClick = (e: MouseEvent) => {
         if(e.button !== 0) return;
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+        if(tool === null || tool === undefined) {
+          socket?.emit("url", [x, y]);
+          return;
+        } 
         let r, g, b;
         if(tool == "painting") {
           panzoomInstance?.pause();
