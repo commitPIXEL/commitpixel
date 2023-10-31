@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final SolvedAcUtil solvedAcUtil;
-    private final WebSocketHandler webSocketHandler;
+    private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
 
@@ -93,7 +94,9 @@ public class UserServiceImpl implements UserService {
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer refreshedCredit = commitNum + solvedNum;
-
+        // pixelms와 연결된 kafka에 정보 보냄
+        Map<Integer, Integer> map = Map.of(providerId, refreshedCredit);
+        kafkaTemplate.send("total-credit-topic", map);
         log.info("refreshCredit end: " + refreshedCredit);
         return refreshedCredit;
     }
