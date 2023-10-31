@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
 
-    private final AuthFeignClient authFeignClient;
-
     /**
      * 커밋 수와 문제 수 불러오기
      * 15분 간격
