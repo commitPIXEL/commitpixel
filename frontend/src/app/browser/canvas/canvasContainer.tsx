@@ -111,43 +111,27 @@ const CanvasContainer = () => {
       };
 
       const canvasClick = (e: MouseEvent) => {
-        e.preventDefault();
-        panzoomInstance.pause();
-        setTimeout(panzoomInstance.resume(), 200);
+        if(e.button !== 0) return;
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         let r, g, b;
-        if(tool === null) return;
-        switch (tool) {
-          case "panning":
-            break;
-          case "painting":
-            if(!panzoomInstance.isPaused) {
-              console.log("Panzoom is not paused");
-              break;
-            }
-            audio.play();
-            panzoomInstance.pause();
+        if(tool == "painting") {
+          panzoomInstance?.pause();
+          audio.play();
             r = color.rgb.r;
             g = color.rgb.g;
             b = color.rgb.b;
             setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
-            break;
-          case "copying":
-            if (ctx) {
-              panzoomInstance.pause();
-              const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-              const hex = rgbtoHex(r, g, b);
-              dispatch(
-                pick({
-                  hex: hex,
-                  rgb: { r: r, g: g, b: b, a: 1 },
-                })
-              );
-              dispatch(setTool("painting"));
-            }
-            break;
-          default:
-            break;
+        } else if(tool == "copying" && ctx) {
+          panzoomInstance?.pause();
+          const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+          const hex = rgbtoHex(r, g, b);
+          dispatch(
+            pick({
+              hex: hex,
+              rgb: { r: r, g: g, b: b, a: 1 },
+            })
+          );
+          dispatch(setTool("painting"));
         }
       };
 
@@ -162,18 +146,12 @@ const CanvasContainer = () => {
       wrapper.addEventListener("mouseup", onMouseUp);
 
       return () => {
-        wrapper.removeEventListener("contextmenu", setCursor);
+        wrapper.removeEventListener("mousemove", setCursor);
         wrapper.removeEventListener("mousedown", canvasClick);
         wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
   }, [color, setPixel, tool, panzoomInstance, rgbToHex]);
-
-  useEffect(() => {
-    if ((tool == "panning" || tool === null || tool === undefined) && panzoomInstance?.isPaused()){
-      panzoomInstance.resume();
-    }
-  }, [tool, panzoomInstance]);
 
   return (
     <div className="col-span-3 max-h-full">
