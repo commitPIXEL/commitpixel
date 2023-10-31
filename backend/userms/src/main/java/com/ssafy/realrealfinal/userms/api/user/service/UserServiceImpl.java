@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
@@ -36,9 +37,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final SolvedAcUtil solvedAcUtil;
+    private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
-    private final String TOTAL_CREDIT_KEY = "total";
-    private final String USED_PIXEL_KEY = "used";
 
     /**
      * 커밋 수와 문제 수 불러오기
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public Integer refreshCreditFromClient(String accessToken) {
         log.info("refreshCreditFromClient start: " + accessToken);
 
-        Integer providerId = 1; // TODO: jwt accessToken으로 providerId 얻기
+        Integer providerId = authFeignClient.withQueryString(accessToken);
         Integer refreshedCredit = refreshCredit(providerId);
 
         log.info("refreshCreditFromClient end: " + refreshedCredit);
