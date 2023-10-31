@@ -42,22 +42,6 @@ const CanvasContainer = () => {
     }
   }, [ctx, socket]);
 
-  useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 1) {
-        e.preventDefault();
-        return false;
-      }
-    };
-  
-    document.body.addEventListener('mousedown', handleMouseDown);
-  
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-    return () => {
-      document.body.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, []);
-
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
