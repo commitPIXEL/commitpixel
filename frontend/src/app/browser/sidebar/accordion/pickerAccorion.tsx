@@ -3,11 +3,9 @@ import AccordionTitle from "./accordionTitle";
 import Picker from "../picker/picker";
 import Menu from "../picker/menu/pickerMenu";
 
-const PickerAccordion = ({isConnected}: {
-  isConnected: boolean,
-}) => {
+const PickerAccordion = () => {
   return (
-    <Accordion disabled={!isConnected} defaultExpanded={isConnected} className="!rounded mb-6">
+    <Accordion defaultExpanded={true} className="!rounded mb-6">
       <AccordionTitle title="색깔" />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <Menu />
