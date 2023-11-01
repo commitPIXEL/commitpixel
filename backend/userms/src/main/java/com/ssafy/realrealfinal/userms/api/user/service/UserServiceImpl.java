@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
     private final KafkaTemplate<String, Integer> pixelKafkaTemplate;
 
     /**
-     * 커밋 수와 문제 수 불러오기 15분 간격
-     * pixelms로 kafka 보내야 함
+     * 커밋 수와 문제 수 불러오기 15분 간격 pixelms로 kafka 보내야 함
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
