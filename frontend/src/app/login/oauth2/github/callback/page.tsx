@@ -13,6 +13,7 @@ export default function LoginHandler() {
         console.log(code);
 
         if(code) {
+            // TODO: 수정하기
             axios.get(`http://localhost:8080/auth/login/github?code=${code}`)
             .then((res) => {
                 console.log(res);

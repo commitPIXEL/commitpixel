@@ -3,6 +3,7 @@ import { RootState } from '@/store';
 
 const useFetchWithAuth = () => {
   const authorization = useSelector((state: RootState) => state.authorization.authorization);
+  // TODO: 수정하기
   const baseURL = 'http://localhost:8082';
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
