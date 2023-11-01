@@ -104,8 +104,8 @@ public class PixelServiceImpl implements PixelService {
         Map<Integer, Integer> map = record.value();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer providerId = entry.getKey();
-            Integer totalCredit = entry.getValue();
-            updateTotalCredit(providerId, totalCredit);
+            Integer additionalCredit = entry.getValue();
+            updateTotalCredit(providerId, additionalCredit);
         }
     }
 
