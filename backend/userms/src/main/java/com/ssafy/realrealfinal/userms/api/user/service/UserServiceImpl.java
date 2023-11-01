@@ -7,7 +7,6 @@ import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
-import com.ssafy.realrealfinal.userms.common.exception.user.APIRequestException;
 import com.ssafy.realrealfinal.userms.common.exception.user.GetPixelDataException;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
@@ -23,8 +22,8 @@ import com.ssafy.realrealfinal.userms.db.entity.Whitelist;
 import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
 import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
 import com.ssafy.realrealfinal.userms.db.repository.WhitelistRepository;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -111,7 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 건의사항 추가 whitelist 추가 요청이면 중복 여부 체크 후, 없으면 저장
+     * 건의사항 추가. whitelist 추가 요청이면 중복 여부 체크 후, 없으면 저장
      *
      * @param accessToken 작성자 확인
      * @param boardReq    작성 내용
@@ -121,16 +120,14 @@ public class UserServiceImpl implements UserService {
         Integer providerId = authFeignClient.withQueryString(accessToken);
         if (boardReq.getType() == 1) {
             String url = boardReq.getContent();
-            String host = null;
-            try {
-                host = new URL(url).getHost();
-            } catch (MalformedURLException e) {
-                throw new APIRequestException();
-            }
-            Whitelist whitelist = whitelistRepository.findByUrlContaining(host);
-            log.info("updateUrl mid: " + whitelist);
-            if (whitelist != null) {
-                throw new WhitelistNotSavedException();
+            List<Whitelist> whitelists = new ArrayList<>();
+            whitelists = whitelistRepository.findAll();
+
+            for (Whitelist whitelist : whitelists) {
+                if (url.contains(whitelist.getUrl())) {
+                    log.info("updateUrl mid: " + whitelist.getUrl());
+                    throw new WhitelistNotSavedException();
+                }
             }
         }
 
@@ -235,7 +232,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 사용자가 요청한 url이 Whitelist에 있는지 확인
+     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인. 없으면 예외
      *
      * @param accessToken jwt 토큰
      * @param url         사용자 요청 url
@@ -243,19 +240,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUrl(String accessToken, String url) {
         log.info("updateUrl start: " + url);
-        String host = null;
-        try {
-            host = new URL(url).getHost();
-        } catch (MalformedURLException e) {
-            throw new APIRequestException();
-        }
-        Whitelist whitelist = whitelistRepository.findByUrlContaining(host);
-        log.info("updateUrl mid: " + whitelist);
-
         Integer providerId = authFeignClient.withQueryString(accessToken);
-        User user = userRepository.findByProviderId(providerId);
-        user.updateUrl(url);
-        log.info("updateUrl end: " + user);
+        List<Whitelist> whitelists = new ArrayList<>();
+        whitelists = whitelistRepository.findAll();
+
+        for (Whitelist whitelist : whitelists) {
+            if (url.contains(whitelist.getUrl())) {
+                log.info("updateUrl mid: " + whitelist.getUrl());
+
+                User user = userRepository.findByProviderId(providerId);
+                user.updateUrl(url);
+                log.info("updateUrl end: " + user);
+                return;
+            }
+        }
+
+        throw new WhitelistNotFoundException();
     }
 
     /**

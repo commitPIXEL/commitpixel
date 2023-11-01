@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WhitelistRepository extends JpaRepository<Whitelist, Integer> {
 
-    Whitelist findByUrlContaining(String host);
 }
