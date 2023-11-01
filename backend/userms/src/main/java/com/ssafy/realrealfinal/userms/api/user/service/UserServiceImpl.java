@@ -120,10 +120,10 @@ public class UserServiceImpl implements UserService {
         Integer providerId = authFeignClient.withQueryString(accessToken);
         if (boardReq.getType() == 1) {
             String url = boardReq.getContent();
-            List<Whitelist> whitelists = new ArrayList<>();
-            whitelists = whitelistRepository.findAll();
+            List<Whitelist> whitelistList = new ArrayList<>();
+            whitelistList = whitelistRepository.findAll();
 
-            for (Whitelist whitelist : whitelists) {
+            for (Whitelist whitelist : whitelistList) {
                 if (url.contains(whitelist.getUrl())) {
                     log.info("updateUrl mid: " + whitelist.getUrl());
                     throw new WhitelistNotSavedException();
@@ -241,10 +241,10 @@ public class UserServiceImpl implements UserService {
     public void updateUrl(String accessToken, String url) {
         log.info("updateUrl start: " + url);
         Integer providerId = authFeignClient.withQueryString(accessToken);
-        List<Whitelist> whitelists = new ArrayList<>();
-        whitelists = whitelistRepository.findAll();
+        List<Whitelist> whitelistList = new ArrayList<>();
+        whitelistList = whitelistRepository.findAll();
 
-        for (Whitelist whitelist : whitelists) {
+        for (Whitelist whitelist : whitelistList) {
             if (url.contains(whitelist.getUrl())) {
                 log.info("updateUrl mid: " + whitelist.getUrl());
 
@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
             solvedProblem = Integer.parseInt(entry.getValue());
         }
         if (solvedAcId == null) {
-            log.info("solvedAcNewSolvedProblem end: " + 0);
+            log.info("solvedAcNewSolvedProblem end: 0");
             return 0;
         }
         solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
