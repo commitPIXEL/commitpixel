@@ -13,7 +13,8 @@ export default function LoginHandler() {
         console.log(code);
 
         if(code) {
-            axios.get(`http://localhost:8080/auth/login/github?code=${code}`)
+            // axios.get(`http://localhost:8080/auth/login/github?code=${code}`) // 로컬용
+            axios.get(`http://dev.commitpixel.com/auth/login/github?code=${code}`) // 배포용
             .then((res) => {
                 console.log(res);
                 console.log(res.headers);
