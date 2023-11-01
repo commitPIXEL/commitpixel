@@ -2,7 +2,6 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
-import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,25 +36,10 @@ public class UserController {
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshCredit start: " + accessToken);
-        CreditRes creditRes = userService.refreshCredit(accessToken);
-        log.info("refreshCredit end: " + creditRes);
-        return ResponseEntity.ok().body(creditRes);
+        Integer refreshedCredit = userService.refreshCreditFromClient(accessToken);
+        log.info("refreshCredit end: " + refreshedCredit);
+        return ResponseEntity.ok().body(refreshedCredit);
     }
-
-    /**
-     * 픽셀 찍을 때마다 누적 픽셀 수 업데이트
-     *
-     * @param accessToken jwt 액세스 토큰
-     * @return
-     */
-//    @GetMapping("/usedpixel")
-//    public ResponseEntity<Integer> updateUsedPixel(
-//        @RequestHeader(value = "accesstoken") String accessToken) {
-//        log.info("updateUsedPixel start: " + accessToken);
-//        Integer usedPixel = userService.updateUsedPixel(accessToken);
-//        log.info("updateUsedPixel end: " + usedPixel);
-//        return ResponseEntity.ok().body(usedPixel);
-//    }
 
     /**
      * 건의사항 추가 - 일반 건의사항(0), url건의사항(1)

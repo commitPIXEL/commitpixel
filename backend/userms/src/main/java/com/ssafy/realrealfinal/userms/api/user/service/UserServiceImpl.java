@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
-import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.GetPixelDataException;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
@@ -24,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,112 +39,68 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final SolvedAcUtil solvedAcUtil;
-    private final String TOTAL_CREDIT_KEY = "total";
-    private final String USED_PIXEL_KEY = "used";
-
     private final AuthFeignClient authFeignClient;
+    private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
 
     /**
      * 커밋 수와 문제 수 불러오기
+     * 15분 간격
+     * pixelms에서 kafka로 호출해야 함 
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
     @Override
-    public CreditRes refreshCredit(String accessToken) {
-        log.info("refreshCredit start: " + accessToken);
+    public Integer refreshCreditFromClient(String accessToken) {
+        log.info("refreshCreditFromClient start: " + accessToken);
 
-        Integer providerId = authFeignClient.withQueryString(
-            accessToken); // TODO: userRepository 사용
-        if (!lastUpdateCheckUtil.isPossibleToUpdate(String.valueOf(providerId))) {
-            return getTotalAndAvailableCredit(providerId);
-        }
-        String userName = "유저 테이블에서 토큰으로 확인한 userName"; // TODO: userRepository 사용
-        String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName);
-        Integer solvedNum = 0; // TODO: Solved.ac에서 문제수 가져오는 로직 구현
+        Integer providerId = authFeignClient.withQueryString(accessToken);
+        Integer refreshedCredit = refreshCredit(providerId);
 
-        updateTotalCredit(providerId, commitNum + solvedNum);
-        CreditRes creditRes = getTotalAndAvailableCredit(providerId);
-
-        log.info("refreshCredit end: " + creditRes);
-        return creditRes;
+        log.info("refreshCreditFromClient end: " + refreshedCredit);
+        return refreshedCredit;
     }
 
     /**
-     * 사용자가 픽셀을 찍을 때 마다 누적 사용 픽셀 수 + 1
+     * 서버 내에서 호출
      *
-     * @param accessToken jwt 토큰
-     * @return Integer 누적 사용 픽셀 수
+     * @param providerId
+     * @return
      */
-//    @Override
-//    public Integer updateUsedPixel(String accessToken) {
-//        log.info("updateUsedPixel start: " + accessToken);
-//
-//        String userId = "유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
-//        Integer usedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-//        redisUtil.setData(userId, USED_PIXEL_KEY, usedPixel + 1);
-//        Integer updatedUsedPixel = redisUtil.getData(userId, USED_PIXEL_KEY);
-//
-//        log.info("updateUsedPixel end: " + updatedUsedPixel);
-//        return updatedUsedPixel;
-//    }
+    public Integer refreshCreditFromServer(Integer providerId) {
+        log.info("refreshCreditFromServer start: " + providerId);
 
-    /**
-     * 전체 크레딧 업데이트
-     *
-     * @param providerId       providerId
-     * @param additionalCredit 추가 크레딧 수
-     */
-    private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
-        log.info("updateTotalCredit start: " + providerId + ", " + additionalCredit);
+        Integer refreshedCredit = refreshCredit(providerId);
 
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        redisUtil.setData(String.valueOf(providerId), TOTAL_CREDIT_KEY,
-            totalCredit + additionalCredit);
-
-        log.info("updateTotalCredit end");
+        log.info("refreshCreditFromServer end: " + refreshedCredit);
+        return refreshedCredit;
     }
 
     /**
-     * 전체 크레딧, 사용 가능 크레딧 반환
+     * refreshCreditFromClient와 refreshCreditFromServer의 공통 로직
      *
-     * @param providerId providerId
-     * @return CreditRes
+     * @param providerId
+     * @return
      */
-    private CreditRes getTotalAndAvailableCredit(Integer providerId) {
-        log.info("getTotalAndAvailableCredit start: " + providerId);
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        Integer usedPixel = getCredit(providerId, USED_PIXEL_KEY);
-        CreditRes creditRes = new CreditRes(totalCredit, totalCredit - usedPixel);
-
-        log.info("getTotalAndAvailableCredit end: " + creditRes);
-        return creditRes;
-    }
-
-    /**
-     * 크레딧(전체, 누적) 반환 메서드 없다면(최초 가입) 0으로 set
-     *
-     * @param providerId providerId
-     * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
-     * @return Integer 크레딧
-     */
-    private Integer getCredit(Integer providerId, String type) {
-        log.info("getCredit start: " + providerId + " " + type);
-        String key = String.valueOf(providerId);
-        Integer credit = 0;
-        try {
-            redisUtil.getData(key, type);
-            log.info("getCredit end: " + credit);
-            return credit;
-        } catch (Exception e) {
-            redisUtil.setData(key, type, 0);
-            log.warn("getCredit end: " + 0);
+    private Integer refreshCredit(Integer providerId) {
+        Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
+        // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
+        if (lastUpdateStatus == -1) {
             return 0;
         }
-
+        String userName = "유저 테이블에서 providerId로 확인한 userName"; // TODO: userRepository 사용
+        String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
+        Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
+        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
+        // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
+        Integer solvedNum = solvedAcNewSolvedProblem(providerId);
+        Integer refreshedCredit = commitNum + solvedNum;
+        // pixelms와 연결된 kafka에 정보 보냄
+        Map<Integer, Integer> map = Map.of(providerId, refreshedCredit);
+        kafkaTemplate.send("total-credit-topic", map);
+        log.info("refreshCredit end: " + refreshedCredit);
+        return refreshedCredit;
     }
-
 
     /**
      * 건의사항 추가
@@ -202,10 +158,10 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             user = UserMapper.INSTANCE.toNewUser(githubNickname, profileImage, providerId, url);
             userRepository.save(user);
-            //TODO: 깃허브 커밋수 가져와서 넣어두는 작업 (7일치)
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
+        refreshCreditFromServer(providerId);
         log.info("login end: " + user);
     }
 
@@ -230,8 +186,8 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-        int total = getCredit(providerId, "total") + solvedCount;
-        redisUtil.setData(String.valueOf(providerId), "total", total);
+//        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount; // 없는 redis입니다!!!
+//        redisUtil.setData(String.valueOf(providerId), "total", total); // 없는 redis입니다!!!
         log.info("authSolvedAc end: success");
     }
 
