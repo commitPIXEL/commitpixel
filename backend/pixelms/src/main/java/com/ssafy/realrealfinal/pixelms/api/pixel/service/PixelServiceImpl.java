@@ -2,6 +2,7 @@ package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
+import java.awt.image.BufferedImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -50,6 +51,76 @@ public class PixelServiceImpl implements PixelService {
 
         log.info("getTotalAndAvailableCredit end: " + availableCredit);
         return availableCredit;
+    }
+
+    /**
+     * imageMS에서 scheduled로 요청 들어오면 현 redis 상태 이미지화해서 보내주는 것.
+     *
+     * @return  레디스 데이터 -> 이미지
+     */
+    @Override
+    public BufferedImage redisToImage() {
+
+
+
+
+        public static BufferedImage matToBufferedImage(Mat mat) {
+            int type = BufferedImage.TYPE_BYTE_GRAY;
+            if (mat.channels() > 1) {
+                type = BufferedImage.TYPE_3BYTE_BGR;
+            }
+
+            int bufferSize = mat.channels() * mat.cols() * mat.rows();
+            byte[] bytes = new byte[bufferSize];
+            mat.get(0, 0, bytes);
+            BufferedImage image = new BufferedImage(mat.cols(), mat.rows(), type);
+            final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+            System.arraycopy(bytes, 0, targetPixels, 0, bytes.length);
+
+            return image;
+        }
+
+        public static BufferedImage redisToBufferedImage() {
+            // Redis 서버에 연결
+            Jedis jedis = new Jedis("localhost");
+
+            // Redis에서 픽셀 정보 가져오기
+            String pixelData = jedis.get("pixel_data_key");
+
+            // 픽셀 정보를 Mat 객체로 변환
+            String[] pixelRows = pixelData.split(";");
+            int height = pixelRows.length;ll
+            String[] pixelRow = pixelRows[0].split(",");
+            int width = pixelRow.length;
+            Mat imageMat = new Mat(height, width, CvType.CV_8UC3);
+
+            for (int y = 0; y < height; y++) {
+                pixelRow = pixelRows[y].split(",");
+                for (int x = 0; x < width; x++) {
+                    int b = Integer.parseInt(pixelRow[x]);
+                    int g = Integer.parseInt(pixelRow[x]);
+                    int r = Integer.parseInt(pixelRow[x]);
+                    imageMat.put(y, x, r, g, b);
+                }
+            }
+
+            // Mat 객체를 BufferedImage로 변환
+            BufferedImage image = matToBufferedImage(imageMat);
+
+            // Redis 연결 종료
+            jedis.close();
+
+            return image;
+        }
+
+
+
+
+
+
+
+
+        return null;
     }
 
     /**
