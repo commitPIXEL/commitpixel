@@ -21,11 +21,13 @@ export default function LoginHandler() {
                 if(res.status === 200) {
                     const accesstoken: string = res.headers.accesstoken;
                     dispatch(login(accesstoken));
-                    window.location.href = '/';
                 }
             })
             .catch((err) => {
                 console.log(err);
+                alert("깃허브 로그인 실패!");
+            }).finally(() => {
+                window.location.href = "/";
             })
         }
     },[])
