@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PatchNote from "./patchNote";
 import { useEffect } from "react";
 
-export default function tutorials () {
+export default function Tutorials () {
   useEffect(() => {
     localStorage.setItem("isVisited", JSON.stringify(true));
   }, []);
