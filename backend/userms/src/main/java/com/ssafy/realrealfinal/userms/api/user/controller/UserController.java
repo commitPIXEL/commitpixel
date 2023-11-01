@@ -1,6 +1,5 @@
 package com.ssafy.realrealfinal.userms.api.user.controller;
 
-import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
