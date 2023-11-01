@@ -41,11 +41,11 @@ public class UserServiceImpl implements UserService {
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
+    private final KafkaTemplate<String, Integer> pixelKafkaTemplate;
 
     /**
-     * 커밋 수와 문제 수 불러오기
-     * 15분 간격
-     * pixelms에서 kafka로 호출해야 함 
+     * 커밋 수와 문제 수 불러오기 15분 간격
+     * pixelms로 kafka 보내야 함
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
     /**
      * 서버 내에서 호출
      *
-     * @param providerId
-     * @return
+     * @param providerId github provider id
+     * @return refreshedCredit
      */
     public Integer refreshCreditFromServer(Integer providerId) {
         log.info("refreshCreditFromServer start: " + providerId);
@@ -79,8 +79,8 @@ public class UserServiceImpl implements UserService {
     /**
      * refreshCreditFromClient와 refreshCreditFromServer의 공통 로직
      *
-     * @param providerId
-     * @return
+     * @param providerId github provider id
+     * @return refreshedCredit
      */
     private Integer refreshCredit(Integer providerId) {
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
@@ -91,7 +91,8 @@ public class UserServiceImpl implements UserService {
         String userName = "유저 테이블에서 providerId로 확인한 userName"; // TODO: userRepository 사용
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus, lastUpdateTime);
+        Integer commitNum = githubUtil.getCommit(githubAccessToken, userName, lastUpdateStatus,
+            lastUpdateTime);
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer refreshedCredit = commitNum + solvedNum;
@@ -186,8 +187,9 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-//        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount; // 없는 redis입니다!!!
-//        redisUtil.setData(String.valueOf(providerId), "total", total); // 없는 redis입니다!!!
+        //TODO:받는 쪽에서 (pixelMS) 받은 값을 total에 더해줘야.
+        pixelKafkaTemplate.send("solvedac-update-topic", solvedCount);
+        log.info("authSolvedAc mid: kafka sent data: " + solvedCount);
         log.info("authSolvedAc end: success");
     }
 
@@ -226,7 +228,12 @@ public class UserServiceImpl implements UserService {
             solvedAcId = entry.getKey();
             solvedProblem = Integer.parseInt(entry.getValue());
         }
+        if (solvedAcId == null) {
+            log.info("solvedAcNewSolvedProblem end: " + 0);
+            return 0;
+        }
         solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
+        redisUtil.setData(key, solvedAcId, solvedProblem);
         log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
         return solvedProblem;
     }
