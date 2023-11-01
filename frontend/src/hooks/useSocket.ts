@@ -11,7 +11,7 @@ const useSocket = () => {
         transports: ["websocket"],
         reconnection: false,
         extraHeaders: {
-          "Authorization": null,
+          "Authorization": "",
         },
       });
       
