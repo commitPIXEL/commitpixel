@@ -47,6 +47,12 @@ dependencies {
     // kafka
     implementation 'org.springframework.kafka:spring-kafka'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
+    //spring cloud config 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
 }
 
 dependencyManagement {
