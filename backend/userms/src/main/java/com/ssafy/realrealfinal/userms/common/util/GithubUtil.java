@@ -1,13 +1,11 @@
 package com.ssafy.realrealfinal.userms.common.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,25 +25,27 @@ public class GithubUtil {
         .defaultHeader("Accept", "application/vnd.github.v3+json")
         .build();
 
+    // TODO: 깃허브 userInfo 얻어오고 닉네임 리턴하는 코드
+    
     /**
      * @param githubAccessToken 깃허브 토큰
-     * @param userName          깃허브 닉네임
+     * @param githubNickname          깃허브 닉네임
      * @param lastUpdateStatus  마지막 업데이트 상태
      * @param lastUpdateTime    마지막 업데이트 일시
      * @return 커밋 수
      */
-    public Integer getCommit(String githubAccessToken, String userName, Integer lastUpdateStatus,
+    public Integer getCommit(String githubAccessToken, String githubNickname, Integer lastUpdateStatus,
         Long lastUpdateTime) {
 
-        log.info("getCommit start: " + userName + " " + lastUpdateStatus + " " + lastUpdateTime);
+        log.info("getCommit start: " + githubNickname + " " + lastUpdateStatus + " " + lastUpdateTime);
 
         // webclient로 github api 호출
         Mono<JsonNode> githubEventList = githubWebClient
             .get()
             .uri(uriBuilder -> uriBuilder
-                .path("/users/{username}/events")
+                .path("/users/{githubNickname}/events")
                 .queryParam("per_page", 100)
-                .build(userName))
+                .build(githubNickname))
             .header("Authorization", "Bearer " + githubAccessToken)
             .retrieve()
             .bodyToMono(JsonNode.class);
