@@ -23,7 +23,7 @@ public class Whitelist {
     @Column(name = "whitelist_id")
     private Integer id;
 
-    @Column(name = "domain")
+    @Column(name = "domain", unique = true)
     private String url;
 
     @Builder

@@ -80,7 +80,7 @@ public class UserController {
      * @param url
      * @return 200 Ok(url 변경 성공), 404 NOT_FOUND(변경 url whitelist에 없음)
      */
-    @PatchMapping("/whitelist")
+    @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
         String url) {
         log.info("updateUrl start: " + url);
