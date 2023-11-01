@@ -59,32 +59,32 @@ public class WebSocketHandler {
      * 사용자가 픽셀 한 개를 찍음
      *
      * @param client
-     * @param pixelDtoList 픽셀 한개의 정보 [x, y, r, g, b, url, userName]
+     * @param pixelInfo 픽셀 한개의 정보 [x, y, r, g, b, url, userName]
      */
     @OnEvent("pixel")
-    public void onPixelEvent(SocketIOClient client, List pixelDtoList) {
-        log.info("Pixel event received: {}", pixelDtoList);
+    public void onPixelEvent(SocketIOClient client, List pixelInfo) {
+        log.info("Pixel event received: {}", pixelInfo);
         // 사용자가 없을 때
         if (CLIENTS == null || CLIENTS.size() == 0) {
             return;
         }
         // (x * 1024 + y) 인덱스
-        Integer index = (Integer) pixelDtoList.get(0) * SCALE + (Integer) pixelDtoList.get(1);
+        Integer index = (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1);
         // Red
-        redisUtil.setData(String.valueOf(index), "R", (Integer) pixelDtoList.get(2));
+        redisUtil.setData(String.valueOf(index), "R", (Integer) pixelInfo.get(2));
         // Green
-        redisUtil.setData(String.valueOf(index), "G", (Integer) pixelDtoList.get(3));
+        redisUtil.setData(String.valueOf(index), "G", (Integer) pixelInfo.get(3));
         // Blue
-        redisUtil.setData(String.valueOf(index), "B", (Integer) pixelDtoList.get(4));
+        redisUtil.setData(String.valueOf(index), "B", (Integer) pixelInfo.get(4));
         // Url
-        redisUtil.setData(String.valueOf(index), "url", (String) pixelDtoList.get(5));
+        redisUtil.setData(String.valueOf(index), "url", (String) pixelInfo.get(5));
         // UserId
-        redisUtil.setData(String.valueOf(index), "id", (String) pixelDtoList.get(6));
+        redisUtil.setData(String.valueOf(index), "id", (String) pixelInfo.get(6));
         for (SocketClientInfoDto clientInfo : CLIENTS.values()) {
             SocketIOClient clientSession = clientInfo.getSocketIOClient();
             // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
             if (!client.getSessionId().equals(clientSession.getSessionId()) && clientSession.isChannelOpen()) {
-                clientSession.sendEvent("pixel", pixelDtoList);
+                clientSession.sendEvent("pixel", pixelInfo);
             }
         }
 
@@ -104,13 +104,13 @@ public class WebSocketHandler {
      * 픽셀 클릭 시 해당 url과 작성자를 반환
      *
      * @param client
-     * @param pixelDtoList 클릭한 픽셀의 위치 [x, y]
+     * @param pixelInfo 클릭한 픽셀의 위치 [x, y]
      */
     @OnEvent("url")
-    public void onUrlEvent(SocketIOClient client, List pixelDtoList) {
-        log.info("Url event received: {}", pixelDtoList);
+    public void onUrlEvent(SocketIOClient client, List pixelInfo) {
+        log.info("Url event received: {}", pixelInfo);
 
-        Integer index = (Integer) pixelDtoList.get(0) * SCALE + (Integer) pixelDtoList.get(1);
+        Integer index = (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1);
         String url = redisUtil.getStringData(String.valueOf(index), "url");
         String githubNickname = redisUtil.getStringData(String.valueOf(index), "id");
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
