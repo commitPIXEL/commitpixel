@@ -32,13 +32,13 @@ public class UserController {
      * @param accessToken jwt 액세스 토큰
      * @return CreditRes, HttpStatus.OK
      */
-    @GetMapping("/refreshcredit")
+    @GetMapping("/refreshinfo")
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
-        log.info("refreshCredit start: " + accessToken);
-        Integer refreshedCredit = userService.refreshCreditFromClient(accessToken);
-        log.info("refreshCredit end: " + refreshedCredit);
-        return ResponseEntity.ok().body(refreshedCredit);
+        log.info("refreshinfo start: " + accessToken);
+        String githubNickname = userService.refreshInfoFromClient(accessToken);
+        log.info("refreshinfo end: " + githubNickname);
+        return ResponseEntity.ok().body(githubNickname);
     }
 
     /**
