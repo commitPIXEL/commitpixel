@@ -93,4 +93,12 @@ public class AuthController {
         log.info("feignTest end: " + result);
         return result;
     }
+
+    @GetMapping("/token/github")
+    public String getGithubAccessTokenByJwtAccessToken(@RequestParam String accessToken){
+        log.info("getGithubAccessTokenByJwtAccessToken start: "+accessToken);
+        String githubAccessToken = authService.getGithubTokenFromJwtAccessToken(accessToken);
+        log.info("getGithubAccessTokenByJwtAccessToken end: "+accessToken);
+        return githubAccessToken;
+    }
 }
