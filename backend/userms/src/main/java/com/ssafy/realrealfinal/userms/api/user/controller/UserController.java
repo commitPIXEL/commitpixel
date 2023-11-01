@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.controller;
 
+import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
@@ -32,13 +33,13 @@ public class UserController {
      * @param accessToken jwt 액세스 토큰
      * @return CreditRes, HttpStatus.OK
      */
-    @GetMapping("/refreshcredit")
+    @GetMapping("/refreshinfo")
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
-        log.info("refreshCredit start: " + accessToken);
-        Integer refreshedCredit = userService.refreshCreditFromClient(accessToken);
-        log.info("refreshCredit end: " + refreshedCredit);
-        return ResponseEntity.ok().body(refreshedCredit);
+        log.info("refreshinfo start: " + accessToken);
+        String refreshInfo = userService.refreshInfoFromClient(accessToken);
+        log.info("refreshinfo end: " + refreshInfo);
+        return ResponseEntity.ok().body(refreshInfo);
     }
 
     /**

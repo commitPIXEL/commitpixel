@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.mapper;
 
+import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.db.entity.Board;
@@ -21,5 +22,5 @@ public interface UserMapper {
     @Mapping(source = "profileImage", target = "profileImage")
     User toUser(String githubNickname, String profileImage, User user);
 
-    UserInfoRes toUserInfoRes(User user, Integer totalPixel, Integer availablePixel);
+    UserInfoRes toUserInfoRes(User user);
 }

@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
@@ -41,70 +42,86 @@ public class UserServiceImpl implements UserService {
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
+    private final KafkaTemplate<String, String> rankKafkaTemplate;
 
     /**
-     * 커밋 수와 문제 수 불러오기
-     * 15분 간격
-     * pixelms에서 kafka로 호출해야 함
+     * 커밋 수와 문제 수 불러오기 15분 간격 pixelms에서 kafka로 호출해야 함
      *
      * @param accessToken jwt 토큰
      * @return CreditRes
      */
     @Override
-    public Integer refreshCreditFromClient(String accessToken) {
+    public String refreshInfoFromClient(String accessToken) {
         log.info("refreshCreditFromClient start: " + accessToken);
 
         Integer providerId = authFeignClient.withQueryString(accessToken);
-        Integer refreshedCredit = refreshCredit(providerId);
+        String refreshedInfo = refreshInfo(providerId);
 
-        log.info("refreshCreditFromClient end: " + refreshedCredit);
-        return refreshedCredit;
+        log.info("refreshCreditFromClient end: " + refreshedInfo);
+        return refreshedInfo;
     }
 
     /**
      * 서버 내에서 호출
      *
-     * @param providerId
-     * @return
+     * @param providerId 깃허브 provider id
+     * @return RefreshInfoDto
      */
-    public Integer refreshCreditFromServer(Integer providerId) {
+    public String refreshedInfoFromServer(Integer providerId) {
         log.info("refreshCreditFromServer start: " + providerId);
 
-        Integer refreshedCredit = refreshCredit(providerId);
+        String refreshedInfo = refreshInfo(providerId);
 
-        log.info("refreshCreditFromServer end: " + refreshedCredit);
-        return refreshedCredit;
+        log.info("refreshCreditFromServer end: " + refreshedInfo);
+        return refreshedInfo;
     }
 
     /**
      * refreshCreditFromClient와 refreshCreditFromServer의 공통 로직
      *
-     * @param providerId
-     * @return
+     * @param providerId 깃허브 provider id
+     * @return RefreshInfoDto
      */
-    private Integer refreshCredit(Integer providerId) { // TODO: 리턴 타입을 Integer가 아니라 닉네임도 포함한 새로운 dto로!
+    @Transactional
+    public String refreshInfo(
+        Integer providerId) {
         log.info("refreshCredit start: " + providerId);
 
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
         // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
         if (lastUpdateStatus == -1) {
-            return 0;
+            return null;
         }
-        String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
+        String githubAccessToken = authFeignClient.getGithubAccessTokenByJwtAccessToken(
+            String.valueOf(providerId));
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
-        String githubNickname = ""; // TODO: userinfo 가져오기(nickname이 바뀐 경우를 고려하기 위해서)
-        // TODO: user 테이블의 닉네임과 비교해서 바뀌었으면 mysql 바꿔주기 -> kafka로 Rank에 정보를 보내줌
+        String githubNickname = githubUtil.getGithubUserNickName(
+            githubAccessToken);
+        User user = userRepository.findByProviderId(providerId);
+        if (!user.getGithubNickname().equals(githubNickname)) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonMessage = objectMapper.writeValueAsString(
+                    Map.of("previous", user.getGithubNickname(), "now", githubNickname));
+                rankKafkaTemplate.send("rank-nickname-topic", jsonMessage);
+                log.info("refreshCredit mid: kafka json data: " + jsonMessage);
+            } catch (JsonProcessingException e) {
+                throw new JsonifyException();
+            }
+            user.updateNickname(githubNickname);
+
+        }
         // github 커밋 수 가져오기(마지막 업데이트 시점으로부터 지금까지의 변동 사항만)
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, githubNickname, lastUpdateStatus, lastUpdateTime);
+        Integer commitNum = githubUtil.getCommit(githubAccessToken, githubNickname,
+            lastUpdateStatus, lastUpdateTime);
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer refreshedCredit = commitNum + solvedNum;
         // pixelms와 연결된 kafka에 정보 보냄
         Map<Integer, Integer> map = Map.of(providerId, refreshedCredit);
         kafkaTemplate.send("total-credit-topic", map);
-
-        log.info("refreshCredit end: " + refreshedCredit);
-        return refreshedCredit;
+        log.info("refreshCredit end: " + githubNickname);
+        return githubNickname;
     }
 
     /**
@@ -114,8 +131,7 @@ public class UserServiceImpl implements UserService {
      * @param boardReq    작성 내용
      */
     public void addBoard(String accessToken, BoardReq boardReq) {
-        Integer providerId = 1;
-        //"유저 테이블에서 토큰으로 확인한 providerId"; // TODO: userRepository 사용
+        Integer providerId = authFeignClient.withQueryString(accessToken);
         User user = userRepository.findByProviderId(providerId);
         Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
         boardRepository.save(board);
@@ -166,7 +182,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
-        refreshCreditFromServer(providerId);
+        refreshedInfoFromServer(providerId);
         log.info("login end: " + user);
     }
 
@@ -201,16 +217,7 @@ public class UserServiceImpl implements UserService {
         log.info("getUserInfo start: " + accessToken);
         Integer providerId = authFeignClient.withQueryString(accessToken);
         User user = userRepository.findByProviderId(providerId);
-        Integer totalPixel = 0;
-        Integer availablePixel = 0;
-        try {
-            totalPixel = redisUtil.getData(String.valueOf(providerId), "total");
-            availablePixel = totalPixel - redisUtil.getData(String.valueOf(providerId), "used");
-        } catch (Exception e) {
-            throw new GetPixelDataException();
-        }
-        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user, totalPixel,
-            availablePixel);
+        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user);
         log.info("getUserInfo end: " + userInfoRes);
         return userInfoRes;
     }
