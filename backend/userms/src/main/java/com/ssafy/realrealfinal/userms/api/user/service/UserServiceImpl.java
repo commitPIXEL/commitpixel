@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
      * @param providerId
      * @return
      */
-    private Integer refreshCredit(Integer providerId) {
+    private Integer refreshCredit(Integer providerId) { // TODO: 리턴 타입을 Integer가 아니라 닉네임도 포함한 새로운 dto로!
         log.info("refreshCredit start: " + providerId);
 
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         String githubAccessToken = "authms로 jwt 토큰을 보내서 github 토큰을 가져옴"; // TODO: authms와 연결
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
         String githubNickname = ""; // TODO: userinfo 가져오기(nickname이 바뀐 경우를 고려하기 위해서)
-        // TODO: user 테이블의 닉네임과 비교해서 바뀌었으면 mysql 바꿔주기 -> kafka로 Rank, Pixel에 정보를 보내줌
+        // TODO: user 테이블의 닉네임과 비교해서 바뀌었으면 mysql 바꿔주기 -> kafka로 Rank에 정보를 보내줌
         // github 커밋 수 가져오기(마지막 업데이트 시점으로부터 지금까지의 변동 사항만)
         Integer commitNum = githubUtil.getCommit(githubAccessToken, githubNickname, lastUpdateStatus, lastUpdateTime);
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)

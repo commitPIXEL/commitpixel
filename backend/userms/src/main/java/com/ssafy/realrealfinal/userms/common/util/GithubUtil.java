@@ -25,8 +25,8 @@ public class GithubUtil {
         .defaultHeader("Accept", "application/vnd.github.v3+json")
         .build();
 
-    // TODO: 깃허브 userInfo 얻어오고 닉네임 리턴하는 코드
-    
+    // TODO: 깃허브 userInfo 얻어오고 닉네임 리턴하는 코드, 리턴 타입을 Integer가 아니라 닉네임도 포함한 새로운 dto로!
+
     /**
      * @param githubAccessToken 깃허브 토큰
      * @param githubNickname          깃허브 닉네임
