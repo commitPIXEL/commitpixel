@@ -50,4 +50,8 @@ public class User {
         this.url = url;
         this.providerId = providerId;
     }
+
+    public void updateUrl(String url) {
+        this.url = url;
+    }
 }

@@ -4,7 +4,7 @@ import com.ssafy.realrealfinal.userms.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class BaseException extends RuntimeException  {
+public class BaseException extends RuntimeException {
 
     private final ErrorCode errorCode;
 

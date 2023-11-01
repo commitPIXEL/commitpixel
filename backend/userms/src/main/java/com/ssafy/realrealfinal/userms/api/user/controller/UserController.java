@@ -47,7 +47,7 @@ public class UserController {
      *
      * @param accessToken jwt 액세스 토큰
      * @param boardReq    건의사항
-     * @return 200 Ok(건의사항 추가 성공), 409 Conflict(url 중복), 예외처리 (accesstoken 만료)
+     * @return 200 Ok(건의사항 추가 성공), 409 Conflict(요청 url whitelist에 이미 있음)
      */
     @PostMapping("/board")
     public ResponseEntity<?> addBoard(@RequestHeader(value = "accesstoken") String accessToken,
@@ -57,6 +57,23 @@ public class UserController {
         log.info("addBoard end: " + SUCCESS);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * 사용자 url 변경
+     *
+     * @param accessToken jwt 액세스 토큰
+     * @param url
+     * @return 200 Ok(url 변경 성공), 404 NOT_FOUND(변경 url whitelist에 없음)
+     */
+    @PatchMapping("/url")
+    public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
+        String url) {
+        log.info("updateUrl start: " + url);
+        userService.updateUrl(accessToken, url);
+        log.info("updateUrl end: " + SUCCESS);
+        return ResponseEntity.ok().build();
+    }
+
 
     /**
      * solved 연동

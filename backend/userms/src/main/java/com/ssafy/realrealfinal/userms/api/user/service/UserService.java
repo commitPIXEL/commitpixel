@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.service;
 import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
+import java.net.MalformedURLException;
 
 public interface UserService {
 
@@ -15,4 +16,6 @@ public interface UserService {
     void authSolvedAc(String solvedAcId, String accessToken);
 
     UserInfoRes getUserInfo(String accessToken);
+
+    void updateUrl(String accessToken, String url);
 }

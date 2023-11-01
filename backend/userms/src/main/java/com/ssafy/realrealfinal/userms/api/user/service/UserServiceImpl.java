@@ -11,14 +11,20 @@ import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.GetPixelDataException;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
+import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotFoundException;
+import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotSavedException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
 import com.ssafy.realrealfinal.userms.common.util.RedisUtil;
 import com.ssafy.realrealfinal.userms.common.util.SolvedAcUtil;
 import com.ssafy.realrealfinal.userms.db.entity.Board;
 import com.ssafy.realrealfinal.userms.db.entity.User;
+import com.ssafy.realrealfinal.userms.db.entity.Whitelist;
 import com.ssafy.realrealfinal.userms.db.repository.BoardRepository;
 import com.ssafy.realrealfinal.userms.db.repository.UserRepository;
+import com.ssafy.realrealfinal.userms.db.repository.WhitelistRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final WhitelistRepository whitelistRepository;
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
@@ -126,13 +133,27 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 건의사항 추가
+     * 건의사항 추가. whitelist 추가 요청이면 중복 여부 체크 후, 없으면 저장
      *
      * @param accessToken 작성자 확인
      * @param boardReq    작성 내용
      */
+    @Transactional
     public void addBoard(String accessToken, BoardReq boardReq) {
         Integer providerId = authFeignClient.withQueryString(accessToken);
+        if (boardReq.getType() == 1) {
+            String url = boardReq.getContent();
+            List<Whitelist> whitelistList = new ArrayList<>();
+            whitelistList = whitelistRepository.findAll();
+
+            for (Whitelist whitelist : whitelistList) {
+                if (url.contains(whitelist.getUrl())) {
+                    log.info("updateUrl mid: " + whitelist.getUrl());
+                    throw new WhitelistNotSavedException();
+                }
+            }
+        }
+
         User user = userRepository.findByProviderId(providerId);
         Board board = UserMapper.INSTANCE.toBoard(boardReq, user);
         boardRepository.save(board);
@@ -222,6 +243,33 @@ public class UserServiceImpl implements UserService {
         UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user);
         log.info("getUserInfo end: " + userInfoRes);
         return userInfoRes;
+    }
+
+    /**
+     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인. 없으면 예외
+     *
+     * @param accessToken jwt 토큰
+     * @param url         사용자 요청 url
+     */
+    @Transactional
+    public void updateUrl(String accessToken, String url) {
+        log.info("updateUrl start: " + url);
+        Integer providerId = authFeignClient.withQueryString(accessToken);
+        List<Whitelist> whitelistList = new ArrayList<>();
+        whitelistList = whitelistRepository.findAll();
+
+        for (Whitelist whitelist : whitelistList) {
+            if (url.contains(whitelist.getUrl())) {
+                log.info("updateUrl mid: " + whitelist.getUrl());
+
+                User user = userRepository.findByProviderId(providerId);
+                user.updateUrl(url);
+                log.info("updateUrl end: " + user);
+                return;
+            }
+        }
+
+        throw new WhitelistNotFoundException();
     }
 
     /**
