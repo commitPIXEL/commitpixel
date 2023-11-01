@@ -37,6 +37,10 @@ public class User {
         this.solvedAcId = solvedAcId;
     }
 
+    public void updateNickname(String githubNickname) {
+        this.githubNickname = githubNickname;
+    }
+
     @Builder
     public User(String solvedAcId, String githubNickname, String profileImage, String url,
         Integer providerId) {
