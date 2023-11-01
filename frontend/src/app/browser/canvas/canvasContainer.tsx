@@ -151,7 +151,7 @@ const CanvasContainer = () => {
       const onMouseUp = (e: MouseEvent) => {
         if(tool === "painting" || tool === "copying") {
           panzoomInstance.resume();
-        } else {
+        } else if(tool === null && e.button !== 2) {
           setOpen(true);
         }
       };
