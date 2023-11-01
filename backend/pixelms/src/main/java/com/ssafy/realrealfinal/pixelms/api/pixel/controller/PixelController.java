@@ -21,7 +21,7 @@ public class PixelController {
      *
      * @return 픽셀 레디스 데이터 -> 이미지
      */
-    @GetMapping("pixel/image")
+    @GetMapping("/image")
     BufferedImage getImage() {
         log.info("getImage start");
         BufferedImage image = pixelService.redisToImage();
