@@ -5,7 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfo;
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfoDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
@@ -32,7 +32,7 @@ public class WebSocketHandler {
     private final int SCALE = 1024;
 
     // 클라이언트의 providerId가 key, 연결된 클라이언트의 Websocket 세션이 value
-    private static final ConcurrentHashMap<UUID, SocketClientInfo> CLIENTS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, SocketClientInfoDto> CLIENTS = new ConcurrentHashMap<>();
 
     @EventListener(ContextRefreshedEvent.class)
     public void start() {
@@ -46,10 +46,10 @@ public class WebSocketHandler {
 
         String accessToken = client.getHandshakeData().getHttpHeaders().get("Authorization");
         if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
-            CLIENTS.put(client.getSessionId(), new SocketClientInfo(-1, client));
+            CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(-1, client));
         } else {
             Integer providerId = authFeignClient.withQueryString(accessToken);
-            CLIENTS.put(client.getSessionId(), new SocketClientInfo(providerId, client));
+            CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(providerId, client));
         }
 
     }
@@ -80,7 +80,7 @@ public class WebSocketHandler {
         redisUtil.setData(String.valueOf(index), "url", (String) pixelDtoList.get(5));
         // UserId
         redisUtil.setData(String.valueOf(index), "id", (String) pixelDtoList.get(6));
-        for (SocketClientInfo clientInfo : CLIENTS.values()) {
+        for (SocketClientInfoDto clientInfo : CLIENTS.values()) {
             SocketIOClient clientSession = clientInfo.getSocketIOClient();
             // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
             if (!client.getSessionId().equals(clientSession.getSessionId()) && clientSession.isChannelOpen()) {
@@ -96,11 +96,7 @@ public class WebSocketHandler {
         // 현재 클라이언트의 usedPixel redis 값 변경
         pixelService.updateUsedPixel(providerId);
         Integer availableCredit = pixelService.getAvailableCredit(providerId);
-        SocketIOClient clientSession = CLIENTS.get(client.getSessionId()).getSocketIOClient();
-        // 현재 client에게만 변경된 가용 픽셀 수 리턴
-        if (client.getSessionId().equals(clientSession.getSessionId())) {
-            clientSession.sendEvent("pixel", availableCredit);
-        }
+        client.sendEvent("pixel", availableCredit);
         return;
     }
 
@@ -118,11 +114,7 @@ public class WebSocketHandler {
         String url = redisUtil.getStringData(String.valueOf(index), "url");
         String githubNickname = redisUtil.getStringData(String.valueOf(index), "id");
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
-
-        SocketIOClient clientSession = CLIENTS.get(client.getSessionId()).getSocketIOClient();
-        if (client.getSessionId().equals(clientSession.getSessionId())) {
-            clientSession.sendEvent("url", pixelInfoRes);
-        }
+        client.sendEvent("url", pixelInfoRes);
     }
 
     // 클라이언트가 연결을 끊을 때 실행되는 메서드
