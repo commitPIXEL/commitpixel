@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SocketClientInfo {
+public class SocketClientInfoDto {
 
     private Integer providerId;
     private SocketIOClient socketIOClient;
