@@ -1,6 +1,5 @@
 package com.ssafy.realrealfinal.userms.api.user.mapper;
 
-import com.ssafy.realrealfinal.userms.api.user.dto.RefreshInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.db.entity.Board;
