@@ -10,6 +10,9 @@ const useSocket = () => {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         reconnection: false,
+        extraHeaders: {
+          "Authorization": null,
+        },
       });
       
       socket.on("connect", () => {
