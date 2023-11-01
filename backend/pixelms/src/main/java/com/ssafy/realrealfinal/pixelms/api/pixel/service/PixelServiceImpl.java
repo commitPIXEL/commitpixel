@@ -104,26 +104,26 @@ public class PixelServiceImpl implements PixelService {
         Integer index = (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1);
 
         // 이전 유저와 url 정보(없으면 null)
-        String prevUrl = redisUtil.getStringData(String.valueOf(index), "ID");
-        String prevUserId = redisUtil.getStringData(String.valueOf(index), "URL");
+        String prevUrl = redisUtil.getStringData(String.valueOf(index), "url");
+        String prevName = redisUtil.getStringData(String.valueOf(index), "name");
 
         // Red
-        redisUtil.setData(String.valueOf(index), "R", (Integer) pixelInfo.get(2));
+        redisUtil.setData(String.valueOf(index), "red", (Integer) pixelInfo.get(2));
         // Green
-        redisUtil.setData(String.valueOf(index), "G", (Integer) pixelInfo.get(3));
+        redisUtil.setData(String.valueOf(index), "green", (Integer) pixelInfo.get(3));
         // Blue
-        redisUtil.setData(String.valueOf(index), "B", (Integer) pixelInfo.get(4));
+        redisUtil.setData(String.valueOf(index), "blue", (Integer) pixelInfo.get(4));
         // Url
-        redisUtil.setData(String.valueOf(index), "URL", (String) pixelInfo.get(5));
+        redisUtil.setData(String.valueOf(index), "url", (String) pixelInfo.get(5));
         // UserId
-        redisUtil.setData(String.valueOf(index), "ID", (String) pixelInfo.get(6));
+        redisUtil.setData(String.valueOf(index), "name", (String) pixelInfo.get(6));
 
         // rank로 이전, 현재 정보 보내기
         Map<String, String> map = Map.of(
                 "prevUrl", prevUrl,
-                "prevUserId", prevUserId,
+                "prevName", prevName,
                 "currUrl", (String) pixelInfo.get(5),
-                "currUserId", (String) pixelInfo.get(6));
+                "currName", (String) pixelInfo.get(6));
         kafkaTemplate.send("pixel-update-topic", map);
     }
 

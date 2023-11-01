@@ -9,7 +9,7 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfoDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
-import com.ssafy.realrealfinal.pixelms.common.util.NicknameProviderUtil;
+import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,12 +28,12 @@ public class WebSocketHandler {
 
     private final PixelService pixelService;
     private final RedisUtil redisUtil;
-    private final NicknameProviderUtil nicknameProviderUtil;
+    private final IdNameUtil idNameUtil;
     private final AuthFeignClient authFeignClient;
     private final SocketIOServer server;
     private final int SCALE = 512;
 
-    // 연결된 클라이언트의 Websocket 세션이 key,
+    // 연결된 클라이언트의 Websocket 세션이 key, {providerId, client}가 담긴 dto가 value
     private static final ConcurrentHashMap<UUID, SocketClientInfoDto> CLIENTS = new ConcurrentHashMap<>();
 
     /**
@@ -47,6 +46,9 @@ public class WebSocketHandler {
 
     /**
      * 클라이언트가 최초로 연결될 때 실행되는 메서드
+     * CLIENTS 맵에 sessionId, providerId, client 저장
+     * idNameMap 맵에 providerId, githubNickname 저장
+     * 
      * @param client
      */
     @OnConnect
@@ -54,14 +56,23 @@ public class WebSocketHandler {
         log.info("New client connected: {}", client.getSessionId().toString());
 
         String accessToken = client.getHandshakeData().getHttpHeaders().get("Authorization");
+        // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
+        // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
+        String githubNickname = client.getHandshakeData().getHttpHeaders().get("githubNickname");
         // 비회원 테스트를 위해 임시로 providerId를 세팅
         if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
             CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(-1, client));
         } else {
+            // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             Integer providerId = authFeignClient.withQueryString(accessToken);
-
-            // TODO: pixelms에 <providerId, nickname> 맵을 하나 만들어 놓고 put
             CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(providerId, client));
+            // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
+            if (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals("")) {
+                idNameUtil.updateMap(-1, "githubNick");
+            } else {
+                // 맵 업데이트
+                idNameUtil.updateMap(providerId, githubNickname);
+            }
         }
     }
 
@@ -72,7 +83,7 @@ public class WebSocketHandler {
      * 3. 모든 사용자에게 변경사항 보냄
      *
      * @param client
-     * @param pixelInfo 픽셀 한개의 정보 [x, y, r, g, b, url, userName]
+     * @param pixelInfo 픽셀 한개의 정보 [x, y, r, g, b, url, githubNickname]
      */
     @OnEvent("pixel")
     public void onPixelEvent(SocketIOClient client, List pixelInfo) {
@@ -82,6 +93,7 @@ public class WebSocketHandler {
             return;
         }
 
+        Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
         pixelService.updatePixelRedisAndSendRank(pixelInfo);
 
@@ -93,7 +105,6 @@ public class WebSocketHandler {
             }
         }
 
-        Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
         // 비회원이면 return
         if (providerId == -1) {
             return;
