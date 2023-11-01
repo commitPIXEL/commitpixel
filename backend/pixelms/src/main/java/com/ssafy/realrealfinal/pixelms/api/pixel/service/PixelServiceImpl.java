@@ -100,7 +100,7 @@ public class PixelServiceImpl implements PixelService {
      * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
      */
     @KafkaListener(topics = "total-credit-topic", groupId = "pixel-group")
-    public void consumeLoginEvent(ConsumerRecord<String, Map<Integer, Integer>> record) {
+    public void consumeCreditEvent(ConsumerRecord<String, Map<Integer, Integer>> record) {
         Map<Integer, Integer> map = record.value();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer providerId = entry.getKey();
