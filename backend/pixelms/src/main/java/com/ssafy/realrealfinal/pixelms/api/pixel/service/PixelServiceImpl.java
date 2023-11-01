@@ -20,7 +20,7 @@ public class PixelServiceImpl implements PixelService {
     private final RedisUtil redisUtil;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
-    private final int SCALE = 1024;
+    private final int SCALE = 512;
 
     /**
      * 누적 사용 픽셀 수 업데이트
