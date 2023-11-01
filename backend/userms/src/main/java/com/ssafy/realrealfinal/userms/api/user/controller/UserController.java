@@ -37,9 +37,9 @@ public class UserController {
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshinfo start: " + accessToken);
-        String refreshInfo = userService.refreshInfoFromClient(accessToken);
-        log.info("refreshinfo end: " + refreshInfo);
-        return ResponseEntity.ok().body(refreshInfo);
+        String githubNickname = userService.refreshInfoFromClient(accessToken);
+        log.info("refreshinfo end: " + githubNickname);
+        return ResponseEntity.ok().body(githubNickname);
     }
 
     /**

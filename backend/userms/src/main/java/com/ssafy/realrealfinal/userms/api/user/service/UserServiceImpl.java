@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
+    private final KafkaTemplate<String, Integer> pixelKafkaTemplate;
 
     /**
      * 커밋 수와 문제 수 불러오기 15분 간격 pixelms에서 kafka로 호출해야 함
@@ -207,8 +208,9 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-//        int total = redisUtil.getData(String.valueOf(providerId), "total") + solvedCount; // 없는 redis입니다!!!
-//        redisUtil.setData(String.valueOf(providerId), "total", total); // 없는 redis입니다!!!
+        //TODO:받는 쪽에서 (pixelMS) 받은 값을 total에 더해줘야.
+        pixelKafkaTemplate.send("solvedac-update-topic", solvedCount);
+        log.info("authSolvedAc mid: kafka sent data: " + solvedCount);
         log.info("authSolvedAc end: success");
     }
 
@@ -238,7 +240,12 @@ public class UserServiceImpl implements UserService {
             solvedAcId = entry.getKey();
             solvedProblem = Integer.parseInt(entry.getValue());
         }
+        if (solvedAcId == null) {
+            log.info("solvedAcNewSolvedProblem end: " + 0);
+            return 0;
+        }
         solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
+        redisUtil.setData(key, solvedAcId, solvedProblem);
         log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
         return solvedProblem;
     }
