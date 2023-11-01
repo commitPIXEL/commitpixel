@@ -59,7 +59,7 @@ public class WebSocketHandler {
      * 사용자가 픽셀 한 개를 찍음
      *
      * @param client
-     * @param pixelDtoList
+     * @param pixelDtoList 픽셀 한개의 정보 [x, y, r, g, b, url, userName]
      */
     @OnEvent("pixel")
     public void onPixelEvent(SocketIOClient client, List pixelDtoList) {
@@ -104,7 +104,7 @@ public class WebSocketHandler {
      * 픽셀 클릭 시 해당 url과 작성자를 반환
      *
      * @param client
-     * @param pixelDtoList
+     * @param pixelDtoList 클릭한 픽셀의 위치 [x, y]
      */
     @OnEvent("url")
     public void onUrlEvent(SocketIOClient client, List pixelDtoList) {
