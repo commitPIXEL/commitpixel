@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    UNEXPECTED_ERROR("커스텀 에러 메시지", HttpStatus.BAD_REQUEST); // 예시
+    REDIS_NOT_FOUND("NO SUCH DATA IN REDIS", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus httpStatus;
