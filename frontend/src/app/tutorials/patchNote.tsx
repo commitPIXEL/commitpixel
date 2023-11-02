@@ -6,7 +6,8 @@ const PatchNote = () => {
         <div>
           <div className="text-mainColor text-xl">ver 1.0.0</div>
           <div className="mt-2 flex flex-col">
-            <div>- 공유 캔버스 기능</div>
+            <div>- PC 공유 캔버스 기능</div>
+            <div>- 모바일은 UI만 구현, 2차 배포에 추가할 예정</div>
           </div>
         </div>
       </div>
