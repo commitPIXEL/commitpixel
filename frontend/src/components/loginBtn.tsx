@@ -2,25 +2,26 @@
 
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-interface loginProps {
-    clientId: string,
-    redirectUrl: string
-}
+export default function loginBtn() {
+  const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+  const redirectUrl = process.env.NEXT_PUBLIC_CALLBACK_URL;
 
-export default function loginBtn({clientId, redirectUrl}: loginProps) {
-    const oauthLogin = () => {
-        const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=repo%20read:user`;
+  const oauthLogin = () => {
+    const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=repo%20read:user`;
 
-        window.location.href = githubURL;
-        console.log(clientId);
-    }
+    window.location.href = githubURL;
+    console.log(clientId);
+  };
 
-    return(
-        <>
-            <button className="flex justify-around items-center space-x-4 font-bold bg-white rounded h-12 mt-6" onClick={oauthLogin}>
-                <GitHubIcon />
-                <p>Sign up with Github</p>
-            </button>
-        </>
-    )
+  return (
+    <>
+      <button
+        className="flex justify-around items-center space-x-4 font-bold bg-white rounded h-12 mt-6"
+        onClick={oauthLogin}
+      >
+        <GitHubIcon />
+        <p>Sign up with Github</p>
+      </button>
+    </>
+  );
 }
