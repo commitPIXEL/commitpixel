@@ -11,7 +11,7 @@ public interface PixelService {
 
     void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
 
-    BufferedImage redisToImage();
+    byte[] redisToImage();
 
     String bufferedImageToBase64Image();
 
