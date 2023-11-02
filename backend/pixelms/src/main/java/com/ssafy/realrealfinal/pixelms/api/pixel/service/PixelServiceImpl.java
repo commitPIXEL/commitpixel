@@ -114,22 +114,22 @@ public class PixelServiceImpl implements PixelService {
         String prevName = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
 
         // Red
-        redisUtil.setData(index, "red", (Integer) pixelInfo.get(2));
+        redisUtil.setData(index, "R", (Integer) pixelInfo.get(2));
         // Green
-        redisUtil.setData(index, "green", (Integer) pixelInfo.get(3));
+        redisUtil.setData(index, "G", (Integer) pixelInfo.get(3));
         // Blue
-        redisUtil.setData(index, "blue", (Integer) pixelInfo.get(4));
+        redisUtil.setData(index, "B", (Integer) pixelInfo.get(4));
         // Url
         redisUtil.setData(index, "url", (String) pixelInfo.get(5));
         // providerId
-        redisUtil.setData(index, "providerId", providerId);
+        redisUtil.setData(index, "id", providerId);
 
         // rank로 이전, 현재 정보 보내기
         Map<String, String> map = Map.of(
                 "prevUrl", prevUrl,
-                "prevName", prevName,
+                "prevGithubNickname", prevName,
                 "currUrl", (String) pixelInfo.get(5),
-                "currName", (String) pixelInfo.get(6));
+                "currGithubNickname", (String) pixelInfo.get(6));
         kafkaTemplate.send("pixel-update-topic", map);
     }
 
