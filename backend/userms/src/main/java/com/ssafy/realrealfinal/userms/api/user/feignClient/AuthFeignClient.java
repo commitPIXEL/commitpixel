@@ -6,18 +6,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "auth", url = "http://k9a709.p.ssafy.io:8181")
+@FeignClient("auth")
 public interface AuthFeignClient {
 
     @GetMapping("auth/token")
-    Integer withQueryString(@RequestParam(value = "accesstoken") String accessToken);
+    Integer withQueryString(@RequestParam(value = "accessToken") String accessToken);
 
     @PostMapping("auth/feigntest")
     String withBody(@RequestBody String test);
 
 
     @GetMapping("auth/token/github")
-    String getGithubAccessTokenByJwtAccessToken(@RequestParam(value = "providerid") String providerId);
+    String getGithubAccessTokenByJwtAccessToken(@RequestParam(value = "accessToken") String accessToken);
 
 
 }
