@@ -138,6 +138,12 @@ public class WebSocketHandler {
         client.sendEvent(URL, pixelInfoRes);
     }
 
+    /**
+     * 크레딧 변경 시에 클라이언트로 보내는 이벤트
+     * 
+     * @param providerId
+     * @param creditRes
+     */
     public void sendCreditToClient(Integer providerId, CreditRes creditRes) {
         SocketIOClient client = CLIENTS_BY_PROVIDER_ID.get(providerId);
         if (client != null && client.isChannelOpen()) {
