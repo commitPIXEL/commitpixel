@@ -63,17 +63,24 @@ const CanvasContainer = () => {
   useEffect(() => {
     if(imageUrl){
       const img = new Image(width, height);
-      img.src = imageUrl;
-      img.crossOrigin = "Anonymous";
-      img.onload = () => {
-        ctx?.drawImage(img, 0, 0);
-      };
+      const imgData = fetch("https://dev.commitpixel.com/api/pixel/image/64").then((res) => {
+        console.log(res);
+        /* 
+        img.src = "data:image/png;base64," + res;
+        img.crossOrigin = "Anonymouse";
+        img.onload = () => {
+          ctx?.drawImage(img, 0, 0);
+        };
+        */
+      }).then((err) => {
+        console.log(err);
+      });
     }
   }, [ctx, socket]);
 
   useEffect(() => {
     const div = ref.current;
-    const initialZoom = 0.5;
+    const initialZoom = 1;
     if (div) {
       const panzoom = Panzoom(div, {
         zoomDoubleClickSpeed: 1,
@@ -85,7 +92,7 @@ const CanvasContainer = () => {
       );
 
       panzoom.setMaxZoom(50);
-      panzoom.setMinZoom(0.3);
+      panzoom.setMinZoom(0.8);
 
       setPanzoomInstance(panzoom);
 
@@ -173,7 +180,7 @@ const CanvasContainer = () => {
   };
 
   return (
-    <div className="col-span-3 max-h-full">
+    <div className="col-span-3 w-full max-h-full">
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
@@ -190,15 +197,10 @@ const CanvasContainer = () => {
         </div>
       )}
       {socket && (
-        <div className="w-full h-full flex flex-col col-span-3">
+        <div className="w-full h-full flex flex-col col-span-3 items-center">
           <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
           <div
-            className="overflow-hidden bg-bgColor"
-            style={{
-              maxWidth: "100vw",
-              maxHeight: "85vh",
-            }}
-          >
+            className="overflow-hidden w-[95%] h-full">
             <div className="w-max" ref={ref}>
               <div
                 className="bg-slate-200"
