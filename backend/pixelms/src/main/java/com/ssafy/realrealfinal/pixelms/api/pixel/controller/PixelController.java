@@ -28,28 +28,12 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/credit")
-    public CreditRes consumeCreditEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
+    public CreditRes updateAndSendCredit(@RequestBody AdditionalCreditDto additionalCreditRes) {
         log.info("consumeCreditEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
 
         log.info("consumeCreditEvent end: " + creditRes);
-        return creditRes;
-    }
-
-    /**
-     * userms에서 solved.ac 연동 시 feign으로 요청하는 메서드
-     * 
-     * @param additionalCreditRes {providerId, 추가 크레딧}
-     * @return creditRes {전체 크레딧, 사용 가능 크레딧}
-     */
-    @GetMapping("/solvedac")
-    public CreditRes consumeSolvedAcEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
-        log.info("consumeSolvedAcEvent start");
-
-        CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
-
-        log.info("consumeSolvedAcEvent end: " + creditRes);
         return creditRes;
     }
 
