@@ -3,6 +3,7 @@ import AccordionTitle from "./accordionTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil} from "@fortawesome/free-solid-svg-icons";
 import React, { useRef, useState } from "react";
+import SolvedacBtn from "@/components/solvedacBtn";
 
 const UserInfoAccordion = () => {
   const urlInputRef = useRef<HTMLInputElement | null>(null);
@@ -48,6 +49,9 @@ const UserInfoAccordion = () => {
         </div>
         <div className="w-full mt-1 pb-1">
           <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} />
+        </div>
+        <div>
+          <SolvedacBtn />
         </div>
       </AccordionDetails>
     </Accordion>
