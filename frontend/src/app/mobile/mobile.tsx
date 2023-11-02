@@ -7,8 +7,8 @@ const Mobile = () => {
   return(
   <div className="w-screen h-screen flex flex-col items-center bg-bgColor text-white">
     <MobileNav />
-    <TestCanvas />
-    {/* <CanvasContainer /> */}
+    {/* <TestCanvas /> */}
+    <CanvasContainer />
     <MobilePicker />
   </div>
   )

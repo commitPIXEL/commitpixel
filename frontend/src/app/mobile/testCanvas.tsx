@@ -8,7 +8,7 @@ const TestCanvas = () => {
 
   useEffect(() => {
     const div = ref.current;
-    const initialZoom = 0.3;
+    const initialZoom = 0.6;
     if (div && div.parentElement) {
       const panzoom = Panzoom(div, {
         zoomDoubleClickSpeed: 1,
@@ -32,14 +32,8 @@ const TestCanvas = () => {
   }, []);
 
   return (
-    <div className="w-full h-[50%] flex flex-col items-center justify-center">
-      <div
-        className="overflow-hidden bg-bgColor"
-        style={{
-          maxWidth: "95vw",
-          maxHeight: "50vh",
-        }}
-      >
+    <div className="w-full flex flex-col items-center justify-center h-[60%]">
+      <div className="overflow-hidden w-[95%] h-full">
         <div className="w-max" ref={ref}>
           <div
             className="bg-slate-200"
@@ -48,8 +42,8 @@ const TestCanvas = () => {
           >
             <canvas
               id="canvas"
-              width={1024}
-              height={1024}
+              width={512}
+              height={512}
               className="canvas"
               ref={canvasRef}
             >
