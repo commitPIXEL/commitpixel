@@ -5,7 +5,6 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfoDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
@@ -37,8 +36,8 @@ public class WebSocketHandler {
     private final String PIXEL = "pixel";
     private final String URL = "url";
 
-    // 연결된 클라이언트의 Websocket 세션이 key, {providerId, client}가 담긴 dto가 value
-    private static final ConcurrentHashMap<UUID, SocketClientInfoDto> CLIENTS = new ConcurrentHashMap<>();
+    // 연결된 클라이언트의 Websocket 세션이 key, providerId가 value
+    private static final ConcurrentHashMap<UUID, Integer> CLIENTS = new ConcurrentHashMap<>();
     // providerId가 key, client가 value
     private static final ConcurrentHashMap<Integer, SocketIOClient> CLIENTS_BY_PROVIDER_ID = new ConcurrentHashMap<>();
 
@@ -66,15 +65,15 @@ public class WebSocketHandler {
         // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
         String githubNickname = client.getHandshakeData().getHttpHeaders().get("githubNickname");
         // 비회원을 위해 임시로 providerId를 세팅
-        if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
-            CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(-1, client));
+        if (accessToken == null || accessToken.isEmpty()) {
+            CLIENTS.put(client.getSessionId(), -1);
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             Integer providerId = authFeignClient.withQueryString(accessToken);
-            CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(providerId, client));
+            CLIENTS.put(client.getSessionId(), providerId);
             CLIENTS_BY_PROVIDER_ID.put(providerId, client);
             // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
-            if (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals("")) {
+            if (githubNickname == null || githubNickname.isEmpty()) {
                 idNameUtil.updateMap(-1, "githubNick");
             } else {
                 // 맵 업데이트
@@ -100,13 +99,12 @@ public class WebSocketHandler {
             return;
         }
 
-        Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
+        Integer providerId = CLIENTS.get(client.getSessionId());
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
         pixelService.updatePixelRedisAndSendRank(pixelInfo);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
-        for (SocketClientInfoDto clientInfo : CLIENTS.values()) {
-            SocketIOClient clientSession = clientInfo.getSocketIOClient();
+        for (SocketIOClient clientSession : CLIENTS_BY_PROVIDER_ID.values()) {
             if (!client.getSessionId().equals(clientSession.getSessionId()) && clientSession.isChannelOpen()) {
                 clientSession.sendEvent(PIXEL, pixelInfo);
             }
@@ -119,7 +117,7 @@ public class WebSocketHandler {
         // 현재 클라이언트의 usedPixel redis 값 변경 후 클라이언트에게 반환
         pixelService.updateUsedPixel(providerId);
         Integer availableCredit = pixelService.getAvailableCredit(providerId);
-        client.sendEvent("pixel", availableCredit);
+        client.sendEvent(PIXEL, availableCredit);
         return;
     }
 
