@@ -1,6 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.controller;
 
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditRes;
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
@@ -28,7 +28,7 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/credit")
-    public ResponseEntity<?> consumeCreditEvent(@RequestBody AdditionalCreditRes additionalCreditRes) {
+    public ResponseEntity<?> consumeCreditEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
         log.info("consumeCreditEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
@@ -44,7 +44,7 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/solvedac")
-    public ResponseEntity<?> consumeSolvedAcEvent(@RequestBody AdditionalCreditRes additionalCreditRes) {
+    public ResponseEntity<?> consumeSolvedAcEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
         log.info("consumeSolvedAcEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);

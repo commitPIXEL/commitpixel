@@ -1,7 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditRes;
-import com.ssafy.realrealfinal.pixelms.api.pixel.handler.WebSocketHandler;
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.common.exception.pixel.Base64ConvertException;
@@ -226,7 +225,7 @@ public class PixelServiceImpl implements PixelService {
      * @return
      */
     @Override
-    public CreditRes updateAndSendCredit(AdditionalCreditRes additionalCreditRes) {
+    public CreditRes updateAndSendCredit(AdditionalCreditDto additionalCreditRes) {
         log.info("updateAndSendCredit start: " + additionalCreditRes);
 
         Integer providerId = additionalCreditRes.getProviderId();
