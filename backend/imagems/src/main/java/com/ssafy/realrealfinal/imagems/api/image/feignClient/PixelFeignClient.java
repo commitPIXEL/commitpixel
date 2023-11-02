@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface PixelFeignClient {
 
     @GetMapping("pixel/image")
-    BufferedImage getImage();
+    byte[] getImage();
 }

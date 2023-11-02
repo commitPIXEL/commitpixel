@@ -2,6 +2,7 @@ package com.ssafy.realrealfinal.imagems.api.image.controller;
 
 import com.ssafy.realrealfinal.imagems.api.image.service.ImageService;
 
+import com.ssafy.realrealfinal.imagems.common.util.S3UploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
 
     private final ImageService imageService;
+    private final S3UploadUtil s3UploadUtil;
 
     @PostMapping("/convert")
     public ResponseEntity<byte[]> convertImage(
@@ -38,7 +40,7 @@ public class ImageController {
      * @return gif
      */
     @GetMapping("/timelapse")
-    public ResponseEntity<byte[]> timelapse(){
+    public ResponseEntity<byte[]> timelapse() {
         log.info("timelapse start");
         byte[] gifBytes = imageService.getGif();
         log.info("timelapse end: SUCCESS");
@@ -50,4 +52,11 @@ public class ImageController {
     }
 
 
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        log.info("test start");
+        s3UploadUtil.S3Upload();
+        log.info("test end");
+        return ResponseEntity.ok().build();
+    }
 }
