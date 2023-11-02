@@ -136,19 +136,6 @@ public class WebSocketHandler {
     }
 
     /**
-     * 크레딧 변경 시에 클라이언트로 보내는 이벤트
-     *
-     * @param providerId
-     * @param creditRes
-     */
-    public void sendCreditToClient(Integer providerId, CreditRes creditRes) {
-        SocketIOClient client = CLIENTS_BY_PROVIDER_ID.get(providerId);
-        if (client != null && client.isChannelOpen()) {
-            client.sendEvent(CREDIT, creditRes);
-        }
-    }
-
-    /**
      * 클라이언트가 연결을 끊을 때 실행되는 메서드
      *
      * @param client
