@@ -4,6 +4,7 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 
 import java.util.List;
+import java.awt.image.BufferedImage;
 
 public interface PixelService {
 
@@ -16,4 +17,9 @@ public interface PixelService {
     CreditRes updateAndSendCredit(Object object);
 
     PixelInfoRes getUrlAndName(String index);
+
+    byte[] redisToImage();
+
+    String bufferedImageToBase64Image();
+
 }
