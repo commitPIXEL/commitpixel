@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AuthFeignClient {
 
     @GetMapping("auth/token")
-    Integer withQueryString(@RequestParam String accessToken);
+    Integer withQueryString(@RequestParam(value = "accesstoken") String accessToken);
 
     @PostMapping("auth/feigntest")
     String withBody(@RequestBody String test);
 
 
     @GetMapping("auth/token/github")
-    String getGithubAccessTokenByJwtAccessToken(@RequestParam String providerId);
+    String getGithubAccessTokenByJwtAccessToken(@RequestParam(value = "providerid") String providerId);
 
 
 }
