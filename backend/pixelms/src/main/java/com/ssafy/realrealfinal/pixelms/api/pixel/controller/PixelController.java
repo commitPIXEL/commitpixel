@@ -1,12 +1,14 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.controller;
 
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
-import java.awt.image.BufferedImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +19,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class PixelController {
 
     private final PixelService pixelService;
-private final RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
+
+    /**
+     * userms에서 credit update 시 feign으로 요청하는 메서드
+     * 
+     * @param additionalCreditRes
+     * @return creditRes {전체 크레딧, 사용 가능 크레딧}
+     */
+    @GetMapping("/credit")
+    public CreditRes updateAndSendCredit(@RequestBody AdditionalCreditDto additionalCreditRes) {
+        log.info("consumeCreditEvent start");
+
+        CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
+
+        log.info("consumeCreditEvent end: " + creditRes);
+        return creditRes;
+    }
+
     /**
      * imageMS에서 scheduled로 요청 들어오면 현 redis 상태 이미지화해서 보내주는 것.
      *
@@ -62,4 +81,5 @@ private final RedisUtil redisUtil;
         }
         return ResponseEntity.ok().build();
     }
+
 }

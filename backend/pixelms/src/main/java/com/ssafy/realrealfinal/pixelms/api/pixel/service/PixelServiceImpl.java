@@ -1,7 +1,11 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.common.exception.pixel.Base64ConvertException;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
+import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -12,10 +16,10 @@ import java.util.Base64;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -24,9 +28,12 @@ import java.util.Map;
 public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
+    private final IdNameUtil idNameUtil;
+    private final KafkaTemplate<String, Map<String, String>> kafkaTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
-    private final int SCALE = 10;
+
+    private final int SCALE = 512;
 
     /**
      * 누적 사용 픽셀 수 업데이트
@@ -176,18 +183,76 @@ public class PixelServiceImpl implements PixelService {
     }
 
     /**
-     * UserMS 에서 update된 credit 값을 FrontEnd에 전달하고, redis에 저장
+     * 픽셀 레디스 업데이트하고 Rank로 보내주는 메서드
      *
-     * @param record providerId와 추가된 credit을 포함
+     * @param providerId
+     * @param pixelInfo
      */
-    @KafkaListener(topics = "total-credit-topic", groupId = "pixel-group")
-    public void consumeCreditEvent(ConsumerRecord<String, Map<Integer, Integer>> record) {
-        Map<Integer, Integer> map = record.value();
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer providerId = entry.getKey();
-            Integer additionalCredit = entry.getValue();
-            updateTotalCredit(providerId, additionalCredit);
-        }
+    @Override
+    public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
+        log.info("updatePixelRedis start: " + pixelInfo);
+
+        // (x * SCALE + y) 인덱스
+        String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
+
+        // 이전 유저 닉네임과 url 정보(없으면 null)
+        String prevUrl = redisUtil.getStringData(index, "url");
+        String prevName = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
+
+        // Red
+        redisUtil.setData(index, "R", (Integer) pixelInfo.get(2));
+        // Green
+        redisUtil.setData(index, "G", (Integer) pixelInfo.get(3));
+        // Blue
+        redisUtil.setData(index, "B", (Integer) pixelInfo.get(4));
+        // Url
+        redisUtil.setData(index, "url", (String) pixelInfo.get(5));
+        // providerId
+        redisUtil.setData(index, "id", providerId);
+
+        // rank로 이전, 현재 정보 보내기
+        Map<String, String> map = Map.of(
+                "prevUrl", prevUrl,
+                "prevGithubNickname", prevName,
+                "currUrl", (String) pixelInfo.get(5),
+                "currGithubNickname", (String) pixelInfo.get(6));
+        kafkaTemplate.send("pixel-update-topic", map);
     }
+
+    /**
+     *
+     * @param additionalCreditRes
+     * @return
+     */
+    @Override
+    public CreditRes updateAndSendCredit(AdditionalCreditDto additionalCreditRes) {
+        log.info("updateAndSendCredit start: " + additionalCreditRes);
+
+        Integer providerId = additionalCreditRes.getProviderId();
+        Integer additionalCredit = additionalCreditRes.getAdditionalCredit();
+        CreditRes creditRes = null;
+        // 전체 크레딧 redis 값 변경
+        updateTotalCredit(providerId, additionalCredit);
+        Integer totalCredit = getCredit(providerId, "total");
+        Integer availableCredit = getAvailableCredit(providerId);
+        creditRes = new CreditRes(totalCredit, availableCredit);
+
+        log.info("updateAndSendCredit start: " + creditRes);
+        return creditRes;
+    }
+
+    @Override
+    public PixelInfoRes getUrlAndName(String index) {
+        log.info("getUrlAndName start: " + index);
+
+        String url = redisUtil.getStringData(index, "url");
+        String githubNickname = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
+
+        PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
+
+        log.info("getUrlAndName end: " + pixelInfoRes);
+        return pixelInfoRes;
+    }
+
 
 }
