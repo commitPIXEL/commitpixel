@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class UpdatePixelDto {
-    private String oldGithubNickname;
-    private String oldUrl;
-    private String newGithubNickname;
-    private String newUrl;
+    private String prevGithubNickname;
+    private String prevUrl;
+    private String currGithubNickname;
+    private String currUrl;
 }

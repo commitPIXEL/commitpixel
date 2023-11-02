@@ -9,5 +9,6 @@ public interface RankMapper {
 
     RankMapper INSTANCE = Mappers.getMapper(RankMapper.class);
 
-    UpdatePixelDto toUpdatePixelDto(String oldGithubNickname, String oldUrl, String newGithubNickname, String newUrl);
+    UpdatePixelDto toUpdatePixelDto(String prevGithubNickname, String prevUrl, String currGithubNickname, String currUrl);
+
 }
