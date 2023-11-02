@@ -7,6 +7,7 @@ import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfoDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
@@ -32,9 +33,14 @@ public class WebSocketHandler {
     private final AuthFeignClient authFeignClient;
     private final SocketIOServer server;
     private final int SCALE = 512;
+    private final String CREDIT = "credit";
+    private final String PIXEL = "pixel";
+    private final String URL = "url";
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, client}가 담긴 dto가 value
     private static final ConcurrentHashMap<UUID, SocketClientInfoDto> CLIENTS = new ConcurrentHashMap<>();
+    // providerId가 key, client가 value
+    private static final ConcurrentHashMap<Integer, SocketIOClient> CLIENTS_BY_PROVIDER_ID = new ConcurrentHashMap<>();
 
     /**
      * 스프링 애플리케이션 컨텍스트가 초기화되거나 새로 고쳐질 때 서버를 시작
@@ -48,7 +54,7 @@ public class WebSocketHandler {
      * 클라이언트가 최초로 연결될 때 실행되는 메서드
      * CLIENTS 맵에 sessionId, providerId, client 저장
      * idNameMap 맵에 providerId, githubNickname 저장
-     * 
+     *
      * @param client
      */
     @OnConnect
@@ -59,13 +65,14 @@ public class WebSocketHandler {
         // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
         // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
         String githubNickname = client.getHandshakeData().getHttpHeaders().get("githubNickname");
-        // 비회원 테스트를 위해 임시로 providerId를 세팅
+        // 비회원을 위해 임시로 providerId를 세팅
         if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
             CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(-1, client));
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             Integer providerId = authFeignClient.withQueryString(accessToken);
             CLIENTS.put(client.getSessionId(), new SocketClientInfoDto(providerId, client));
+            CLIENTS_BY_PROVIDER_ID.put(providerId, client);
             // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
             if (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals("")) {
                 idNameUtil.updateMap(-1, "githubNick");
@@ -101,7 +108,7 @@ public class WebSocketHandler {
         for (SocketClientInfoDto clientInfo : CLIENTS.values()) {
             SocketIOClient clientSession = clientInfo.getSocketIOClient();
             if (!client.getSessionId().equals(clientSession.getSessionId()) && clientSession.isChannelOpen()) {
-                clientSession.sendEvent("pixel", pixelInfo);
+                clientSession.sendEvent(PIXEL, pixelInfo);
             }
         }
 
@@ -130,11 +137,19 @@ public class WebSocketHandler {
         String url = redisUtil.getStringData(String.valueOf(index), "url");
         String githubNickname = redisUtil.getStringData(String.valueOf(index), "id");
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
-        client.sendEvent("url", pixelInfoRes);
+        client.sendEvent(URL, pixelInfoRes);
+    }
+
+    public void sendCreditToClient(Integer providerId, CreditRes creditRes) {
+        SocketIOClient client = CLIENTS_BY_PROVIDER_ID.get(providerId);
+        if (client != null && client.isChannelOpen()) {
+            client.sendEvent(CREDIT, creditRes);
+        }
     }
 
     /**
      * 클라이언트가 연결을 끊을 때 실행되는 메서드
+     *
      * @param client
      */
     @OnDisconnect
