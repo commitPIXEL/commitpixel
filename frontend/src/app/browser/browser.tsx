@@ -44,9 +44,7 @@ const Browser = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     console.log(e.key);
-    if (e.key === "h" || e.key === "H") {
-      dispatch(setTool("panning"));
-    } else if (e.key === "b" || e.key === "B") {
+    if (e.key === "b" || e.key === "B") {
       dispatch(setTool("painting"));
     } else if (e.key === "i" || e.key === "I") {
       dispatch(setTool("copying"));

@@ -23,7 +23,11 @@ const CanvasContainer = () => {
   const [open, setOpen] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
+  const device = useSelector((state: RootState) => state.device.device);
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
+
+  const pcClass = " h-full col-span-3";
+  const mobileClass = " h-full justify-center";
 
 
   // 픽셀 그리기
@@ -80,15 +84,17 @@ const CanvasContainer = () => {
 
   useEffect(() => {
     const div = ref.current;
-    const initialZoom = 1;
+    const initialZoom = device === "mobile" ? 0.6 : 1;
+    const dividerWidth = device === "mobile" ? 3 : 3.5;
+    const dividerHeight = device === "mobile" ? 8 : 3.5;
     if (div) {
       const panzoom = Panzoom(div, {
         zoomDoubleClickSpeed: 1,
         initialZoom: initialZoom,
       });
       panzoom.moveTo(
-        window.innerWidth / 4 - (width / 4) * initialZoom,
-        window.innerHeight / 4 - (height / 4) * initialZoom,
+        window.innerWidth / dividerWidth - (width / dividerWidth) * initialZoom,
+        window.innerHeight / dividerHeight - (height / dividerHeight) * initialZoom,
       );
 
       panzoom.setMaxZoom(50);
@@ -180,7 +186,7 @@ const CanvasContainer = () => {
   };
 
   return (
-    <div className="col-span-3 w-full max-h-full">
+    <div className={device === "mobile" ? "w-full h-[50%]" : "col-span-3 w-full max-h-full"}>
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
@@ -197,8 +203,8 @@ const CanvasContainer = () => {
         </div>
       )}
       {socket && (
-        <div className="w-full h-full flex flex-col col-span-3 items-center">
-          <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
+        <div className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
+          { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
             className="overflow-hidden w-[95%] h-full">
             <div className="w-max" ref={ref}>
