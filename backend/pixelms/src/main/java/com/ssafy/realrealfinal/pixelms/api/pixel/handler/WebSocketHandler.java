@@ -130,10 +130,8 @@ public class WebSocketHandler {
     public void onUrlEvent(SocketIOClient client, List pixelInfo) {
         log.info("Url event received: {}", pixelInfo);
 
-        Integer index = (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1);
-        String url = redisUtil.getStringData(String.valueOf(index), "url");
-        String githubNickname = redisUtil.getStringData(String.valueOf(index), "id");
-        PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
+        String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
+        PixelInfoRes pixelInfoRes = pixelService.getUrlAndName(index);
         client.sendEvent(URL, pixelInfoRes);
     }
 

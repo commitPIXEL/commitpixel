@@ -2,13 +2,12 @@ package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
 import com.ssafy.realrealfinal.pixelms.api.pixel.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +21,7 @@ public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
     private final IdNameUtil idNameUtil;
-    private final WebSocketHandler webSocketHandler;
     private final KafkaTemplate<String, Map<String, String>> kafkaTemplate;
-    private final KafkaTemplate<String, Map<Integer, Integer>> testTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
     private final int SCALE = 512;
@@ -133,43 +130,32 @@ public class PixelServiceImpl implements PixelService {
         kafkaTemplate.send("pixel-update-topic", map);
     }
 
-    /**
-     * KafkaListener 애노테이션을 이용해 메시지를 소비하는 메서드입니다.
-     * "total-credit-topic" 토픽에서 메시지를 소비하며,
-     * 그룹 ID는 "pixel-group"입니다.
-     *
-     * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
-     */
-    @KafkaListener(topics = "total-credit-topic", groupId = "pixel-group")
-    public void consumeCreditEvent(ConsumerRecord<String, Map<String, Integer>> record) {
-        log.info("consumeCreditEvent start: " + record);
+    @Override
+    public CreditRes updateAndSendCredit(Object object) {
+        log.info("updateAndSendCredit start: " + object);
 
-        updateAndSendCredit(record);
-
-        log.info("consumeCreditEvent end");
-    }
-
-    @KafkaListener(topics = "solvedac-update-topic", groupId = "pixel-group")
-    public void consumeSolvedAcEvent(ConsumerRecord<String, Map<String, Integer>> record) {
-        log.info("consumeSolvedAcEvent start: " + record);
-
-        updateAndSendCredit(record);
-
-        log.info("consumeSolvedAcEvent end");
-    }
-
-    private void updateAndSendCredit(ConsumerRecord<String, Map<String, Integer>> record) {
-        Map<String, Integer> map = record.value();
         CreditRes creditRes = null;
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            Integer providerId = Integer.valueOf(entry.getKey());
-            Integer additionalCredit = entry.getValue();
-            updateTotalCredit(providerId, additionalCredit);
-            Integer totalCredit = getCredit(providerId, "total");
-            Integer availableCredit = getAvailableCredit(providerId);
-            creditRes = new CreditRes(totalCredit, availableCredit);
-            webSocketHandler.sendCreditToClient(providerId, creditRes);
-        }
+//        updateTotalCredit(providerId, additionalCredit);
+//        Integer totalCredit = getCredit(providerId, "total");
+//        Integer availableCredit = getAvailableCredit(providerId);
+//        creditRes = new CreditRes(totalCredit, availableCredit);
+
+        log.info("updateAndSendCredit start: " + creditRes);
+        return creditRes;
     }
+
+    @Override
+    public PixelInfoRes getUrlAndName(String index) {
+        log.info("getUrlAndName start: " + index);
+
+        String url = redisUtil.getStringData(index, "url");
+        String githubNickname = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
+
+        PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
+
+        log.info("getUrlAndName end: " + pixelInfoRes);
+        return pixelInfoRes;
+    }
+
 
 }
