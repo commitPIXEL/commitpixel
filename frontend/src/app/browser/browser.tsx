@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, getUserPixel } from "@/store/slices/userSlice";
 import { RootState } from "@/store";
@@ -20,27 +20,34 @@ const Browser = () => {
   );
   const user = useSelector((state: RootState) => state.user);
 
-  // useEffect(() => {
-  //   const fetchAsync = async () => {
-  //     try {
-  //       const [resFromUser, resFromFixel] = await Promise.all([
-  //         customFetch("/user"),
-  //         customFetch("/fixel"),
-  //       ]);
+  useEffect(() => {
+    const fetchAsync = async () => {
+      try {
+        // const [resFromUser, resFromFixel] = await Promise.all([
+        //   customFetch("/user"),
+        //   customFetch("/fixel"),
+        // ]);
 
-  //       const userData: UserInfo = await resFromUser.json();
-  //       const fixelData: UserFixel = await resFromFixel.json();
-  //       dispatch(getUserInfo(userData));
-  //       dispatch(getUserPixel(fixelData));
-  //     } catch (err) {
-  //       console.error("Error:", err);
-  //     }
-  //   };
+        // const userData: UserInfo = await resFromUser.json();
+        // const fixelData: UserFixel = await resFromFixel.json();
+        // dispatch(getUserInfo(userData));
+        // dispatch(getUserPixel(fixelData));
 
-  //   if (accessToken.length) {
-  //     fetchAsync();
-  //   }
-  // }, [accessToken]);
+        // test용
+        const resFromUser = await customFetch("/user");
+        console.log("resFromUser: " + resFromUser);
+        const userData: UserInfo = await resFromUser.json();
+        console.log("userData: " + userData);
+        dispatch(getUserInfo(userData));
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    };
+
+    if (accessToken.length) {
+      fetchAsync();
+    }
+  }, [accessToken]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     console.log(e.key);
