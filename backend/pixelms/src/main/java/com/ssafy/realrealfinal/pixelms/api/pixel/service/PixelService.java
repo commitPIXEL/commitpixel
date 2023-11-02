@@ -8,7 +8,7 @@ public interface PixelService {
 
     Integer getAvailableCredit(Integer providerId);
 
-    BufferedImage redisToImage();
+    byte[] redisToImage();
 
     String bufferedImageToBase64Image();
 }

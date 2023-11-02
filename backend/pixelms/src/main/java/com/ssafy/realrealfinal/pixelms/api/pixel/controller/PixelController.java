@@ -24,9 +24,9 @@ private final RedisUtil redisUtil;
      * @return 픽셀 레디스 데이터 -> 이미지
      */
     @GetMapping("/image")
-    BufferedImage getImage() {
+    byte[] getImage() {
         log.info("getImage start");
-        BufferedImage image = pixelService.redisToImage();
+        byte[] image = pixelService.redisToImage();
         log.info("getImage end: SUCCESS");
         return image;
     }
