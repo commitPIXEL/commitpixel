@@ -6,7 +6,6 @@ import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
-import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
@@ -27,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketHandler {
 
     private final PixelService pixelService;
-    private final RedisUtil redisUtil;
     private final IdNameUtil idNameUtil;
     private final AuthFeignClient authFeignClient;
     private final SocketIOServer server;
