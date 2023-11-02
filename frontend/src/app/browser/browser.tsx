@@ -10,7 +10,7 @@ import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
 import TestCanvas from "./canvas/testCanvas";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { UserInfo, UserFixel } from "../interfaces/browser";
+import { UserInfo, UserFixel } from "../../interfaces/browser";
 
 const Browser = () => {
   const dispatch = useDispatch();
@@ -20,27 +20,27 @@ const Browser = () => {
   );
   const user = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    const fetchAsync = async () => {
-      try {
-        const [resFromUser, resFromFixel] = await Promise.all([
-          customFetch("/user"),
-          customFetch("/fixel"),
-        ]);
+  // useEffect(() => {
+  //   const fetchAsync = async () => {
+  //     try {
+  //       const [resFromUser, resFromFixel] = await Promise.all([
+  //         customFetch("/user"),
+  //         customFetch("/fixel"),
+  //       ]);
 
-        const userData: UserInfo = await resFromUser.json();
-        const fixelData: UserFixel = await resFromFixel.json();
-        dispatch(getUserInfo(userData));
-        dispatch(getUserPixel(fixelData));
-      } catch (err) {
-        console.error("Error:", err);
-      }
-    };
+  //       const userData: UserInfo = await resFromUser.json();
+  //       const fixelData: UserFixel = await resFromFixel.json();
+  //       dispatch(getUserInfo(userData));
+  //       dispatch(getUserPixel(fixelData));
+  //     } catch (err) {
+  //       console.error("Error:", err);
+  //     }
+  //   };
 
-    if (accessToken.length) {
-      fetchAsync();
-    }
-  }, [accessToken]);
+  //   if (accessToken.length) {
+  //     fetchAsync();
+  //   }
+  // }, [accessToken]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     console.log(e.key);
