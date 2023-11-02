@@ -28,13 +28,13 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/credit")
-    public ResponseEntity<?> consumeCreditEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
+    public CreditRes consumeCreditEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
         log.info("consumeCreditEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
 
         log.info("consumeCreditEvent end: " + creditRes);
-        return ResponseEntity.ok().body(creditRes);
+        return creditRes;
     }
 
     /**
@@ -44,13 +44,13 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/solvedac")
-    public ResponseEntity<?> consumeSolvedAcEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
+    public CreditRes consumeSolvedAcEvent(@RequestBody AdditionalCreditDto additionalCreditRes) {
         log.info("consumeSolvedAcEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);
 
         log.info("consumeSolvedAcEvent end: " + creditRes);
-        return ResponseEntity.ok().body(creditRes);
+        return creditRes;
     }
 
     /**
