@@ -118,7 +118,6 @@ public class WebSocketHandler {
         pixelService.updateUsedPixel(providerId);
         Integer availableCredit = pixelService.getAvailableCredit(providerId);
         client.sendEvent(PIXEL, availableCredit);
-        return;
     }
 
     /**
@@ -140,7 +139,7 @@ public class WebSocketHandler {
 
     /**
      * 크레딧 변경 시에 클라이언트로 보내는 이벤트
-     * 
+     *
      * @param providerId
      * @param creditRes
      */
