@@ -23,28 +23,32 @@ export default function Tutorials () {
           </div>
           <div className="w-[50%] h-full">
             <div className="w-full h-full grid grid-cols-2 grid-rows-7 text-xl items-center">
-              <div className="col-span-1 row-span-1">마우스 왼쪽 클릭: </div>
+              {/* <div className="col-span-1 row-span-1">마우스 왼쪽 클릭: </div> */}
+              <img src="/video/mouseleft.gif" width={"75px"} height={"75px"} alt="url 클릭" />
               <div className="col-span-1 row-span-1">픽셀 URL 정보 보기</div>
-              <div className="col-span-1 row-span-1">마우스 오른쪽 클릭:</div>
+              {/* <div className="col-span-1 row-span-1">마우스 오른쪽 클릭:</div> */}
+              <img src="/video/mouseright.gif" width={"75px"} height={"75px"} alt="이동하기" />
               <div className="col-span-1 row-span-1">캔버스 이동</div>
-              <div className="col-span-1 row-span-1 flex items-center justify-between w-[60%]">
+              <div className="col-span-1 row-span-1 flex items-center justify-between w-[50%]">
                 <div
                   className={`flex justify-center items-center ml-1 mr-1 p-2 text-xl border-2 rounded-full aspect-square w-10 bg-mainColor text-bgColor`}
                 >
                   <FontAwesomeIcon icon={faPaintBrush} />
                 </div>
                 <div>+</div>
-                <div>마우스 왼쪽 클릭:</div>
+                {/* <div>마우스 왼쪽 클릭:</div> */}
+                <img src="/video/mouseleft.gif" width={"75px"} height={"75px"} alt="색칠하기" />
               </div>
               <div className="col-span-1 row-span-1">색칠하기</div>
-              <div className="col-span-1 row-span-1 flex items-center justify-between w-[60%]">
+              <div className="col-span-1 row-span-1 flex items-center justify-between w-[50%]">
                 <div
                   className={`flex justify-center items-center ml-1 mr-1 p-2 text-xl border-2 rounded-full aspect-square w-10 bg-mainColor text-bgColor`}
                 >
                   <FontAwesomeIcon icon={faEyeDropper} />
                 </div>
                 <div>+</div>
-                <div>마우스 왼쪽 클릭:</div>
+                {/* <div>마우스 왼쪽 클릭:</div> */}
+                <img src="/video/mouseleft.gif" width={"75px"} height={"75px"} alt="복사하기" />
               </div>
               <div className="col-span-1 row-span-1">복사하기</div>
               <div className="col-span-1 row-span-1">B 키:</div>
