@@ -9,4 +9,6 @@ public interface PixelService {
     Integer getAvailableCredit(Integer providerId);
 
     BufferedImage redisToImage();
+
+    String bufferedImageToBase64Image();
 }
