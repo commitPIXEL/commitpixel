@@ -5,10 +5,18 @@ import Mobile from "./mobile/mobile";
 import { useEffect, useState } from "react";
 import { setDevice } from "@/store/slices/deviceSlice";
 import { RootState } from "@/store";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const device = useSelector((state: RootState) => state.device.device);
+
+  useEffect(() => {
+    const isVisited = localStorage.getItem("isVisited");
+    if (!isVisited) {
+      router.push("tutorials");
+  }}, []);
 
   const handleResize = () => {
     if (window.innerWidth < 769 && window.innerWidth <= window.innerHeight) {
