@@ -25,7 +25,7 @@ public class PixelServiceImpl implements PixelService {
     private final RedisUtil redisUtil;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
-    private final int SCALE = 512;
+    private final int SCALE = 10;
 
     /**
      * 누적 사용 픽셀 수 업데이트
@@ -73,10 +73,10 @@ public class PixelServiceImpl implements PixelService {
         for (int x = 0; x < SCALE; x++) {
             for (int y = 0; y < SCALE; y++) {
                 String key = String.valueOf(x * SCALE + y);
-
-                Integer r = redisUtil.getIntegerData(key, "R");
-                Integer g = redisUtil.getIntegerData(key, "G");
-                Integer b = redisUtil.getIntegerData(key, "B");
+                System.out.println(key);
+                Integer r = redisUtil.getIntegerData(key, "red");
+                Integer g = redisUtil.getIntegerData(key, "green");
+                Integer b = redisUtil.getIntegerData(key, "blue");
 
                 // r, g, b 값이 null이 아니라면 이미지에 색을 적용
                 if (r != null && g != null && b != null) {
