@@ -21,7 +21,7 @@ public class S3UploadUtil {
      * 이미지는 "yyyy-MM-dd" 폴더에 저장.
      * 이미지 파일의 현재 시간 (예: 12:45 -> 12.5, 00:01 -> 0.0) 이름으로 파일 저장.
      */
-    @Scheduled(cron = "0 0,30 * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void S3Upload() {
         BufferedImage image = pixelFeignClient.getImage();
         LocalDateTime now = LocalDateTime.now();
