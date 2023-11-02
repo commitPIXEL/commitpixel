@@ -5,6 +5,7 @@ import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -66,7 +67,7 @@ public class PixelServiceImpl implements PixelService {
      * @return 레디스 데이터 -> 이미지
      */
     @Override
-    public BufferedImage redisToImage() {
+    public byte[] redisToImage() {
         log.info("redisToImage start");
         BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
 
@@ -85,8 +86,17 @@ public class PixelServiceImpl implements PixelService {
                 }
             }
         }
+
+        // BufferedImage를 byte[]로 변환
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(bufferedImage, "png", baos);
+        } catch (IOException e) {
+            log.error("Error while converting BufferedImage to byte[]", e);
+            return null; // Or handle the error in another way
+        }
         log.info("redisToImage end: SUCCESS");
-        return bufferedImage;
+        return baos.toByteArray();
     }
 
     /**
@@ -98,7 +108,17 @@ public class PixelServiceImpl implements PixelService {
     public String bufferedImageToBase64Image() {
         log.info("bufferedImageToBase64Image start");
         String base64Image = null;
-        BufferedImage image = redisToImage();
+        byte[] imageByte = redisToImage();
+        // byte[]를 ByteArrayInputStream으로 변환
+        ByteArrayInputStream bais = new ByteArrayInputStream(imageByte);
+
+        // BufferedImage로 변환
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(bais);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, "png", bos);
