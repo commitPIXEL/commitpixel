@@ -8,5 +8,5 @@ public interface PixelService {
 
     Integer getAvailableCredit(Integer providerId);
 
-    void updatePixelRedisAndSendRank(List pixelInfo);
+    void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
 }

@@ -76,7 +76,7 @@ public class WebSocketHandler {
             if (githubNickname == null || githubNickname.isEmpty()) {
                 idNameUtil.updateMap(-1, "githubNick");
             } else {
-                // 맵 업데이트
+                // id-name 맵 업데이트
                 idNameUtil.updateMap(providerId, githubNickname);
             }
         }
@@ -101,7 +101,7 @@ public class WebSocketHandler {
 
         Integer providerId = CLIENTS.get(client.getSessionId());
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
-        pixelService.updatePixelRedisAndSendRank(pixelInfo);
+        pixelService.updatePixelRedisAndSendRank(providerId, pixelInfo);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
         for (SocketIOClient clientSession : CLIENTS_BY_PROVIDER_ID.values()) {

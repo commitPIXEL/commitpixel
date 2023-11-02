@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 import com.ssafy.realrealfinal.pixelms.api.pixel.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
+import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
+    private final IdNameUtil idNameUtil;
     private final WebSocketHandler webSocketHandler;
     private final KafkaTemplate<String, Map<String, String>> kafkaTemplate;
     private final KafkaTemplate<String, Map<Integer, Integer>> testTemplate;
@@ -101,16 +103,15 @@ public class PixelServiceImpl implements PixelService {
     }
 
     @Override
-    public void updatePixelRedisAndSendRank(List pixelInfo) {
+    public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
         log.info("updatePixelRedis start: " + pixelInfo);
 
         // (x * SCALE + y) 인덱스
-
         String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
 
-        // 이전 유저와 url 정보(없으면 null)
-        String prevUrl = redisUtil.getStringData(String.valueOf(index), "url");
-        String prevName = redisUtil.getStringData(String.valueOf(index), "name");
+        // 이전 유저 닉네임과 url 정보(없으면 null)
+        String prevUrl = redisUtil.getStringData(index, "url");
+        String prevName = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
 
         // Red
         redisUtil.setData(index, "red", (Integer) pixelInfo.get(2));
@@ -120,8 +121,8 @@ public class PixelServiceImpl implements PixelService {
         redisUtil.setData(index, "blue", (Integer) pixelInfo.get(4));
         // Url
         redisUtil.setData(index, "url", (String) pixelInfo.get(5));
-        // UserId
-        redisUtil.setData(index, "name", (String) pixelInfo.get(6));
+        // providerId
+        redisUtil.setData(index, "providerId", providerId);
 
         // rank로 이전, 현재 정보 보내기
         Map<String, String> map = Map.of(
