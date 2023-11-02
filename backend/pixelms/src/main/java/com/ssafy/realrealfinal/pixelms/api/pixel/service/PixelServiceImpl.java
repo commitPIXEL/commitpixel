@@ -1,5 +1,7 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
+import com.ssafy.realrealfinal.pixelms.api.pixel.handler.WebSocketHandler;
+import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import java.util.Map;
 public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
+    private final WebSocketHandler webSocketHandler;
     private final KafkaTemplate<String, Map<String, String>> kafkaTemplate;
+    private final KafkaTemplate<String, Map<Integer, Integer>> testTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
     private final int SCALE = 512;
@@ -101,22 +105,23 @@ public class PixelServiceImpl implements PixelService {
         log.info("updatePixelRedis start: " + pixelInfo);
 
         // (x * SCALE + y) 인덱스
-        Integer index = (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1);
+
+        String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
 
         // 이전 유저와 url 정보(없으면 null)
         String prevUrl = redisUtil.getStringData(String.valueOf(index), "url");
         String prevName = redisUtil.getStringData(String.valueOf(index), "name");
 
         // Red
-        redisUtil.setData(String.valueOf(index), "red", (Integer) pixelInfo.get(2));
+        redisUtil.setData(index, "red", (Integer) pixelInfo.get(2));
         // Green
-        redisUtil.setData(String.valueOf(index), "green", (Integer) pixelInfo.get(3));
+        redisUtil.setData(index, "green", (Integer) pixelInfo.get(3));
         // Blue
-        redisUtil.setData(String.valueOf(index), "blue", (Integer) pixelInfo.get(4));
+        redisUtil.setData(index, "blue", (Integer) pixelInfo.get(4));
         // Url
-        redisUtil.setData(String.valueOf(index), "url", (String) pixelInfo.get(5));
+        redisUtil.setData(index, "url", (String) pixelInfo.get(5));
         // UserId
-        redisUtil.setData(String.valueOf(index), "name", (String) pixelInfo.get(6));
+        redisUtil.setData(index, "name", (String) pixelInfo.get(6));
 
         // rank로 이전, 현재 정보 보내기
         Map<String, String> map = Map.of(
@@ -135,17 +140,35 @@ public class PixelServiceImpl implements PixelService {
      * @param record 소비된 Kafka 메시지. 메시지의 key와 value를 포함하고 있습니다.
      */
     @KafkaListener(topics = "total-credit-topic", groupId = "pixel-group")
-    public void consumeCreditEvent(ConsumerRecord<String, Map<Integer, Integer>> record) {
+    public void consumeCreditEvent(ConsumerRecord<String, Map<String, Integer>> record) {
         log.info("consumeCreditEvent start: " + record);
 
-        Map<Integer, Integer> map = record.value();
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer providerId = entry.getKey();
-            Integer additionalCredit = entry.getValue();
-            updateTotalCredit(providerId, additionalCredit);
-        }
+        updateAndSendCredit(record);
 
         log.info("consumeCreditEvent end");
+    }
+
+    @KafkaListener(topics = "solvedac-update-topic", groupId = "pixel-group")
+    public void consumeSolvedAcEvent(ConsumerRecord<String, Map<String, Integer>> record) {
+        log.info("consumeSolvedAcEvent start: " + record);
+
+        updateAndSendCredit(record);
+
+        log.info("consumeSolvedAcEvent end");
+    }
+
+    private void updateAndSendCredit(ConsumerRecord<String, Map<String, Integer>> record) {
+        Map<String, Integer> map = record.value();
+        CreditRes creditRes = null;
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            Integer providerId = Integer.valueOf(entry.getKey());
+            Integer additionalCredit = entry.getValue();
+            updateTotalCredit(providerId, additionalCredit);
+            Integer totalCredit = getCredit(providerId, "total");
+            Integer availableCredit = getAvailableCredit(providerId);
+            creditRes = new CreditRes(totalCredit, availableCredit);
+            webSocketHandler.sendCreditToClient(providerId, creditRes);
+        }
     }
 
 }
