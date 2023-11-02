@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.handler.WebSocketHandler;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
@@ -182,6 +183,12 @@ public class PixelServiceImpl implements PixelService {
         log.info("updateTotalCredit end");
     }
 
+    /**
+     * 픽셀 레디스 업데이트하고 Rank로 보내주는 메서드
+     *
+     * @param providerId
+     * @param pixelInfo
+     */
     @Override
     public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
         log.info("updatePixelRedis start: " + pixelInfo);
@@ -213,16 +220,23 @@ public class PixelServiceImpl implements PixelService {
         kafkaTemplate.send("pixel-update-topic", map);
     }
 
-
+    /**
+     *
+     * @param additionalCreditRes
+     * @return
+     */
     @Override
-    public CreditRes updateAndSendCredit(Object object) {
-        log.info("updateAndSendCredit start: " + object);
+    public CreditRes updateAndSendCredit(AdditionalCreditRes additionalCreditRes) {
+        log.info("updateAndSendCredit start: " + additionalCreditRes);
 
+        Integer providerId = additionalCreditRes.getProviderId();
+        Integer additionalCredit = additionalCreditRes.getAdditionalCredit();
         CreditRes creditRes = null;
-//        updateTotalCredit(providerId, additionalCredit);
-//        Integer totalCredit = getCredit(providerId, "total");
-//        Integer availableCredit = getAvailableCredit(providerId);
-//        creditRes = new CreditRes(totalCredit, availableCredit);
+        // 전체 크레딧 redis 값 변경
+        updateTotalCredit(providerId, additionalCredit);
+        Integer totalCredit = getCredit(providerId, "total");
+        Integer availableCredit = getAvailableCredit(providerId);
+        creditRes = new CreditRes(totalCredit, availableCredit);
 
         log.info("updateAndSendCredit start: " + creditRes);
         return creditRes;

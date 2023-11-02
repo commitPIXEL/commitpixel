@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 
@@ -14,7 +15,7 @@ public interface PixelService {
 
     void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
 
-    CreditRes updateAndSendCredit(Object object);
+    CreditRes updateAndSendCredit(AdditionalCreditRes additionalCreditRes);
 
     PixelInfoRes getUrlAndName(String index);
 
