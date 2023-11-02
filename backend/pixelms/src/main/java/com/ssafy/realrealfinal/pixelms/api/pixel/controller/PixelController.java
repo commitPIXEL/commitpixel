@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PixelController {
 
     private final PixelService pixelService;
-private final RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
     /**
      * imageMS에서 scheduled로 요청 들어오면 현 redis 상태 이미지화해서 보내주는 것.
      *
@@ -41,25 +41,9 @@ private final RedisUtil redisUtil;
 
     @GetMapping("/")
     ResponseEntity<?> test(){
-        int SCALE = 10;
-        for(int i=0;i<SCALE;i++){
-            for(int j=0;j<SCALE;j++){
-                // (x * SCALE + y) 인덱스
-                Integer val = i * SCALE + j;
-                String index = val.toString();
-
-                // Red
-                redisUtil.setData(index, "red", 255);
-                // Green
-                redisUtil.setData(index, "green", 0);
-                // Blue
-                redisUtil.setData(index, "blue", 0);
-                // Url
-                redisUtil.setData(index, "url", " ");
-                // UserId
-                redisUtil.setData(index, "name", " ");
-            }
-        }
+        pixelService.test();
         return ResponseEntity.ok().build();
     }
+
+
 }

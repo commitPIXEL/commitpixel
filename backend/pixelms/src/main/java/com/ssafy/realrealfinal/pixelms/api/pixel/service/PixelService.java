@@ -11,4 +11,6 @@ public interface PixelService {
     byte[] redisToImage();
 
     String bufferedImageToBase64Image();
+
+    public void test();
 }

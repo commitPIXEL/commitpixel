@@ -1,18 +1,18 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
-import com.ssafy.realrealfinal.pixelms.common.exception.pixel.Base64ConvertException;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,8 @@ public class PixelServiceImpl implements PixelService {
     private final RedisUtil redisUtil;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
-    private final int SCALE = 10;
+    @Value("${canvas.scale}")
+    private int SCALE;
 
     /**
      * 누적 사용 픽셀 수 업데이트
@@ -66,24 +67,25 @@ public class PixelServiceImpl implements PixelService {
      *
      * @return 레디스 데이터 -> 이미지
      */
-    @Override
     public byte[] redisToImage() {
         log.info("redisToImage start");
         BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
 
-        for (int x = 0; x < SCALE; x++) {
-            for (int y = 0; y < SCALE; y++) {
-                String key = String.valueOf(x * SCALE + y);
-                System.out.println(key);
-                Integer r = redisUtil.getIntegerData(key, "red");
-                Integer g = redisUtil.getIntegerData(key, "green");
-                Integer b = redisUtil.getIntegerData(key, "blue");
+        List<Object> rgbValues = redisUtil.getRGBValues();
+        int rgbIndex = -1;
 
-                // r, g, b 값이 null이 아니라면 이미지에 색을 적용
-                if (r != null && g != null && b != null) {
-                    Color color = new Color(r, g, b);
-                    bufferedImage.setRGB(x, y, color.getRGB());
-                }
+        for (int x = 0; x < SCALE; ++x) {
+            for (int y = 0; y < SCALE; ++y) {
+                String rString = (String) rgbValues.get(++rgbIndex);
+                String gString = (String) rgbValues.get(++rgbIndex);
+                String bString = (String) rgbValues.get(++rgbIndex);
+
+                int r = Integer.parseInt(rString);
+                int g = Integer.parseInt(gString);
+                int b = Integer.parseInt(bString);
+
+                Color color = new Color(r, g, b);
+                bufferedImage.setRGB(x, y, color.getRGB());
             }
         }
 
@@ -93,11 +95,40 @@ public class PixelServiceImpl implements PixelService {
             ImageIO.write(bufferedImage, "png", baos);
         } catch (IOException e) {
             log.error("Error while converting BufferedImage to byte[]", e);
-            return null; // Or handle the error in another way
+            return null;
         }
         log.info("redisToImage end: SUCCESS");
         return baos.toByteArray();
     }
+
+    public BufferedImage redisToBufferedImage() {
+        log.info("redisToBufferedImage start");
+        BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
+
+        List<Object> rgbValues = redisUtil.getRGBValues();
+        int rgbIndex = 0;
+
+        for (int x = 0; x < SCALE; x++) {
+            for (int y = 0; y < SCALE; y++) {
+                String rString = (String) rgbValues.get(rgbIndex++);
+                String gString = (String) rgbValues.get(rgbIndex++);
+                String bString = (String) rgbValues.get(rgbIndex++);
+
+                if (rString != null && gString != null && bString != null) {
+                    Integer r = Integer.parseInt(rString);
+                    Integer g = Integer.parseInt(gString);
+                    Integer b = Integer.parseInt(bString);
+
+                    Color color = new Color(r, g, b);
+                    bufferedImage.setRGB(x, y, color.getRGB());
+                }
+            }
+        }
+
+        log.info("redisToBufferedImage end: SUCCESS");
+        return bufferedImage;
+    }
+
 
     /**
      * BufferedImage 를 base64로 변경
@@ -106,22 +137,28 @@ public class PixelServiceImpl implements PixelService {
      */
     @Override
     public String bufferedImageToBase64Image() {
-        log.info("bufferedImageToBase64Image start");
-        String base64Image = null;
-        byte[] imageByte = redisToImage();
-        // byte[]를 ByteArrayInputStream으로 변환
-        ByteArrayInputStream bais = new ByteArrayInputStream(imageByte);
+        log.info("redisToBase64Image start");
 
-        // BufferedImage로 변환
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(bais);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
+        List<Object> rgbValues = (List<Object>) (redisUtil.getRGBValues()).get(0);
+        int rgbIndex = -1;
+
+        for (int x = 0; x < SCALE; ++x) {
+            for (int y = 0; y < SCALE; ++y) {
+                int r = Integer.parseInt(rgbValues.get(++rgbIndex).toString());
+                int g = Integer.parseInt(rgbValues.get(++rgbIndex).toString());
+                int b = Integer.parseInt(rgbValues.get(++rgbIndex).toString());
+
+                Color color = new Color(r, g, b);
+                bufferedImage.setRGB(x, y, color.getRGB());
+            }
         }
+
+        // BufferedImage를 Base64 String으로 변환
+        String base64Image = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            ImageIO.write(image, "png", bos);
+            ImageIO.write(bufferedImage, "png", bos);
             byte[] imageBytes = bos.toByteArray();
 
             Base64.Encoder encoder = Base64.getEncoder();
@@ -129,10 +166,10 @@ public class PixelServiceImpl implements PixelService {
 
             bos.close();
         } catch (IOException e) {
-            log.warn("failed while encoding to base64", e);
-            throw new Base64ConvertException();
+            log.warn("Failed while encoding to base64", e);
         }
-        log.info("bufferedImageToBase64Image end: SUCCESS");
+
+        log.info("redisToBase64Image end: SUCCESS");
         return base64Image;
     }
 
@@ -190,4 +227,10 @@ public class PixelServiceImpl implements PixelService {
         }
     }
 
+    @Override
+    public void test() {
+        log.info("Test start");
+        redisUtil.initPixelRedis();
+        log.info("test end");
+    }
 }
