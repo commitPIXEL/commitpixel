@@ -92,6 +92,12 @@ public class UserController {
 
     }
 
+    /**
+     * feign test 용 메서드
+     *
+     * @param test 문자열
+     * @return 문자열 추가한거.
+     */
     @PostMapping("/feigntest")
     public ResponseEntity<?> feignTest(@RequestBody String test) {
         log.info("feignTest start: " + test);
@@ -100,6 +106,12 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * AccessToken으로 유저정보(닉네임, 프로필이미지, url) 가져오기
+     *
+     * @param accessToken jwt 액세스 토큰
+     * @return 200 Ok(유저정보)
+     */
     @GetMapping("/")
     public ResponseEntity<?> getUserInfo(@RequestHeader(value = "accesstoken") String accessToken) {
         log.info("getUserInfo start: ");
