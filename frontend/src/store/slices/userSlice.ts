@@ -31,12 +31,12 @@ const userSlice = createSlice({
       state.totalPixel = action.payload.totalPixel;
       state.availablePixel = action.payload.availablePixel;
     },
-    pickPixel: (state) => {
-      state.availablePixel -= 1;
+    pickPixel: (state, action: PayloadAction<{ availablePixel: number }>) => {
+      state.availablePixel = action.payload.availablePixel;
     },
-    addPixel: (state, action: PayloadAction<number>) => {
-      state.totalPixel += action.payload;
-      state.availablePixel += action.payload;
+    addPixel: (state, action: PayloadAction<{ totalPixel: number; availablePixel: number }>) => {
+      state.totalPixel = action.payload.totalPixel;
+      state.availablePixel = action.payload.availablePixel;
     },
     logout: (state) => {
       state.nickName = "";

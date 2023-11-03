@@ -33,6 +33,8 @@ const SolvedacBtn = () => {
           body: JSON.stringify({ solvedAcId: id }),
         });
 
+        console.log(resFromUser);
+        console.log(resFromUser.json())
         window.alert("solvedac 연동 성공!!");
     } catch (err) {
         console.error("Error:", err);
