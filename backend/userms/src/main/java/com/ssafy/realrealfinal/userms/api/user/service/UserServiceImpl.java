@@ -4,8 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
+import com.ssafy.realrealfinal.userms.api.user.feignClient.PixelFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.mapper.UserMapper;
+import com.ssafy.realrealfinal.userms.api.user.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
+import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
+import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
@@ -45,9 +49,9 @@ public class UserServiceImpl implements UserService {
     private final WhitelistRepository whitelistRepository;
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
-    private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
     private final KafkaTemplate<String, Map<Integer, Integer>> pixelKafkaTemplate;
+    private final PixelFeignClient pixelFeignClient;
 
     /**
      * 커밋 수와 문제 수 불러오기 15분 간격 pixelms에서 kafka로 호출해야 함
@@ -56,11 +60,11 @@ public class UserServiceImpl implements UserService {
      * @return CreditRes
      */
     @Override
-    public String refreshInfoFromClient(String accessToken) {
+    public RefreshedInfoRes refreshInfoFromClient(String accessToken) {
         log.info("refreshCreditFromClient start: " + accessToken);
 
         Integer providerId = authFeignClient.withQueryString(accessToken);
-        String refreshedInfo = refreshInfo(providerId);
+        RefreshedInfoRes refreshedInfo = refreshInfo(providerId);
 
         log.info("refreshCreditFromClient end: " + refreshedInfo);
         return refreshedInfo;
@@ -72,10 +76,10 @@ public class UserServiceImpl implements UserService {
      * @param providerId 깃허브 provider id
      * @return RefreshInfoDto
      */
-    public String refreshedInfoFromServer(Integer providerId) {
+    public RefreshedInfoRes refreshedInfoFromServer(Integer providerId) {
         log.info("refreshCreditFromServer start: " + providerId);
 
-        String refreshedInfo = refreshInfo(providerId);
+        RefreshedInfoRes refreshedInfo = refreshInfo(providerId);
 
         log.info("refreshCreditFromServer end: " + refreshedInfo);
         return refreshedInfo;
@@ -88,9 +92,9 @@ public class UserServiceImpl implements UserService {
      * @return RefreshInfoDto
      */
     @Transactional
-    public String refreshInfo(
+    public RefreshedInfoRes refreshInfo(
         Integer providerId) {
-        log.info("refreshCredit start: " + providerId);
+        log.info("refreshInfo start: " + providerId);
 
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
         // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
@@ -109,7 +113,7 @@ public class UserServiceImpl implements UserService {
                 String jsonMessage = objectMapper.writeValueAsString(
                     Map.of("previous", user.getGithubNickname(), "now", githubNickname));
                 rankKafkaTemplate.send("rank-nickname-topic", jsonMessage);
-                log.info("refreshCredit mid: kafka json data: " + jsonMessage);
+                log.info("refreshInfo mid: kafka json data: " + jsonMessage);
             } catch (JsonProcessingException e) {
                 throw new JsonifyException();
             }
@@ -121,12 +125,19 @@ public class UserServiceImpl implements UserService {
             lastUpdateStatus, lastUpdateTime);
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
-        Integer refreshedCredit = commitNum + solvedNum;
-        // pixelms와 연결된 kafka에 정보 보냄
-        Map<Integer, Integer> map = Map.of(providerId, refreshedCredit);
-        kafkaTemplate.send("total-credit-topic", map);
-        log.info("refreshCredit end: " + githubNickname);
-        return githubNickname;
+        Integer additionalCredit = commitNum + solvedNum;
+//        // pixelms와 연결된 kafka에 정보 보냄
+//        Map<Integer, Integer> map = Map.of(providerId, additionalCredit);
+//        kafkaTemplate.send("total-credit-topic", map);
+
+        //feign으로 통신.
+        AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
+            providerId, additionalCredit);
+        CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
+        RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
+            githubNickname);
+        log.info("refreshInfo end: " + refreshedInfoRes);
+        return refreshedInfoRes;
     }
 
     /**
