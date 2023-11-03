@@ -195,9 +195,9 @@ public class PixelServiceImpl implements PixelService {
         log.info("updatePixelRedisAndSendRank start: " + providerId + " " + pixelInfo);
         Integer x = (Integer) pixelInfo.get(0);
         Integer y = (Integer) pixelInfo.get(1);
-        String r = (String) pixelInfo.get(2);
-        String g = (String) pixelInfo.get(3);
-        String b = (String) pixelInfo.get(4);
+        String r = String.valueOf(pixelInfo.get(2));
+        String g = String.valueOf(pixelInfo.get(3));
+        String b = String.valueOf(pixelInfo.get(4));
         String url = (String) pixelInfo.get(5);
         String githubNickname = (String) pixelInfo.get(6);
         // (x * SCALE + y) 인덱스
