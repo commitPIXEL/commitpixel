@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-  nickName: "",
+  githubNickname: "",
   profileImage: "",
   totalPixel: 0,
   availablePixel: 0,
@@ -15,12 +15,12 @@ const userSlice = createSlice({
     getUserInfo: (
       state,
       action: PayloadAction<{
-        nickName: string;
+        githubNickname: string;
         profileImage: string;
         url: string;
       }>
     ) => {
-      state.nickName = action.payload.nickName;
+      state.githubNickname = action.payload.githubNickname;
       state.profileImage = action.payload.profileImage;
       state.url = action.payload.url;
     },
@@ -39,7 +39,7 @@ const userSlice = createSlice({
       state.availablePixel = action.payload.availablePixel;
     },
     logout: (state) => {
-      state.nickName = "";
+      state.githubNickname = "";
       state.profileImage = "";
       state.totalPixel = 0;
       state.availablePixel = 0;

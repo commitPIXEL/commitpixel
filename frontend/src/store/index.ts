@@ -7,7 +7,7 @@ import thunk from "redux-thunk";
 const persistConfig = {
     key: "root",    // 스토리지에 저장할 때 키값을 지정
     storage,    // 저장할 스토리지 지정(local)
-    whitelist: ["color", "authorization", "tool", "device"]
+    whitelist: ["color", "authorization", "tool", "device", "user"]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
