@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { height, imageUrl, width } from "../config";
 import Panzoom from "panzoom";
 import { rgbToHex } from "../utils";
-import useColorTool from "@/app/utils/colorTool";
+import useColorTool from "@/hooks/useColorTool";
 import { BrowserSnackBar } from "./snackbar";
 
 const CanvasContainer = () => {

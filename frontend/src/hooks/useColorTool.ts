@@ -2,18 +2,17 @@ import Icolor from "@/interfaces/color";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 
-
-const toHex = (rgbData: number) => {
-  let hex = rgbData.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
-};
-
-const rgbtoHex = (r: number, g: number, b: number) => {
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-};
-
 const useColorTool = (setPixel: any, socket: any, dispatch: any, ctx: any, panzoomInstance: any, tool: string | null, color: Icolor, x: number, y: number) => {
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
+
+  const toHex = (rgbData: number) => {
+    let hex = rgbData.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  };
+  
+  const rgbtoHex = (r: number, g: number, b: number) => {
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  };
   
   if(tool === null || tool === undefined) {
     panzoomInstance?.pause();
