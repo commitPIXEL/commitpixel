@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         if (lastUpdateStatus == -1) {
             return null;
         }
-        String githubAccessToken = authFeignClient.getGithubAccessTokenByJwtAccessToken(
+        String githubAccessToken = authFeignClient.getGithubAccessTokenByProviderId(
             String.valueOf(providerId));
         Long lastUpdateTime = lastUpdateCheckUtil.getLastUpdateTime(providerId);
         String githubNickname = githubUtil.getGithubUserNickName(
