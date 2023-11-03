@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialAuthorization = "";
-
 const initialState = {
-  authorization: initialAuthorization,
+  authorization: "",
 };
 
 const authorizationSlice = createSlice({
@@ -15,7 +13,7 @@ const authorizationSlice = createSlice({
       state.authorization = action.payload;
     },
     logout: (state) => {
-      state.authorization = initialAuthorization;
+      state.authorization = "";
     }
   }
 });
