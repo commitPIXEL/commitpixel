@@ -105,8 +105,11 @@ public class JwtUtil {
     public Integer getProviderIdFromToken(String accessToken) {
         log.info("getUserIdFromToken start: " + accessToken);
         try {
+            byte[] apiKeySecretBytes = secretKey.getBytes();
+            Key signingKey = new SecretKeySpec(apiKeySecretBytes,
+                SignatureAlgorithm.HS256.getJcaName());
             Integer providerId = Integer.parseInt(Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody()
