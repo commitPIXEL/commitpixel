@@ -79,7 +79,7 @@ const CanvasContainer = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [ctx]);
 
   useEffect(() => {
     const div = ref.current;
