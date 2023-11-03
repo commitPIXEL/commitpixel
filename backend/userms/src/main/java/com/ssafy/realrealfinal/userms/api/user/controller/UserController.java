@@ -2,6 +2,7 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
+import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,9 @@ public class UserController {
     public ResponseEntity<?> refreshCredit(
         @RequestHeader(value = "accesstoken") String accessToken) {
         log.info("refreshinfo start: " + accessToken);
-        String githubNickname = userService.refreshInfoFromClient(accessToken);
-        log.info("refreshinfo end: " + githubNickname);
-        return ResponseEntity.ok().body(githubNickname);
+        RefreshedInfoRes refreshedInfoRes = userService.refreshInfoFromClient(accessToken);
+        log.info("refreshinfo end: " + refreshedInfoRes);
+        return ResponseEntity.ok().body(refreshedInfoRes);
     }
 
     /**
