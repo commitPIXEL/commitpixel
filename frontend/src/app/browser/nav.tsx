@@ -12,7 +12,7 @@ const Nav = () => {
     dispatch(logout());
   }
 
-  return user.nickName ? (
+  return user.githubNickname ? (
     <div className="bg-mainColor w-full h-[8%] flex justify-between items-center">
       <div className="flex w-full h-full items-center">
         <div className="relative w-[5%] h-full">
