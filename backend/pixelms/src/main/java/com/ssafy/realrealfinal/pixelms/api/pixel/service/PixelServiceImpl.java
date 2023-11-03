@@ -1,6 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
+import com.ssafy.realrealfinal.pixelms.api.pixel.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -233,7 +232,7 @@ public class PixelServiceImpl implements PixelService {
      * @return CreditRes
      */
     @Override
-    public CreditRes updateAndSendCredit(AdditionalCreditDto additionalCreditRes) {
+    public CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes) {
         log.info("updateAndSendCredit start: " + additionalCreditRes);
 
         Integer providerId = additionalCreditRes.getProviderId();

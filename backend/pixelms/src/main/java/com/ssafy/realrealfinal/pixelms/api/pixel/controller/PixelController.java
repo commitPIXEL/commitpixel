@@ -1,6 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.controller;
 
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
+import com.ssafy.realrealfinal.pixelms.api.pixel.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class PixelController {
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/credit")
-    public CreditRes updateAndSendCredit(@RequestBody AdditionalCreditDto additionalCreditRes) {
+    public CreditRes updateAndSendCredit(@RequestBody AdditionalCreditReq additionalCreditRes) {
         log.info("consumeCreditEvent start");
 
         CreditRes creditRes = pixelService.updateAndSendCredit(additionalCreditRes);

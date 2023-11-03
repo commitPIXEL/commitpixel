@@ -1,9 +1,9 @@
-package com.ssafy.realrealfinal.pixelms.api.pixel.dto;
+package com.ssafy.realrealfinal.pixelms.api.pixel.request;
 
 import lombok.Getter;
 
 @Getter
-public class AdditionalCreditDto {
+public class AdditionalCreditReq {
 
     private Integer providerId;
     private Integer additionalCredit;
