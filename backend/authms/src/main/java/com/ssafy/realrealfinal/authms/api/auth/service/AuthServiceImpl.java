@@ -50,9 +50,9 @@ public class AuthServiceImpl implements AuthService {
             } catch (JsonProcessingException e) {
                 throw new JsonifyException();
             }
-
+            Integer providerId = oauthUserRes.getId();
             String jwtRefreshToken = jwtUtil.createRefreshToken();
-            String jwtAccessToken = jwtUtil.createAccessToken(jwtRefreshToken);
+            String jwtAccessToken = jwtUtil.createAccessToken(providerId);
             saveTokens(oauthUserRes.getId().toString(), jwtRefreshToken,
                 jsonToken.getAccessToken());
             TokenRes tokenRes = AuthMapper.INSTANCE.toTokenRes(jwtAccessToken, jwtRefreshToken);
