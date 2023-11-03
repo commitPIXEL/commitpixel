@@ -216,10 +216,17 @@ public class PixelServiceImpl implements PixelService {
 
         // ==================================
         // rankMS 로 변경된 픽셀 정보 보내기
+        String prevUrl = null;
+        String prevGithubNickname = null;
+        if (prevPixelRankInfo.get(0) != null) {
+            prevUrl = (String) prevPixelRankInfo.get(0);
+            prevGithubNickname = idNameUtil.getNameById(Integer.valueOf(
+                (String) prevPixelRankInfo.get(1)));
+        }
+
         Map<String, String> pixelUpdateInfo = Map.of(
-            "prevUrl", (String) prevPixelRankInfo.get(0),
-            "prevGithubNickname",
-            idNameUtil.getNameById(Integer.valueOf((String) prevPixelRankInfo.get(1))),
+            "prevUrl", prevUrl,
+            "prevGithubNickname", prevGithubNickname,
             "currUrl", url,
             "currGithubNickname", githubNickname);
         kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
