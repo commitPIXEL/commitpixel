@@ -7,11 +7,11 @@ import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
-import { Snackbar } from "@mui/material";
+import { BrowserSnackBar } from "./snackbar";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
-  const { socket, setSocket, connectToSocket } = useSocket();
+  const { socket } = useSocket();
   const canvasRef = useRef<HTMLCanvasElement | null>(null); 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
@@ -25,6 +25,7 @@ const CanvasContainer = () => {
   const tool = useSelector((state:RootState) => state.tool.tool);
   const device = useSelector((state: RootState) => state.device.device);
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
+  const canvasContainer = useRef<HTMLDivElement>(null);
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
@@ -124,6 +125,12 @@ const CanvasContainer = () => {
         return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
       };
 
+      const setFinger = (e: PointerEvent) => {
+        if(e.type === "mouse") return;
+        const [x, y] = [parseInt(String(e.offsetX)), parseInt(String(e.offsetY))];
+        setCursorPos({ x, y });
+      };
+
       const setCursor = (e: MouseEvent) => {
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         setCursorPos({ x, y });
@@ -168,12 +175,16 @@ const CanvasContainer = () => {
         panzoomInstance.resume();
       };
 
-      const onFingerDown = (e: TouchEvent) => {
-        if(device !== "mobile" || e.touches.length !== 1) {
+      const onFingerDown = (e: PointerEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.type === "mouse") return;
+        if(device !== "mobile" || !e.target) {
           return;
         }
-        const x = e.touches[0].clientX - 1;
-        const y = e.touches[0].clientY - 1;
+
+        const x = (Math.round(e.offsetX) - 1);
+        const y = (Math.round(e.offsetY) - 1);
         if(tool === null || tool === undefined) {
           socket?.emit("url", [x, y]);
           return;
@@ -200,8 +211,9 @@ const CanvasContainer = () => {
         }
       };
 
-      const onFingerUp = (e: TouchEvent) => {
-        if(device !== "mobile" || e.touches.length !== 1) {
+      const onFingerUp = (e: PointerEvent) => {
+        if(e.type === "mouse") return;
+        if(device !== "mobile") {
           return;
         }
         if (tool === null || tool === undefined) {
@@ -210,15 +222,17 @@ const CanvasContainer = () => {
         panzoomInstance.resume();
       }
 
-      wrapper.addEventListener("touchstart", onFingerDown);
-      wrapper.addEventListener("touchend", onFingerUp);
+      wrapper.addEventListener("pointerdown", onFingerDown);
+      wrapper.addEventListener("pointerup", onFingerUp);
+      wrapper.addEventListener("pointermove", setFinger);
       wrapper.addEventListener("mousemove", setCursor);
       wrapper.addEventListener("mousedown", canvasClick);
       wrapper.addEventListener("mouseup", onMouseUp);
 
       return () => {
-        wrapper.removeEventListener("touchstart", onFingerDown);
-        wrapper.removeEventListener("touchend", onFingerUp);
+        wrapper.removeEventListener("pointerdown", onFingerDown);
+        wrapper.removeEventListener("pointerup", onFingerUp);
+        wrapper.removeEventListener("pointermove", setFinger);
         wrapper.removeEventListener("mousemove", setCursor);
         wrapper.removeEventListener("mousedown", canvasClick);
         wrapper.removeEventListener("mouseup", onMouseUp);
@@ -235,16 +249,6 @@ const CanvasContainer = () => {
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
-          <button
-            className="px-8 py-2 border"
-            onClick={() => {
-              const socket = connectToSocket();
-              setSocket(socket);
-              console.log(socket);
-            }}
-          >
-            Reconnect
-          </button>
         </div>
       )}
       {socket && (
@@ -292,3 +296,4 @@ const CanvasContainer = () => {
 }
 
 export default CanvasContainer;
+
