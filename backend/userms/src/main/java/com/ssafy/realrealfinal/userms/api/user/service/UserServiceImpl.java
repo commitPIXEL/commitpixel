@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public RefreshedInfoRes refreshInfo(
         Integer providerId) {
-        log.info("refreshCredit start: " + providerId);
+        log.info("refreshInfo start: " + providerId);
 
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
         // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
                 String jsonMessage = objectMapper.writeValueAsString(
                     Map.of("previous", user.getGithubNickname(), "now", githubNickname));
                 rankKafkaTemplate.send("rank-nickname-topic", jsonMessage);
-                log.info("refreshCredit mid: kafka json data: " + jsonMessage);
+                log.info("refreshInfo mid: kafka json data: " + jsonMessage);
             } catch (JsonProcessingException e) {
                 throw new JsonifyException();
             }
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
             githubNickname);
-        log.info("refreshCredit end: " + refreshedInfoRes);
+        log.info("refreshInfo end: " + refreshedInfoRes);
         return refreshedInfoRes;
     }
 
