@@ -101,34 +101,6 @@ public class PixelServiceImpl implements PixelService {
         return baos.toByteArray();
     }
 
-    public BufferedImage redisToBufferedImage() {
-        log.info("redisToBufferedImage start");
-        BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
-
-        List<Object> rgbValues = redisUtil.getRGBValues();
-        int rgbIndex = 0;
-
-        for (int x = 0; x < SCALE; x++) {
-            for (int y = 0; y < SCALE; y++) {
-                String rString = (String) rgbValues.get(rgbIndex++);
-                String gString = (String) rgbValues.get(rgbIndex++);
-                String bString = (String) rgbValues.get(rgbIndex++);
-
-                if (rString != null && gString != null && bString != null) {
-                    Integer r = Integer.parseInt(rString);
-                    Integer g = Integer.parseInt(gString);
-                    Integer b = Integer.parseInt(bString);
-
-                    Color color = new Color(r, g, b);
-                    bufferedImage.setRGB(x, y, color.getRGB());
-                }
-            }
-        }
-
-        log.info("redisToBufferedImage end: SUCCESS");
-        return bufferedImage;
-    }
-
 
     /**
      * BufferedImage 를 base64로 변경
