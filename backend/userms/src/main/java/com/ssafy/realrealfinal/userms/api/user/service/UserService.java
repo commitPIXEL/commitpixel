@@ -16,5 +16,5 @@ public interface UserService {
 
     UserInfoRes getUserInfo(String accessToken);
 
-    void updateUrl(String accessToken, String url);
+    String updateUrl(String accessToken, String url);
 }
