@@ -60,22 +60,21 @@ public class WebSocketHandler {
         // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
         // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
         String githubNickname = client.getHandshakeData().getSingleUrlParam("githubNickname");
+        Integer providerId;
         // 비회원을 위해 임시로 providerId를 세팅
-        if (accessToken == null || accessToken.isEmpty()) {
-            CLIENTS.put(client.getSessionId(), -1);
+        if ((accessToken == null || accessToken.isEmpty()) && (githubNickname == null || githubNickname.isEmpty())) {
+            // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
+            providerId = -1;
+            githubNickname = "githubNick";
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
-            Integer providerId = authFeignClient.withQueryString(accessToken);
-            CLIENTS.put(client.getSessionId(), providerId);
-            CLIENTS_BY_PROVIDER_ID.put(providerId, client);
-            // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
-            if (githubNickname == null || githubNickname.isEmpty()) {
-                idNameUtil.updateMap(-1, "githubNick");
-            } else {
-                // id-name 맵 업데이트
-                idNameUtil.updateMap(providerId, githubNickname);
-            }
+            providerId = authFeignClient.withQueryString(accessToken);
         }
+        CLIENTS.put(client.getSessionId(), providerId);
+        CLIENTS_BY_PROVIDER_ID.put(providerId, client);
+        // id-name 맵 업데이트
+        idNameUtil.updateMap(providerId, githubNickname);
+
     }
 
     /**
