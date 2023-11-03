@@ -34,7 +34,7 @@ const Browser = () => {
         // dispatch(getUserPixel(fixelData));
 
         // test용
-        const resFromUser = await customFetch("/user");
+        const resFromUser = await customFetch("/user/");
         console.log("resFromUser: " + resFromUser);
         const userData: UserInfo = await resFromUser.json();
         console.log("userData: " + userData);
