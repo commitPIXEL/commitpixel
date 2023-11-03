@@ -56,8 +56,7 @@ public class RedisUtil {
      * @return
      */
     public String getData(String key) {
-        String value = stringRedisTemplate.opsForValue().get(key);
-        return value;
+        return stringRedisTemplate.opsForValue().get(key);
     }
 
     /**

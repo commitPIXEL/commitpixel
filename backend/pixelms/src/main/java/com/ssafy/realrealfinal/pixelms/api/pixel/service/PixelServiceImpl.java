@@ -216,10 +216,17 @@ public class PixelServiceImpl implements PixelService {
 
         // ==================================
         // rankMS 로 변경된 픽셀 정보 보내기
+        String prevUrl = null;
+        String prevGithubNickname = null;
+        if (prevPixelRankInfo.get(0) != null && prevPixelRankInfo.get(1) != null) {
+            prevUrl = (String) prevPixelRankInfo.get(0);
+            prevGithubNickname = idNameUtil.getNameById(Integer.valueOf(
+                (String) prevPixelRankInfo.get(1)));
+        }
+
         Map<String, String> pixelUpdateInfo = Map.of(
-            "prevUrl", (String) prevPixelRankInfo.get(0),
-            "prevGithubNickname",
-            idNameUtil.getNameById(Integer.valueOf((String) prevPixelRankInfo.get(1))),
+            "prevUrl", prevUrl,
+            "prevGithubNickname", prevGithubNickname,
             "currUrl", url,
             "currGithubNickname", githubNickname);
         kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
@@ -254,8 +261,11 @@ public class PixelServiceImpl implements PixelService {
         log.info("getUrlAndName start: " + index);
 
         String url = redisUtil.getData(index + ":url");
-        String githubNickname = idNameUtil.getNameById(
-            Integer.valueOf(redisUtil.getData((index + ":id"))));
+        String githubNickname = null;
+        String providerId = redisUtil.getData(index + ":id");
+        if (providerId != null) {
+            githubNickname = idNameUtil.getNameById(Integer.valueOf(providerId));
+        }
 
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
 
