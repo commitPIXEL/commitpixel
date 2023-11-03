@@ -38,7 +38,7 @@ const userSlice = createSlice({
       state.totalPixel = action.payload.totalPixel;
       state.availablePixel = action.payload.availablePixel;
     },
-    logout: (state) => {
+    resetUser: (state) => {
       state.githubNickname = "";
       state.profileImage = "";
       state.totalPixel = 0;
@@ -48,6 +48,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { getUserInfo, getUserPixel, pickPixel, addPixel, logout } =
+export const { getUserInfo, getUserPixel, pickPixel, addPixel, resetUser } =
   userSlice.actions;
 export default userSlice.reducer;
