@@ -54,7 +54,6 @@ const CanvasContainer = () => {
   useEffect(() => {
     if (socket && ctx) {
       socket.on("pixel", (pixel) => {
-        console.log(pixel);
         const [x, y, r, g, b] = pixel;
         ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
@@ -139,7 +138,6 @@ const CanvasContainer = () => {
           e.preventDefault();
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-        console.log("click " + x + ":" + y);
         if(tool === null || tool === undefined) {
           socket?.emit("url", [x, y]);
           return;
@@ -254,7 +252,6 @@ const CanvasContainer = () => {
             onClick={() => {
               const socket = connectToSocket();
               setSocket(socket);
-              console.log(socket);
             }}
           >
             Reconnect
