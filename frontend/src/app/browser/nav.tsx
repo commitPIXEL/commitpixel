@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { logout } from "@/store/slices/userSlice";
+import {resetUser} from "@/store/slices/userSlice"
+import { logout } from "@/store/slices/authorizationSlice";
 import Button from '@mui/material/Button';
 
 const Nav = () => {
@@ -10,6 +11,7 @@ const Nav = () => {
 
   const clickLogout = () => {
     dispatch(logout());
+    dispatch(resetUser());
   }
 
   return user.githubNickname ? (
