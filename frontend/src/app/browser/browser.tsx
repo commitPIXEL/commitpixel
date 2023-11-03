@@ -33,11 +33,13 @@ const Browser = () => {
         // dispatch(getUserInfo(userData));
         // dispatch(getUserPixel(fixelData));
 
-        // test용
+        // TODO: test용
         const resFromUser = await customFetch("/user/");
-        console.log("resFromUser: " + resFromUser);
+        console.log("resFromUser: ");
+        console.log(resFromUser);
         const userData: UserInfo = await resFromUser.json();
-        console.log("userData: " + userData);
+        console.log("userData: ");
+        console.log(userData);
         dispatch(getUserInfo(userData));
       } catch (err) {
         console.error("Error:", err);
