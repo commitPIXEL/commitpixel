@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
+import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfo;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
@@ -33,10 +34,8 @@ public class WebSocketHandler {
     private final String PIXEL = "pixel";
     private final String URL = "url";
 
-    // 연결된 클라이언트의 Websocket 세션이 key, providerId가 value
-    private static final ConcurrentHashMap<UUID, Integer> CLIENTS = new ConcurrentHashMap<>();
-    // providerId가 key, client가 value
-    private static final ConcurrentHashMap<Integer, SocketIOClient> CLIENTS_BY_PROVIDER_ID = new ConcurrentHashMap<>();
+    // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
+    private static final ConcurrentHashMap<UUID, SocketClientInfo> CLIENTS = new ConcurrentHashMap<>();
 
     /**
      * 스프링 애플리케이션 컨텍스트가 초기화되거나 새로 고쳐질 때 서버를 시작
@@ -62,19 +61,19 @@ public class WebSocketHandler {
         String githubNickname = client.getHandshakeData().getSingleUrlParam("githubNickname");
         Integer providerId;
         // 비회원을 위해 임시로 providerId를 세팅
-        if ((accessToken == null || accessToken.isEmpty()) && (githubNickname == null || githubNickname.isEmpty())) {
+        if ((accessToken == null || accessToken.isEmpty() || accessToken.equals("")) || (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals(""))) {
             // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
             providerId = -1;
             githubNickname = "githubNick";
+            log.warn("if문 들어옴!!!!!!!!!!!");
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
         }
-        CLIENTS.put(client.getSessionId(), providerId);
-        CLIENTS_BY_PROVIDER_ID.put(providerId, client);
+        CLIENTS.put(client.getSessionId(), new SocketClientInfo(providerId, client));
         // id-name 맵 업데이트
         idNameUtil.updateMap(providerId, githubNickname);
-
+        log.warn("onConnect set nickname: " + githubNickname);
     }
 
     /**
@@ -92,12 +91,13 @@ public class WebSocketHandler {
             return;
         }
 
-        Integer providerId = CLIENTS.get(client.getSessionId());
+        Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
         pixelService.updatePixelRedisAndSendRank(providerId, pixelInfo);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
-        for (SocketIOClient clientSession : CLIENTS_BY_PROVIDER_ID.values()) {
+        for (SocketClientInfo clientInfo : CLIENTS.values()) {
+            SocketIOClient clientSession = clientInfo.getSocketIOClient();
             if (!client.getSessionId().equals(clientSession.getSessionId())
                 && clientSession.isChannelOpen()) {
                 clientSession.sendEvent(PIXEL, pixelInfo);
