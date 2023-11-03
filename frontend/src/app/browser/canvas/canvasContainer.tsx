@@ -168,38 +168,6 @@ const CanvasContainer = () => {
         panzoomInstance.resume();
       };
 
-      const onFingerDown = (e: TouchEvent) => {
-        if(device !== "mobile" || e.touches.length !== 1) {
-          return;
-        }
-        const x = e.touches[0].clientX - 1;
-        const y = e.touches[0].clientY - 1;
-        if(tool === null || tool === undefined) {
-          socket?.emit("url", [x, y]);
-          return;
-        } 
-        let r, g, b;
-        if(tool == "painting") {
-          panzoomInstance?.pause();
-          audio.play();
-            r = color.rgb.r;
-            g = color.rgb.g;
-            b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
-        } else if(tool == "copying" && ctx) {
-          panzoomInstance?.pause();
-          const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-          const hex = rgbtoHex(r, g, b);
-          dispatch(
-            pick({
-              hex: hex,
-              rgb: { r: r, g: g, b: b, a: 1 },
-            })
-          );
-          dispatch(setTool("painting"));
-        }
-      };
-
       const onFingerUp = (e: TouchEvent) => {
         if(device !== "mobile" || e.touches.length !== 1) {
           return;
