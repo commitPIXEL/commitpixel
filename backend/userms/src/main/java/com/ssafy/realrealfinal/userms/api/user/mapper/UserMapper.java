@@ -1,6 +1,9 @@
 package com.ssafy.realrealfinal.userms.api.user.mapper;
 
+import com.ssafy.realrealfinal.userms.api.user.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
+import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
+import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.db.entity.Board;
 import com.ssafy.realrealfinal.userms.db.entity.User;
@@ -22,4 +25,8 @@ public interface UserMapper {
     User toUser(String githubNickname, String profileImage, User user);
 
     UserInfoRes toUserInfoRes(User user);
+
+    AdditionalCreditReq toAdditionalCreditReq(Integer providerId, Integer additionalCredit);
+
+    RefreshedInfoRes toRefreshedInfoRes(CreditRes creditRes, String githubNickname);
 }
