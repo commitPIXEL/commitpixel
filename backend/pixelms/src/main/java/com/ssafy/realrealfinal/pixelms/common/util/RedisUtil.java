@@ -24,18 +24,22 @@ public class RedisUtil {
     @Value("${canvas.scale}")
     private int SCALE;
 
-    private List<String> keys = new ArrayList<>();
+    private final List<String> colorKeys = new ArrayList<>();
+    private final List<String> pixelKeys = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         int scale2 = SCALE * SCALE;
         for (int i = 0; i < scale2; ++i) {
             String index = Integer.toString(i);
-            keys.add(index + ":R");
-            keys.add(index + ":G");
-            keys.add(index + ":B");
-//            keys.add(index + ":url");
-//            keys.add(index + ":name");
+            colorKeys.add(index + ":R");
+            colorKeys.add(index + ":G");
+            colorKeys.add(index + ":B");
+            pixelKeys.add(index + ":R");
+            pixelKeys.add(index + ":G");
+            pixelKeys.add(index + ":B");
+            pixelKeys.add(index + ":url");
+            pixelKeys.add(index + ":name");
         }
     }
 
@@ -96,10 +100,9 @@ public class RedisUtil {
         return stringRedisTemplate.executePipelined(new SessionCallback<List<String>>() {
             @Override
             public List<String> execute(RedisOperations operations) throws DataAccessException {
-                operations.opsForValue().multiGet(keys);
+                operations.opsForValue().multiGet(colorKeys);
 
                 return null; // executePipelined가 결과를 자동으로 반환하므로 여기서는 null을 반환
-            }
         });
     }
 }
