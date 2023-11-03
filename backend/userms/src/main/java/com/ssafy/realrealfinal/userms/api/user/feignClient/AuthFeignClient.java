@@ -17,7 +17,7 @@ public interface AuthFeignClient {
 
 
     @GetMapping("auth/token/github")
-    String getGithubAccessTokenByJwtAccessToken(@RequestParam(value = "accessToken") String accessToken);
+    String getGithubAccessTokenByProviderId(@RequestParam(value = "providerId") String providerId);
 
 
 }
