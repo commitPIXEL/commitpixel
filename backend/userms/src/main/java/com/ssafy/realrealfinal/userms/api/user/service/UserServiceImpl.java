@@ -9,7 +9,6 @@ import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
-import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotFoundException;
 import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotSavedException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
@@ -245,15 +244,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인. 없으면 예외
+     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인
      *
      * @param accessToken jwt 토큰
      * @param url         사용자 요청 url
+     * @return 1)인가 url이면 요청 url, 2)비인가 url이면 이전 사용자 url
      */
     @Transactional
-    public void updateUrl(String accessToken, String url) {
+    public String updateUrl(String accessToken, String url) {
         log.info("updateUrl start: " + url);
         Integer providerId = authFeignClient.withQueryString(accessToken);
+        User user = userRepository.findByProviderId(providerId);
         List<Whitelist> whitelistList = new ArrayList<>();
         whitelistList = whitelistRepository.findAll();
 
@@ -261,14 +262,15 @@ public class UserServiceImpl implements UserService {
             if (url.contains(whitelist.getUrl())) {
                 log.info("updateUrl mid: " + whitelist.getUrl());
 
-                User user = userRepository.findByProviderId(providerId);
                 user.updateUrl(url);
-                log.info("updateUrl end: " + user);
-                return;
+                log.info("updateUrl end: " + user.getUrl());
+                return url;
             }
         }
 
-        throw new WhitelistNotFoundException();
+        String preUrl = user.getUrl();
+        log.info("updateUrl end: " + preUrl);
+        return preUrl;
     }
 
     /**

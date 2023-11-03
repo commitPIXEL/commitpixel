@@ -62,15 +62,15 @@ public class UserController {
      *
      * @param accessToken jwt 액세스 토큰
      * @param url
-     * @return 200 Ok(url 변경 성공), 404 NOT_FOUND(변경 url whitelist에 없음)
+     * @return newUrl, HttpStatus.OK
      */
     @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
         String url) {
         log.info("updateUrl start: " + url);
-        userService.updateUrl(accessToken, url);
-        log.info("updateUrl end: " + SUCCESS);
-        return ResponseEntity.ok().build();
+        String newUrl = userService.updateUrl(accessToken, url);
+        log.info("updateUrl end: " + newUrl);
+        return ResponseEntity.ok().body(newUrl);
     }
 
 
