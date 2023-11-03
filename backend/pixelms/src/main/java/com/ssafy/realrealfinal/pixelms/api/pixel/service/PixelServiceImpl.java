@@ -3,13 +3,11 @@ package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
-import com.ssafy.realrealfinal.pixelms.common.exception.pixel.Base64ConvertException;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -17,9 +15,7 @@ import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -211,15 +207,15 @@ public class PixelServiceImpl implements PixelService {
         String prevName = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
 
         // Red
-        redisUtil.setData(index, "R", (Integer) pixelInfo.get(2));
+        redisUtil.setData(index + ":R", (Integer) pixelInfo.get(2));
         // Green
-        redisUtil.setData(index, "G", (Integer) pixelInfo.get(3));
+        redisUtil.setData(index + ":G", (Integer) pixelInfo.get(3));
         // Blue
-        redisUtil.setData(index, "B", (Integer) pixelInfo.get(4));
+        redisUtil.setData(index + ":B", (Integer) pixelInfo.get(4));
         // Url
-        redisUtil.setData(index, "url", (String) pixelInfo.get(5));
+        redisUtil.setData(index + ":url", (String) pixelInfo.get(5));
         // providerId
-        redisUtil.setData(index, "id", providerId);
+        redisUtil.setData(index + ":id", providerId);
 
         // rank로 이전, 현재 정보 보내기
         Map<String, String> map = Map.of(
@@ -231,9 +227,10 @@ public class PixelServiceImpl implements PixelService {
     }
 
     /**
-     *
-     * @param additionalCreditRes
-     * @return
+     * feign 통신용 메서드 
+     * 
+     * @param additionalCreditRes 정보 업데이트용
+     * @return CreditRes
      */
     @Override
     public CreditRes updateAndSendCredit(AdditionalCreditDto additionalCreditRes) {

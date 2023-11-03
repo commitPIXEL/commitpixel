@@ -41,7 +41,7 @@ public class RedisUtil {
             pixelKeys.put(index + ":G", "255");
             pixelKeys.put(index + ":B", "255");
             pixelKeys.put(index + ":url", "");
-            pixelKeys.put(index + ":name", "");
+            pixelKeys.put(index + ":id", "");
         }
     }
 
@@ -79,6 +79,12 @@ public class RedisUtil {
         hashOperations.put(key, type, value.toString());
         log.info("setData end: success");
     }
+
+    public void setData(String key, String value){
+
+
+    }
+
 
     public void initPixelRedis() {
         stringRedisTemplate.executePipelined(new SessionCallback<Object>() {
