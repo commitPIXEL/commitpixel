@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
     private final WhitelistRepository whitelistRepository;
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
-    private final KafkaTemplate<String, Map<Integer, Integer>> kafkaTemplate;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
     private final KafkaTemplate<String, Map<Integer, Integer>> pixelKafkaTemplate;
     private final PixelFeignClient pixelFeignClient;
