@@ -49,7 +49,7 @@ public class PixelController {
     }
 
     /**
-     * 개발자용 BufferedImage 를 String 으로 변환하여 반환
+     * 개발자용 현재 redis 상태를 -> bufferedImage 로 변환 후 -> base64 로 전환하는 메서드
      *
      * @return String 형태의 BufferedImage
      */
@@ -62,8 +62,7 @@ public class PixelController {
     }
 
     /**
-     * 개발자용 Canvas 초기화 명령
-     * Pixel Redis 의 상태를 초기화한다.
+     * 개발자용 Canvas 초기화 명령 Pixel Redis 의 상태를 초기화한다.
      *
      * @return 200(ok)
      */

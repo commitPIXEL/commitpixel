@@ -35,7 +35,6 @@ public class RedisUtil {
     /**
      * 서버 실행시 Canvas 정보를 빠르게 가져오기 위한 쵝 변수 선언
      */
-
     @PostConstruct
     public void init() {
         int scale2 = SCALE * SCALE;

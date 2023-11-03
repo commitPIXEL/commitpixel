@@ -192,7 +192,7 @@ public class PixelServiceImpl implements PixelService {
      */
     @Override
     public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
-        log.info("updatePixelRedis start: " + providerId + " " + pixelInfo);
+        log.info("updatePixelRedisAndSendRank start: " + providerId + " " + pixelInfo);
         Integer x = (Integer) pixelInfo.get(0);
         Integer y = (Integer) pixelInfo.get(1);
         String r = (String) pixelInfo.get(2);
@@ -223,7 +223,7 @@ public class PixelServiceImpl implements PixelService {
             "currUrl", url,
             "currGithubNickname", githubNickname);
         kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
-        log.info("updatePixelRedis end");
+        log.info("updatePixelRedisAndSendRank end");
     }
 
     /**
