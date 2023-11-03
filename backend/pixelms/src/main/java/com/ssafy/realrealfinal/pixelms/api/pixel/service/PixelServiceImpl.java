@@ -203,7 +203,7 @@ public class PixelServiceImpl implements PixelService {
         String index = String.valueOf(x * SCALE + y);
 
         // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
-        List<Object> prevPixelRankInfo = redisUtil.getPrevPixel(index);
+        List<Object> prevPixelRankInfo = (List<Object>) redisUtil.getPrevPixel(index).get(0);
 
         // 현재 pixel 정보 Redis에 저장
         Map<String, String> currPixelInfo = Map.of(
