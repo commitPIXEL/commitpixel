@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { height, imageUrl, width } from "../config";
+import { height, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
@@ -11,7 +11,7 @@ import { BrowserSnackBar } from "./snackbar";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
-  const { socket } = useSocket();
+  const { socket, setSocket, connectToSocket } = useSocket();
   const canvasRef = useRef<HTMLCanvasElement | null>(null); 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
@@ -66,40 +66,36 @@ const CanvasContainer = () => {
   }, [socket, ctx]);
 
   useEffect(() => {
-    if(imageUrl){
-      const img = new Image(width, height);
-      const imgData = fetch("https://dev.commitpixel.com/api/pixel/image/64").then((res) => {
-        console.log(res);
-        /* 
-        img.src = "data:image/png;base64," + res;
+    const img = new Image(width, height);
+    fetch("https://dev.commitpixel.com/api/pixel/image/64")
+      .then((res) => res.text())
+      .then((data) => {
+        img.src = "data:image/png;base64," + data;
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
         };
-        */
-      }).then((err) => {
+      })
+      .catch((err) => {
         console.log(err);
       });
-    }
-  }, [ctx, socket]);
+  }, []);
 
   useEffect(() => {
     const div = ref.current;
-    const initialZoom = device === "mobile" ? 0.6 : 1;
-    const dividerWidth = device === "mobile" ? 3 : 3.5;
-    const dividerHeight = device === "mobile" ? 8 : 3.5;
-    if (div) {
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (div && container) {
       const panzoom = Panzoom(div, {
         zoomDoubleClickSpeed: 1,
         initialZoom: initialZoom,
       });
-      panzoom.moveTo(
-        window.innerWidth / dividerWidth - (width / dividerWidth) * initialZoom,
-        window.innerHeight / dividerHeight - (height / dividerHeight) * initialZoom,
-      );
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
+      panzoom.moveTo(centerX, centerY);
 
       panzoom.setMaxZoom(50);
-      panzoom.setMinZoom(0.8);
+      panzoom.setMinZoom(0.5);
 
       setPanzoomInstance(panzoom);
 
@@ -108,6 +104,7 @@ const CanvasContainer = () => {
       };
     }
   }, [socket]);
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -138,10 +135,11 @@ const CanvasContainer = () => {
 
       const canvasClick = (e: MouseEvent) => {
         if(e.button !== 0) return;
-        if(e.detail == 2) {
+        if(e.detail >= 2) {
           e.preventDefault();
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+        console.log("click " + x + ":" + y);
         if(tool === null || tool === undefined) {
           socket?.emit("url", [x, y]);
           return;
@@ -176,9 +174,9 @@ const CanvasContainer = () => {
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
         if(e.type === "mouse") return;
+        // e.preventDefault();
+        e.stopPropagation();
         if(device !== "mobile" || !e.target) {
           return;
         }
@@ -225,6 +223,7 @@ const CanvasContainer = () => {
       wrapper.addEventListener("pointerdown", onFingerDown);
       wrapper.addEventListener("pointerup", onFingerUp);
       wrapper.addEventListener("pointermove", setFinger);
+
       wrapper.addEventListener("mousemove", setCursor);
       wrapper.addEventListener("mousedown", canvasClick);
       wrapper.addEventListener("mouseup", onMouseUp);
@@ -233,6 +232,7 @@ const CanvasContainer = () => {
         wrapper.removeEventListener("pointerdown", onFingerDown);
         wrapper.removeEventListener("pointerup", onFingerUp);
         wrapper.removeEventListener("pointermove", setFinger);
+
         wrapper.removeEventListener("mousemove", setCursor);
         wrapper.removeEventListener("mousedown", canvasClick);
         wrapper.removeEventListener("mouseup", onMouseUp);
@@ -245,23 +245,30 @@ const CanvasContainer = () => {
   };
 
   return (
-    <div className={device === "mobile" ? "w-full h-[50%]" : "col-span-3 w-full max-h-full"}>
+    <div className={device === "mobile" ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
+          <button
+            className="px-8 py-2 border"
+            onClick={() => {
+              const socket = connectToSocket();
+              setSocket(socket);
+              console.log(socket);
+            }}
+          >
+            Reconnect
+          </button>
+
         </div>
       )}
       {socket && (
-        <div className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
+        <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
-            className="overflow-hidden w-[95%] h-full">
+            className="overflow-hidden w-full h-full">
             <div className="w-max" ref={ref}>
-              <div
-                className="bg-slate-200"
-                style={{ padding: 0.5 }}
-                ref={canvasWrapper}
-              >
+              <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas
                   id="canvas"
                   width={width}
@@ -271,15 +278,6 @@ const CanvasContainer = () => {
                 >
                   캔버스를 지원하지 않는 브라우저입니다. 크롬으로 접속해주세요!
                 </canvas>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: cursorPos.y + 1,
-                    left: cursorPos.x + 1.25,
-                    width: 0,
-                    height: 0,
-                  }}
-                ></div>
               </div>
             </div>
           </div>
@@ -291,4 +289,3 @@ const CanvasContainer = () => {
 }
 
 export default CanvasContainer;
-
