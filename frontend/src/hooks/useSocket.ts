@@ -10,8 +10,9 @@ const useSocket = () => {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         reconnection: false,
-        extraHeaders: {
-          "Authorization": "",
+        query: {
+          "Authorization": "실제 토큰 값",
+          "githubNickname": "실제 깃허브 닉네임"
         },
       });
       
