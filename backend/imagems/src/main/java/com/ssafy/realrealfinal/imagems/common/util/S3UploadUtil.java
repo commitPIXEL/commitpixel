@@ -26,7 +26,7 @@ public class S3UploadUtil {
      * 이미지는 "yyyy-MM-dd" 폴더에 저장.
      * 이미지 파일의 현재 시간 (예: 12:45 -> 12.5, 00:01 -> 0.0) 이름으로 파일 저장.
      */
-    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 0,30 * * * ?")
     public void S3Upload() {
         log.info("S3Upload start");
         // byte[] 형태로 이미지 받아오기
