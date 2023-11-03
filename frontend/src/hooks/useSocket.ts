@@ -12,7 +12,7 @@ const useSocket = () => {
         reconnection: false,
         query: {
           "Authorization": "",
-          "githubNickname": "visitor"
+          "githubNickname": "Visitor"
         },
       });
       
