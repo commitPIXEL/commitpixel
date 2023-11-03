@@ -4,6 +4,8 @@ import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { height, imageUrl, width } from "../config";
 import Panzoom from "panzoom";
+import { pick } from "@/store/slices/colorSlice";
+import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import useColorTool from "@/hooks/useColorTool";
 import { BrowserSnackBar } from "./snackbar";
