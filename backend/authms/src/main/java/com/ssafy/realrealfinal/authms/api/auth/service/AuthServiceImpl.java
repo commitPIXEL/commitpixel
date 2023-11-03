@@ -108,12 +108,17 @@ public class AuthServiceImpl implements AuthService {
         return providerId;
     }
 
+    /**
+     * providerId로 githubAccessToken을 redis에서 빼서 리턴해주기
+     *
+     * @param providerId github providerId
+     * @return githubAccessToken
+     */
     @Override
-    public String getGithubTokenFromJwtAccessToken(String accessToken) {
-        log.info("getGithubTokenFromJwtAccessToken start: " + accessToken);
-        String providerId = String.valueOf(jwtUtil.getProviderIdFromToken(accessToken));
+    public String getGithubAccessTokenByProviderId(String providerId) {
+        log.info("getGithubAccessTokenByProviderId start: " + providerId);
         String githubAccessToken = redisUtil.getData(providerId);
-        log.info("getGithubTokenFromJwtAccessToken end: " + githubAccessToken);
+        log.info("getGithubAccessTokenByProviderId end: " + githubAccessToken);
         return githubAccessToken;
     }
 }

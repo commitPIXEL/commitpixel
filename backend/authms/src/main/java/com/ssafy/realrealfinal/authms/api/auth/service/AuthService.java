@@ -12,5 +12,5 @@ public interface AuthService {
 
     Integer getProviderIDFromAccessToken(String accessToken);
 
-    String getGithubTokenFromJwtAccessToken(String accessToken);
+    String getGithubAccessTokenByProviderId(String providerId);
 }
