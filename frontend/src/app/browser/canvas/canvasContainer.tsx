@@ -50,6 +50,24 @@ const CanvasContainer = () => {
     }
   }, [ctx, socket]);
 
+  const onMouseDown = useCallback((e: MouseEvent) => {
+    if(e.button !== 0) return;
+    if(e.detail == 2) {
+      e.preventDefault();
+    }
+    const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+    useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
+  }, [setPixel, socket, dispatch, ctx, panzoomInstance, tool, color]);
+
+  const onFingerDown = useCallback((e: TouchEvent) => {
+    if(device !== "mobile" || e.touches.length !== 1) {
+      return;
+    }
+    const x = e.touches[0].clientX - 1;
+    const y = e.touches[0].clientY - 1;
+    useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
+  }, [setPixel, socket, dispatch, ctx, panzoomInstance, tool, color]);
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
@@ -120,29 +138,11 @@ const CanvasContainer = () => {
         setCursorPos({ x, y });
       };
 
-      const onMouseDown = (e: MouseEvent) => {
-        if(e.button !== 0) return;
-        if(e.detail == 2) {
-          e.preventDefault();
-        }
-        const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-        useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
-      };
-
       const onMouseUp = (e: MouseEvent) => {
         if (tool === null && e.button !== 2) {
           setOpen(true);
         } 
         panzoomInstance.resume();
-      };
-
-      const onFingerDown = (e: TouchEvent) => {
-        if(device !== "mobile" || e.touches.length !== 1) {
-          return;
-        }
-        const x = e.touches[0].clientX - 1;
-        const y = e.touches[0].clientY - 1;
-        useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
       };
 
       const onFingerUp = (e: TouchEvent) => {
@@ -162,6 +162,8 @@ const CanvasContainer = () => {
       wrapper.addEventListener("mouseup", onMouseUp);
 
       return () => {
+        wrapper.removeEventListener("touchstart", onFingerDown);
+        wrapper.removeEventListener("touchend", onFingerUp);
         wrapper.removeEventListener("mousemove", setCursor);
         wrapper.removeEventListener("mousedown", onMouseDown);
         wrapper.removeEventListener("mouseup", onMouseUp);
