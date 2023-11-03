@@ -56,9 +56,7 @@ public class RedisUtil {
      * @return
      */
     public String getData(String key) {
-        log.info("getData start: " + key);
         String value = stringRedisTemplate.opsForValue().get(key);
-        log.info("getData end: " + value);
         return value;
     }
 
@@ -70,7 +68,6 @@ public class RedisUtil {
      */
     public void setData(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
-        log.info("setData end: SUCCESS");
     }
 
     /**
@@ -82,19 +79,14 @@ public class RedisUtil {
      * @throws RedisNotFoundException
      */
     public Integer getData(String key, String type) throws RedisNotFoundException {
-        log.info("getData start: " + key + " " + type);
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
-        log.warn("getData mid: " + hashOperations.get(key, type));
         Integer value = Integer.parseInt(hashOperations.get(key, type));
-        log.info("getData end: " + value);
         return value;
     }
 
     public void setData(String key, String type, Integer value) {
-        log.info("setData start: " + key + " " + type + " " + value);
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
         hashOperations.put(key, type, value.toString());
-        log.info("setData end: success");
     }
 
     /**
