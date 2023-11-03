@@ -4,11 +4,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil} from "@fortawesome/free-solid-svg-icons";
 import React, { useRef, useState } from "react";
 import SolvedacBtn from "@/components/solvedacBtn";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import Loading from "@/components/loading";
 
 const UserInfoAccordion = () => {
+  const customFetch = useFetchWithAuth();
   const urlInputRef = useRef<HTMLInputElement | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [url, setUrl] = useState("");
+  const [isChangeUrl, setIsChangeUrl] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const urlUpdate = async () => {
+    try {
+      setLoading(true);
+      const resFromUser = await customFetch("/user/url", {
+        method: "PATCH",
+        body: JSON.stringify({ url: url }),
+      });
+
+      console.log(resFromUser);
+      console.log(resFromUser.json())
+      window.alert("홍보 url이 변경되었습니다!");
+    } catch (err) {
+        setUrl("변경 예정");
+        console.error("Error:", err);
+        window.alert("인가된 url이 아닙니다!");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleEditClick = () => {
     if(!isEdit) {
@@ -18,16 +43,19 @@ const UserInfoAccordion = () => {
       }, 100);
     } else {
       setIsEdit(false);
+      if(isChangeUrl) urlUpdate();
     }
   };
 
   const handleInputChange = (e: any) => {
     setUrl(e.target.value);
+    setIsChangeUrl(true);
   };
 
   const handleEnterClick = (e: any) => {
     if(e.keyCode === 13) {
       setIsEdit(false);
+      if(isChangeUrl) urlUpdate();
     }
   };
 
