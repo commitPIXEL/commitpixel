@@ -6,10 +6,15 @@ import React, { useRef, useState } from "react";
 import SolvedacBtn from "@/components/solvedacBtn";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import Loading from "@/components/loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const UserInfoAccordion = () => {
   const customFetch = useFetchWithAuth();
   const urlInputRef = useRef<HTMLInputElement | null>(null);
+  const user = useSelector(
+    (state: RootState) => state.user
+  );
   const [isEdit, setIsEdit] = useState(false);
   const [url, setUrl] = useState("");
   const [isChangeUrl, setIsChangeUrl] = useState(false);
@@ -24,7 +29,10 @@ const UserInfoAccordion = () => {
       });
 
       console.log(resFromUser);
-      console.log(resFromUser.json())
+
+      const data: {newUrl: string} = await resFromUser.json(); 
+      console.log(data)
+      setUrl(data.newUrl);
       window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
         setUrl("변경 예정");
@@ -63,14 +71,14 @@ const UserInfoAccordion = () => {
     <Accordion defaultExpanded={true} className="!rounded mb-6">
       <Loading open={loading} />
 
-      <AccordionTitle title={"githubNick"} isProfile={true} />
+      <AccordionTitle githubNickname={user.githubNickname} profileImage={user.profileImage} />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
           <div className="text-lg text-textGray">Pixel</div>
           <div className="flex justify-between text-textBlack">
-            <div>{ Number(2400).toLocaleString("ko-KR") }</div>
+            <div>{ user.availablePixel.toLocaleString("ko-KR") }</div>
             <div className="ml-2 mr-2">/</div>
-            <div>{ Number(14293).toLocaleString("ko-KR") }</div>
+            <div>{ user.totalPixel.toLocaleString("ko-KR") }</div>
           </div>
         </div>
         <div className="w-full flex items-center">
@@ -78,7 +86,7 @@ const UserInfoAccordion = () => {
           <FontAwesomeIcon onClick={handleEditClick} className="text-textGray cursor-pointer" icon={faPencil} />
         </div>
         <div className="w-full mt-1 pb-1">
-          <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} />
+          <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} defaultValue={user.url} />
         </div>
         <div className="w-full mt-4">
           <SolvedacBtn />
