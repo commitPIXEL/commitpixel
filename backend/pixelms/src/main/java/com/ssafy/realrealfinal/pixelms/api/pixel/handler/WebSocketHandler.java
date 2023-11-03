@@ -65,6 +65,7 @@ public class WebSocketHandler {
             // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
             providerId = -1;
             githubNickname = "githubNick";
+            log.warn("if문 들어옴!!!!!!!!!!!");
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
@@ -72,7 +73,7 @@ public class WebSocketHandler {
         CLIENTS.put(client.getSessionId(), new SocketClientInfo(providerId, client));
         // id-name 맵 업데이트
         idNameUtil.updateMap(providerId, githubNickname);
-
+        log.warn("onConnect set nickname: " + githubNickname);
     }
 
     /**
