@@ -61,6 +61,8 @@ const UserInfoAccordion = () => {
 
   return (
     <Accordion defaultExpanded={true} className="!rounded mb-6">
+      <Loading open={loading} />
+
       <AccordionTitle title={"githubNick"} isProfile={true} />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">

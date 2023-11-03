@@ -1,10 +1,10 @@
-export interface UserInfo {
-  nickName: string;
+export interface IUserInfo {
+  githubNickname: string;
   profileImage: string;
   url: string;
 }
 
-export interface UserFixel {
+export interface IUserFixel {
   totalPixel: number;
   availablePixel: number;
 }
