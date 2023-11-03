@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { height, imageUrl, width } from "../config";
+import { height, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
@@ -11,7 +11,7 @@ import { BrowserSnackBar } from "./snackbar";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
-  const { socket } = useSocket();
+  const { socket, setSocket, connectToSocket } = useSocket();
   const canvasRef = useRef<HTMLCanvasElement | null>(null); 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
@@ -67,18 +67,16 @@ const CanvasContainer = () => {
 
   useEffect(() => {
     const img = new Image(width, height);
-    const imgData = fetch("https://dev.commitpixel.com/api/pixel/image/64")
-      .then((res) => {
-        console.log(res);
-        /* 
-        img.src = "data:image/png;base64," + res;
+    fetch("https://dev.commitpixel.com/api/pixel/image/64")
+      .then((res) => res.text())
+      .then((data) => {
+        img.src = "data:image/png;base64," + data;
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
         };
-        */
       })
-      .then((err) => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -137,10 +135,11 @@ const CanvasContainer = () => {
 
       const canvasClick = (e: MouseEvent) => {
         if(e.button !== 0) return;
-        if(e.detail == 2) {
+        if(e.detail >= 2) {
           e.preventDefault();
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
+        console.log("click " + x + ":" + y);
         if(tool === null || tool === undefined) {
           socket?.emit("url", [x, y]);
           return;
@@ -175,9 +174,9 @@ const CanvasContainer = () => {
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
         if(e.type === "mouse") return;
+        // e.preventDefault();
+        e.stopPropagation();
         if(device !== "mobile" || !e.target) {
           return;
         }
@@ -233,7 +232,7 @@ const CanvasContainer = () => {
         wrapper.removeEventListener("pointerdown", onFingerDown);
         wrapper.removeEventListener("pointerup", onFingerUp);
         wrapper.removeEventListener("pointermove", setFinger);
-        
+
         wrapper.removeEventListener("mousemove", setCursor);
         wrapper.removeEventListener("mousedown", canvasClick);
         wrapper.removeEventListener("mouseup", onMouseUp);
@@ -250,6 +249,17 @@ const CanvasContainer = () => {
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
+          <button
+            className="px-8 py-2 border"
+            onClick={() => {
+              const socket = connectToSocket();
+              setSocket(socket);
+              console.log(socket);
+            }}
+          >
+            Reconnect
+          </button>
+
         </div>
       )}
       {socket && (
@@ -258,11 +268,7 @@ const CanvasContainer = () => {
           <div
             className="overflow-hidden w-full h-full">
             <div className="w-max" ref={ref}>
-              <div
-                className="bg-slate-200"
-                style={{ padding: 0.5 }}
-                ref={canvasWrapper}
-              >
+              <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas
                   id="canvas"
                   width={width}
