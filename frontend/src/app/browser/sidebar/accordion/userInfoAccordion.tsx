@@ -71,7 +71,7 @@ const UserInfoAccordion = () => {
     <Accordion defaultExpanded={true} className="!rounded mb-6">
       <Loading open={loading} />
 
-      <AccordionTitle githubNickname={user.githubNickname} profileImage={user.profileImage} />
+      <AccordionTitle title={user.githubNickname} profileImage={user.profileImage} />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
           <div className="text-lg text-textGray">Pixel</div>
