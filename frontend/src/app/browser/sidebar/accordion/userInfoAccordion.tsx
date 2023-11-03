@@ -29,7 +29,10 @@ const UserInfoAccordion = () => {
       });
 
       console.log(resFromUser);
-      console.log(resFromUser.json())
+
+      const data: {newUrl: string} = await resFromUser.json(); 
+      console.log(data)
+      setUrl(data.newUrl);
       window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
         setUrl("변경 예정");
