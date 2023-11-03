@@ -9,7 +9,6 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
-import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -48,9 +47,8 @@ public class WebSocketHandler {
     }
 
     /**
-     * 클라이언트가 최초로 연결될 때 실행되는 메서드
-     * CLIENTS 맵에 sessionId, providerId, client 저장
-     * idNameMap 맵에 providerId, githubNickname 저장
+     * 클라이언트가 최초로 연결될 때 실행되는 메서드 CLIENTS 맵에 sessionId, providerId, client 저장 idNameMap 맵에
+     * providerId, githubNickname 저장
      *
      * @param client
      */
@@ -81,10 +79,8 @@ public class WebSocketHandler {
     }
 
     /**
-     * "pixel" 이벤트가 발생했을 때 실행되는 메서드(사용자가 픽셀 한 개를 찍음)
-     * 1. rankms로 정보 보냄
-     * 2. 누적 사용 픽셀 업데이트
-     * 3. 모든 사용자에게 변경사항 보냄
+     * "pixel" 이벤트가 발생했을 때 실행되는 메서드(사용자가 픽셀 한 개를 찍음) 1. rankms로 정보 보냄 2. 누적 사용 픽셀 업데이트 3. 모든 사용자에게
+     * 변경사항 보냄
      *
      * @param client
      * @param pixelInfo 픽셀 한개의 정보 [x, y, r, g, b, url, githubNickname]
@@ -103,7 +99,8 @@ public class WebSocketHandler {
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
         for (SocketIOClient clientSession : CLIENTS_BY_PROVIDER_ID.values()) {
-            if (!client.getSessionId().equals(clientSession.getSessionId()) && clientSession.isChannelOpen()) {
+            if (!client.getSessionId().equals(clientSession.getSessionId())
+                && clientSession.isChannelOpen()) {
                 clientSession.sendEvent(PIXEL, pixelInfo);
             }
         }
@@ -128,7 +125,8 @@ public class WebSocketHandler {
     public void onUrlEvent(SocketIOClient client, List pixelInfo) {
         log.info("Url event received: {}", pixelInfo);
 
-        String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
+        String index = String.valueOf(
+            (Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
         PixelInfoRes pixelInfoRes = pixelService.getUrlAndName(index);
         client.sendEvent(URL, pixelInfoRes);
     }
