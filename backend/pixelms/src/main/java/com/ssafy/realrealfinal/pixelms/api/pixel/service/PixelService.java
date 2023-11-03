@@ -1,6 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
-import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
+import com.ssafy.realrealfinal.pixelms.api.pixel.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import java.util.List;
@@ -19,7 +19,7 @@ public interface PixelService {
 
     void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
 
-    CreditRes updateAndSendCredit(AdditionalCreditDto additionalCreditRes);
+    CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes);
 
     PixelInfoRes getUrlAndName(String index);
 }
