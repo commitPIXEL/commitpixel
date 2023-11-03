@@ -44,11 +44,12 @@ const SolvedacBtn = () => {
   };
 
   return (
-    <>
+    <div className="w-full">
       <Button
         onClick={handleOpen}
         variant="contained"
-        className="shadow-md rounded-lg bg-black text-white p-2 hover:bg-gray-800"
+        sx={{ bgcolor: 'green', '&:hover': { bgcolor: 'darkgreen' } }}
+        className="shadow-md rounded-lg text-white p-2 w-full"
       >
         solved.ac 연동
       </Button>
@@ -70,7 +71,7 @@ const SolvedacBtn = () => {
                 href="https://solved.ac"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
+                className="text-green-600 hover:text-green-800"
               >
                 solved.ac
               </a>
@@ -96,20 +97,20 @@ const SolvedacBtn = () => {
           <div className="flex justify-end space-x-4">
             <Button
               onClick={handleSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="px-4 py-2 rounded"
             >
               제출
             </Button>
             <Button
               onClick={handleClose}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="px-4 py-2 rounded"
             >
               취소
             </Button>
           </div>
         </Box>
       </Modal>
-    </>
+    </div>
   );
 };
 

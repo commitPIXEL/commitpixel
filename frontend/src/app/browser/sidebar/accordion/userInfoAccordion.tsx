@@ -50,7 +50,7 @@ const UserInfoAccordion = () => {
         <div className="w-full mt-1 pb-1">
           <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} />
         </div>
-        <div>
+        <div className="w-full mt-4">
           <SolvedacBtn />
         </div>
       </AccordionDetails>
