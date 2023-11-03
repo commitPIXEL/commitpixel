@@ -4,10 +4,9 @@ import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { height, imageUrl, width } from "../config";
 import Panzoom from "panzoom";
-import { pick } from "@/store/slices/colorSlice";
-import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
-import { Snackbar } from "@mui/material";
+import useColorTool from "@/app/utils/colorTool";
+import { BrowserSnackBar } from "./snackbar";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -15,6 +14,7 @@ const CanvasContainer = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null); 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
+  const canvasContainer = useRef<HTMLDivElement>(null);
 
   const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
@@ -24,7 +24,6 @@ const CanvasContainer = () => {
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
   const device = useSelector((state: RootState) => state.device.device);
-  const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
@@ -60,6 +59,7 @@ const CanvasContainer = () => {
       });
       socket.on("url", (urlData) => {
         setUrlData(urlData);
+        console.log(urlData);
       });
     }
   }, [socket, ctx]);
@@ -84,21 +84,19 @@ const CanvasContainer = () => {
 
   useEffect(() => {
     const div = ref.current;
-    const initialZoom = device === "mobile" ? 0.6 : 1;
-    const dividerWidth = device === "mobile" ? 3 : 3.5;
-    const dividerHeight = device === "mobile" ? 8 : 3.5;
-    if (div) {
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (div && container) {
       const panzoom = Panzoom(div, {
         zoomDoubleClickSpeed: 1,
         initialZoom: initialZoom,
       });
-      panzoom.moveTo(
-        window.innerWidth / dividerWidth - (width / dividerWidth) * initialZoom,
-        window.innerHeight / dividerHeight - (height / dividerHeight) * initialZoom,
-      );
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
+      panzoom.moveTo(centerX, centerY);
 
       panzoom.setMaxZoom(50);
-      panzoom.setMinZoom(0.8);
+      panzoom.setMinZoom(0.5);
 
       setPanzoomInstance(panzoom);
 
@@ -115,67 +113,55 @@ const CanvasContainer = () => {
       const ctx = canvas.getContext("2d");
       setCtx(ctx);
 
-      const toHex = (rgbData: number) => {
-        let hex = rgbData.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-      };
-    
-      const rgbtoHex = (r: number, g: number, b: number) => {
-        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-      };
-
       const setCursor = (e: MouseEvent) => {
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         setCursorPos({ x, y });
       };
 
-      const canvasClick = (e: MouseEvent) => {
+      const onMouseDown = (e: MouseEvent) => {
         if(e.button !== 0) return;
         if(e.detail == 2) {
           e.preventDefault();
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
-        if(tool === null || tool === undefined) {
-          socket?.emit("url", [x, y]);
-          return;
-        } 
-        let r, g, b;
-        if(tool == "painting") {
-          panzoomInstance?.pause();
-          audio.play();
-            r = color.rgb.r;
-            g = color.rgb.g;
-            b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
-        } else if(tool == "copying" && ctx) {
-          panzoomInstance?.pause();
-          const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-          const hex = rgbtoHex(r, g, b);
-          dispatch(
-            pick({
-              hex: hex,
-              rgb: { r: r, g: g, b: b, a: 1 },
-            })
-          );
-          dispatch(setTool("painting"));
-        }
+        useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        if(tool === "painting" || tool === "copying") {
-          panzoomInstance.resume();
-        } else if(tool === null && e.button !== 2) {
+        if (tool === null && e.button !== 2) {
           setOpen(true);
-        }
+        } 
+        panzoomInstance.resume();
       };
 
+      const onFingerDown = (e: TouchEvent) => {
+        if(device !== "mobile" || e.touches.length !== 1) {
+          return;
+        }
+        const x = e.touches[0].clientX - 1;
+        const y = e.touches[0].clientY - 1;
+        useColorTool(setPixel, socket, dispatch, ctx, panzoomInstance, tool, color, x, y);
+      };
+
+      const onFingerUp = (e: TouchEvent) => {
+        if(device !== "mobile" || e.touches.length !== 1) {
+          return;
+        }
+        if (tool === null || tool === undefined) {
+          setOpen(true);
+        }
+        panzoomInstance.resume();
+      }
+
+      wrapper.addEventListener("touchstart", onFingerDown);
+      wrapper.addEventListener("touchend", onFingerUp);
       wrapper.addEventListener("mousemove", setCursor);
-      wrapper.addEventListener("mousedown", canvasClick);
+      wrapper.addEventListener("mousedown", onMouseDown);
       wrapper.addEventListener("mouseup", onMouseUp);
 
       return () => {
         wrapper.removeEventListener("mousemove", setCursor);
-        wrapper.removeEventListener("mousedown", canvasClick);
+        wrapper.removeEventListener("mousedown", onMouseDown);
         wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
@@ -186,7 +172,7 @@ const CanvasContainer = () => {
   };
 
   return (
-    <div className={device === "mobile" ? "w-full h-[50%]" : "col-span-3 w-full max-h-full"}>
+    <div className={device === "mobile" ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
@@ -203,10 +189,10 @@ const CanvasContainer = () => {
         </div>
       )}
       {socket && (
-        <div className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
+        <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
-            className="overflow-hidden w-[95%] h-full">
+            className="overflow-hidden w-full h-full">
             <div className="w-max" ref={ref}>
               <div
                 className="bg-slate-200"
@@ -222,24 +208,10 @@ const CanvasContainer = () => {
                 >
                   캔버스를 지원하지 않는 브라우저입니다. 크롬으로 접속해주세요!
                 </canvas>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: cursorPos.y + 1,
-                    left: cursorPos.x + 1.25,
-                    width: 0,
-                    height: 0,
-                  }}
-                ></div>
               </div>
             </div>
           </div>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <div className="bg-white rounded p-4">
-              <div className="cursor-pointer">{urlData?.userId}</div> 
-              <div className="cursor-pointer" onClick={() => {window.open("https://www.naver.com/", "_blank")}}>{urlData?.url}</div> 
-            </div>
-          </Snackbar>
+          <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
         </div>
       )}
     </div>
