@@ -85,7 +85,12 @@ public class AuthController {
         return providerId;
     }
 
-
+    /**
+     * feign test 용 메서드
+     *
+     * @param test 문자열
+     * @return 문자열 추가한거.
+     */
     @PostMapping("/feigntest")
     String feignTest(@RequestBody String test) {
         log.info("feignTest start: " + test);
@@ -94,11 +99,17 @@ public class AuthController {
         return result;
     }
 
+    /**
+     * providerId로 깃허브 accesstoken 얻기
+     *
+     * @param providerId 깃허브 providerId 
+     * @return 깃허브 accesstoken
+     */
     @GetMapping("/token/github")
-    public String getGithubAccessTokenByJwtAccessToken(@RequestParam String accessToken){
-        log.info("getGithubAccessTokenByJwtAccessToken start: "+accessToken);
-        String githubAccessToken = authService.getGithubTokenFromJwtAccessToken(accessToken);
-        log.info("getGithubAccessTokenByJwtAccessToken end: "+accessToken);
+    public String getGithubAccessTokenByProviderId(@RequestParam String providerId) {
+        log.info("getGithubAccessTokenByProviderId start: " + providerId);
+        String githubAccessToken = authService.getGithubAccessTokenByProviderId(providerId);
+        log.info("getGithubAccessTokenByProviderId end: " + githubAccessToken);
         return githubAccessToken;
     }
 }
