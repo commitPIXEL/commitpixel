@@ -10,7 +10,7 @@ import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
 import TestCanvas from "./canvas/testCanvas";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { UserInfo, UserFixel } from "../../interfaces/browser";
+import { IUserInfo, IUserFixel } from "../../interfaces/browser";
 
 const Browser = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const Browser = () => {
         const resFromUser = await customFetch("/user/");
         console.log("resFromUser: ");
         console.log(resFromUser);
-        const userData: UserInfo = await resFromUser.json();
+        const userData: IUserInfo = await resFromUser.json();
         console.log("userData: ");
         console.log(userData);
         dispatch(getUserInfo(userData));

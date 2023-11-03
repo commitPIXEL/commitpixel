@@ -283,12 +283,7 @@ const CanvasContainer = () => {
               </div>
             </div>
           </div>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <div className="bg-white rounded p-4">
-              <div className="cursor-pointer">{urlData?.userId}</div> 
-              <div className="cursor-pointer" onClick={() => {window.open("https://www.naver.com/", "_blank")}}>{urlData?.url}</div> 
-            </div>
-          </Snackbar>
+          <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
         </div>
       )}
     </div>
