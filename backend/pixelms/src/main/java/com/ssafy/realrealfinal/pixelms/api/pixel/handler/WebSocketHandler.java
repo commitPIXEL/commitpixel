@@ -56,10 +56,10 @@ public class WebSocketHandler {
     public void onConnect(SocketIOClient client) {
         log.info("New client connected: {}", client.getSessionId().toString());
 
-        String accessToken = client.getHandshakeData().getHttpHeaders().get("Authorization");
+        String accessToken = client.getHandshakeData().getSingleUrlParam("Authorization");
         // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
         // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
-        String githubNickname = client.getHandshakeData().getHttpHeaders().get("githubNickname");
+        String githubNickname = client.getHandshakeData().getSingleUrlParam("githubNickname");
         // 비회원을 위해 임시로 providerId를 세팅
         if (accessToken == null || accessToken.isEmpty()) {
             CLIENTS.put(client.getSessionId(), -1);
