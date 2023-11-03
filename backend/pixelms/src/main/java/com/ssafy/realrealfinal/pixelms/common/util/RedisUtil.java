@@ -4,6 +4,8 @@ import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +27,7 @@ public class RedisUtil {
     private int SCALE;
 
     private final List<String> colorKeys = new ArrayList<>();
-    private final List<String> pixelKeys = new ArrayList<>();
+    private final Map<String, String> pixelKeys = new TreeMap<>();
 
     @PostConstruct
     public void init() {
@@ -35,11 +37,11 @@ public class RedisUtil {
             colorKeys.add(index + ":R");
             colorKeys.add(index + ":G");
             colorKeys.add(index + ":B");
-            pixelKeys.add(index + ":R");
-            pixelKeys.add(index + ":G");
-            pixelKeys.add(index + ":B");
-            pixelKeys.add(index + ":url");
-            pixelKeys.add(index + ":name");
+            pixelKeys.put(index + ":R", "255");
+            pixelKeys.put(index + ":G", "255");
+            pixelKeys.put(index + ":B", "255");
+            pixelKeys.put(index + ":url", "");
+            pixelKeys.put(index + ":name", "");
         }
     }
 
@@ -80,17 +82,10 @@ public class RedisUtil {
 
     public void initPixelRedis() {
         stringRedisTemplate.executePipelined(new SessionCallback<Object>() {
+        @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                for (int i = 0; i < SCALE; ++i) {
-                    for (int j = 0; j < SCALE; ++j) {
-                        String index = Integer.toString(i * SCALE + j);
-                        operations.opsForValue().set(index + ":R", "255");
-                        operations.opsForValue().set(index + ":G", "255");
-                        operations.opsForValue().set(index + ":B", "255");
-                        operations.opsForValue().set(index + ":url", " ");
-                        operations.opsForValue().set(index + ":name", " ");
-                    }
-                }
+                operations.opsForValue().multiSet(pixelKeys);
+
                 return null;
             }
         });
@@ -103,6 +98,7 @@ public class RedisUtil {
                 operations.opsForValue().multiGet(colorKeys);
 
                 return null; // executePipelined가 결과를 자동으로 반환하므로 여기서는 null을 반환
+            }
         });
     }
 }
