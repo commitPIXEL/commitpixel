@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.pixelms.common.util;
 
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
 @Component
 public class IdNameUtil {
 
-    private HashMap<Integer, String> idNameMap = new HashMap<>();
+    private TreeMap<Integer, String> idNameMap = new TreeMap<>();
 
     public void updateMap(Integer providerId, String githubNickname) {
         idNameMap.put(providerId, githubNickname);

@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class PixelServiceImpl implements PixelService {
     public void updateUsedPixel(Integer providerId) {
         log.info("updateUsedPixel start: " + providerId);
 
-        Integer usedPixel = redisUtil.getIntegerData(String.valueOf(providerId), USED_PIXEL_KEY);
+        Integer usedPixel = redisUtil.getData(String.valueOf(providerId), USED_PIXEL_KEY);
         redisUtil.setData(String.valueOf(providerId), USED_PIXEL_KEY, usedPixel + 1);
 
         log.info("updateUsedPixel end");
@@ -82,16 +83,11 @@ public class PixelServiceImpl implements PixelService {
 
         for (int x = 0; x < SCALE; ++x) {
             for (int y = 0; y < SCALE; ++y) {
-                String rString = (String) rgbValues.get(++rgbIndex);
-                String gString = (String) rgbValues.get(++rgbIndex);
-                String bString = (String) rgbValues.get(++rgbIndex);
+                int r = Integer.parseInt((String) rgbValues.get(++rgbIndex));
+                int g = Integer.parseInt((String) rgbValues.get(++rgbIndex));
+                int b = Integer.parseInt((String) rgbValues.get(++rgbIndex));
 
-                int r = Integer.parseInt(rString);
-                int g = Integer.parseInt(gString);
-                int b = Integer.parseInt(bString);
-
-                Color color = new Color(r, g, b);
-                bufferedImage.setRGB(x, y, color.getRGB());
+                bufferedImage.setRGB(x, y, (new Color(r, g, b)).getRGB());
             }
         }
 
@@ -117,7 +113,7 @@ public class PixelServiceImpl implements PixelService {
         log.info("redisToBase64Image start");
 
         BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
-        List<Object> rgbValues = (List<Object>) (redisUtil.getRGBValues()).get(0);
+        List<Object> rgbValues = (List<Object>) redisUtil.getRGBValues().get(0);
         int rgbIndex = -1;
 
         for (int x = 0; x < SCALE; ++x) {
@@ -160,9 +156,9 @@ public class PixelServiceImpl implements PixelService {
     private Integer getCredit(Integer providerId, String type) {
         log.info("getCredit start: " + providerId + " " + type);
         String key = String.valueOf(providerId);
-        Integer credit = 0;
+        Integer credit;
         try {
-            credit = redisUtil.getIntegerData(key, type);
+            credit = redisUtil.getData(key, type);
             log.info("getCredit end: " + credit);
             return credit;
         } catch (RedisNotFoundException e) {
@@ -170,7 +166,6 @@ public class PixelServiceImpl implements PixelService {
             log.warn("getCredit end: " + 0);
             return 0;
         }
-
     }
 
     /**
@@ -190,45 +185,50 @@ public class PixelServiceImpl implements PixelService {
     }
 
     /**
-     * 픽셀 레디스 업데이트하고 Rank로 보내주는 메서드
+     * Pixel Redis 업데이트하고 RankMS 로 보내주는 메서드
      *
-     * @param providerId
-     * @param pixelInfo
+     * @param providerId providerId
+     * @param pixelInfo  픽셀 한개의 정보 [x, y, r, g, b, url, githubNickname]
      */
     @Override
     public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
-        log.info("updatePixelRedis start: " + pixelInfo);
-
+        log.info("updatePixelRedis start: " + providerId + " " + pixelInfo);
+        Integer x = (Integer) pixelInfo.get(0);
+        Integer y = (Integer) pixelInfo.get(1);
+        String r = (String) pixelInfo.get(2);
+        String g = (String) pixelInfo.get(3);
+        String b = (String) pixelInfo.get(4);
+        String url = (String) pixelInfo.get(5);
+        String githubNickname = (String) pixelInfo.get(6);
         // (x * SCALE + y) 인덱스
-        String index = String.valueOf((Integer) pixelInfo.get(0) * SCALE + (Integer) pixelInfo.get(1));
+        String index = String.valueOf(x * SCALE + y);
 
-        // 이전 유저 닉네임과 url 정보(없으면 null)
-        String prevUrl = redisUtil.getStringData(index, "url");
-        String prevName = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
+        // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
+        List<Object> prevPixelRankInfo = redisUtil.getPrevPixel(index);
 
-        // Red
-        redisUtil.setData(index + ":R", (Integer) pixelInfo.get(2));
-        // Green
-        redisUtil.setData(index + ":G", (Integer) pixelInfo.get(3));
-        // Blue
-        redisUtil.setData(index + ":B", (Integer) pixelInfo.get(4));
-        // Url
-        redisUtil.setData(index + ":url", (String) pixelInfo.get(5));
-        // providerId
-        redisUtil.setData(index + ":id", providerId);
+        // 현재 pixel 정보 Redis에 저장
+        Map<String, String> currPixelInfo = Map.of(
+            index + ":R", r,
+            index + ":G", g,
+            index + ":B", b,
+            index + ":url", url,
+            index + ":id", String.valueOf(providerId));
+        redisUtil.setCurrPixel(currPixelInfo);
 
-        // rank로 이전, 현재 정보 보내기
-        Map<String, String> map = Map.of(
-                "prevUrl", prevUrl,
-                "prevGithubNickname", prevName,
-                "currUrl", (String) pixelInfo.get(5),
-                "currGithubNickname", (String) pixelInfo.get(6));
-        kafkaTemplate.send("pixel-update-topic", map);
+        // ==================================
+        // rankMS 로 변경된 픽셀 정보 보내기
+        Map<String, String> pixelUpdateInfo = Map.of(
+            "prevUrl", (String) prevPixelRankInfo.get(0),
+            "prevGithubNickname", (String) prevPixelRankInfo.get(1),
+            "currUrl", url,
+            "currGithubNickname", githubNickname);
+        kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
+        log.info("updatePixelRedis end");
     }
 
     /**
-     * feign 통신용 메서드 
-     * 
+     * feign 통신용 메서드
+     *
      * @param additionalCreditRes 정보 업데이트용
      * @return CreditRes
      */
@@ -253,8 +253,9 @@ public class PixelServiceImpl implements PixelService {
     public PixelInfoRes getUrlAndName(String index) {
         log.info("getUrlAndName start: " + index);
 
-        String url = redisUtil.getStringData(index, "url");
-        String githubNickname = idNameUtil.getNameById(Integer.valueOf(redisUtil.getStringData(index, "providerId")));
+        String url = redisUtil.getData(index + ":url");
+        String githubNickname = idNameUtil.getNameById(
+            Integer.valueOf(redisUtil.getData((index + ":id"))));
 
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
 
@@ -263,9 +264,9 @@ public class PixelServiceImpl implements PixelService {
     }
 
     @Override
-    public void test() {
-        log.info("Test start");
-        redisUtil.initPixelRedis();
-        log.info("test end");
+    public void initCanvas() {
+        log.info("initCanvas start");
+        redisUtil.initCanvasRedis();
+        log.info("initCanvas end");
     }
 }

@@ -3,8 +3,6 @@ package com.ssafy.realrealfinal.pixelms.api.pixel.controller;
 import com.ssafy.realrealfinal.pixelms.api.pixel.dto.AdditionalCreditDto;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
-import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
-import java.awt.image.BufferedImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,7 @@ public class PixelController {
     /**
      * userms에서 credit update 시 feign으로 요청하는 메서드
      *
-     * @param additionalCreditRes
+     * @param additionalCreditRes 추가된 credit 수
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
     @GetMapping("/credit")
@@ -43,24 +41,37 @@ public class PixelController {
      * @return 픽셀 레디스 데이터 -> 이미지
      */
     @GetMapping("/image")
-    byte[] getImage() {
+    public byte[] getImage() {
         log.info("getImage start");
         byte[] image = pixelService.redisToImage();
         log.info("getImage end: SUCCESS");
         return image;
     }
 
+    /**
+     * 개발자용 BufferedImage 를 String 으로 변환하여 반환
+     *
+     * @return String 형태의 BufferedImage
+     */
     @GetMapping("/image/64")
-    ResponseEntity<String> toBase64Image() {
+    public ResponseEntity<String> toBase64Image() {
         log.info("toBase64Image start");
         String base64Image = pixelService.bufferedImageToBase64Image();
         log.info("toBase64Image end: SUCCESS");
         return ResponseEntity.ok().body(base64Image);
     }
 
-    @GetMapping("/")
-    ResponseEntity<?> test(){
-        pixelService.test();
+    /**
+     * 개발자용 Canvas 초기화 명령
+     * Pixel Redis 의 상태를 초기화한다.
+     *
+     * @return 200(ok)
+     */
+    @GetMapping("/init")
+    public ResponseEntity<?> initCanvas() {
+        log.info("initCanvas start");
+        pixelService.initCanvas();
+        log.info("initCanvas end: SUCCESS");
         return ResponseEntity.ok().build();
     }
 }
