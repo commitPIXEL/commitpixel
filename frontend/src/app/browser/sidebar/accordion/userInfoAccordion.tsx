@@ -100,7 +100,7 @@ const UserInfoAccordion = () => {
           <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} defaultValue={user.url} />
         </div>
         <div className="w-full mt-4">
-          <SolvedacBtn isSolvedACAuth = {user.isSolvedACAuth} />
+          <SolvedacBtn isSolvedACAuth = {user?.isSolvedACAuth} />
         </div>
         <Loading open={loading} />
       </AccordionDetails>
