@@ -26,7 +26,10 @@ const userSlice = createSlice({
       state.githubNickname = action.payload.githubNickname;
       state.profileImage = action.payload.profileImage;
       state.url = action.payload.url;
-      state.isSolvedACAuth = action.payload.isSolvedACAuth;
+      // TODO: 배포 터져서 임시 타입 추가
+      state.isSolvedACAuth = typeof action.payload.isSolvedACAuth === 'boolean'
+    ? action.payload.isSolvedACAuth
+    : false;
     },
     getUserPixel: (
       state,
