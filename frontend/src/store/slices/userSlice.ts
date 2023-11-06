@@ -19,7 +19,8 @@ const userSlice = createSlice({
         githubNickname: string;
         profileImage: string;
         url: string;
-        isSolvedACAuth: boolean;
+        // TODO: 배포 터져서 임시 타입 추가
+        isSolvedACAuth: boolean | undefined | string;
       }>
     ) => {
       state.githubNickname = action.payload.githubNickname;
