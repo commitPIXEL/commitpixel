@@ -24,7 +24,7 @@ public interface UserMapper {
     @Mapping(source = "profileImage", target = "profileImage")
     User toUser(String githubNickname, String profileImage, User user);
 
-    UserInfoRes toUserInfoRes(User user);
+    UserInfoRes toUserInfoRes(User user, Boolean isSolvedACAuth);
 
     AdditionalCreditReq toAdditionalCreditReq(Integer providerId, Integer additionalCredit);
 

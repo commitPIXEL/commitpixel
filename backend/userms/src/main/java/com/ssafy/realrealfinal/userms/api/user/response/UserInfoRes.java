@@ -11,11 +11,14 @@ public class UserInfoRes {
     private String githubNickname;
     private String profileImage;
     private String url;
+    private Boolean isSolvedACAuth;
 
     @Builder
-    public UserInfoRes(String githubNickname, String profileImage, String url) {
+    public UserInfoRes(String githubNickname, String profileImage, String url,
+        Boolean isSolvedACAuth) {
         this.githubNickname = githubNickname;
         this.profileImage = profileImage;
         this.url = url;
+        this.isSolvedACAuth = isSolvedACAuth;
     }
 }
