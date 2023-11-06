@@ -77,8 +77,12 @@ public class RedisUtil {
      * @return
      * @throws RedisNotFoundException
      */
-    public Integer getData(String key, String type) throws RedisNotFoundException {
+    public Integer getData(String key, String type) {
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        String tempValue = hashOperations.get(key, type);
+        if (tempValue == null) {
+            throw new RedisNotFoundException();
+        }
         Integer value = Integer.parseInt(hashOperations.get(key, type));
         return value;
     }
