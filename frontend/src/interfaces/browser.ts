@@ -2,6 +2,7 @@ export interface IUserInfo {
   githubNickname: string;
   profileImage: string;
   url: string;
+  isSolvedACAuth?: string;
 }
 
 export interface IUserPixel {
