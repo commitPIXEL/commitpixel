@@ -26,7 +26,7 @@ const userSlice = createSlice({
     },
     getUserPixel: (
       state,
-      action: PayloadAction<{ totalPixel: number; availablePixel: number }>
+      action: PayloadAction<{ githubNickname: string; totalPixel: number; availablePixel: number }>
     ) => {
       state.totalPixel = action.payload.totalPixel;
       state.availablePixel = action.payload.availablePixel;
