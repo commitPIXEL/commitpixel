@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -224,11 +225,11 @@ public class PixelServiceImpl implements PixelService {
                 (String) prevPixelRankInfo.get(1)));
         }
 
-        Map<String, String> pixelUpdateInfo = Map.of(
-            "prevUrl", prevUrl,
-            "prevGithubNickname", prevGithubNickname,
-            "currUrl", url,
-            "currGithubNickname", githubNickname);
+        Map<String, String> pixelUpdateInfo = new TreeMap<>();
+        pixelUpdateInfo.put("prevUrl", prevUrl);
+        pixelUpdateInfo.put("prevGithubNickname", prevGithubNickname);
+        pixelUpdateInfo.put("currUrl", url);
+        pixelUpdateInfo.put("currGithubNickname", githubNickname);
         kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
         log.info("updatePixelRedisAndSendRank end");
     }
