@@ -73,12 +73,12 @@ const CanvasContainer = () => {
     fetch("https://dev.commitpixel.com/api/pixel/image/64")
       .then((res) => res.text())
       .then((data) => {
+        setIsLoading(false);
         img.src = "data:image/png;base64," + data;
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
         };
-        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -267,7 +267,10 @@ const CanvasContainer = () => {
       {socket && (
         <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
-          { isLoading ? <CircularProgress /> :<div
+          { isLoading ? 
+          <div className="w-full h-full flex justify-center items-center">
+            <CircularProgress />
+          </div> :<div
             className="overflow-hidden w-full h-full">
             <div className="w-max" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
