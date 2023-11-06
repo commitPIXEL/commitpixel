@@ -6,10 +6,7 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class PixelController {
      * @param additionalCreditRes 추가된 credit 수
      * @return creditRes {전체 크레딧, 사용 가능 크레딧}
      */
-    @GetMapping("/credit")
+    @PostMapping("/credit")
     public CreditRes updateAndSendCredit(@RequestBody AdditionalCreditReq additionalCreditRes) {
         log.info("consumeCreditEvent start");
 
