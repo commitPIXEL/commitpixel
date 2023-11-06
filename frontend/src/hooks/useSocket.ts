@@ -1,9 +1,13 @@
 import { io, Socket } from "socket.io-client";
 import { socketUrl} from "../app/config";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
+  const userNickname = useSelector((state: RootState) => state.user.githubNickname);
+  const accessToken = useSelector((state: RootState) => state.authorization.authorization);
 
   const connectToSocket = () => {
     if(true && socketUrl) {
@@ -11,8 +15,8 @@ const useSocket = () => {
         transports: ["websocket"],
         reconnection: false,
         query: {
-          "Authorization": "",
-          "githubNickname": "Visitor"
+          "Authorization": accessToken || "",
+          "githubNickname": userNickname || "Visitor",
         },
       });
       
