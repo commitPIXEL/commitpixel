@@ -286,8 +286,9 @@ public class UserServiceImpl implements UserService {
             log.info("solvedAcNewSolvedProblem end: " + 0);
             return 0;
         }
-        solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
-        redisUtil.setData(key, solvedAcId, solvedProblem);
+        Integer newProblemCount = solvedAcUtil.getSolvedCount(solvedAcId);
+        solvedProblem = newProblemCount - solvedProblem;
+        redisUtil.setData(key, solvedAcId, newProblemCount);
         log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
         return solvedProblem;
     }
