@@ -2,7 +2,8 @@ export interface IUserInfo {
   githubNickname: string;
   profileImage: string;
   url: string;
-  isSolvedACAuth?: string;
+  // TODO: 배포 터져서 임시로 타입 추가
+  isSolvedACAuth?: string | boolean | undefined;
 }
 
 export interface IUserPixel {
@@ -12,5 +13,6 @@ export interface IUserPixel {
 }
 
 export interface IIsSolvedACAuth {
-  isSolvedACAuth: boolean;
+// TODO: 배포 터져서 임시로 타입 추가
+  isSolvedACAuth: string | boolean | undefined;
 }
