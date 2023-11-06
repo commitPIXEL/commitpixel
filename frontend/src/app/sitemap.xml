@@ -1,0 +1,12 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+  <!-- TODO: 배포용Url로 변경하기 -->
+    <loc>https://dev.commitpixel.com/</loc>
+    <lastmod>2023-11-06T12:00:00+09:00</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+  <!-- TODO: 배포용Url로 변경하기 -->
+    <loc>https://dev.commitpixel.com/tutorials</loc>
+  </url>
+</urlset>
