@@ -2,14 +2,16 @@ import { Accordion, AccordionDetails, Input } from "@mui/material";
 import AccordionTitle from "./accordionTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil} from "@fortawesome/free-solid-svg-icons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SolvedacBtn from "@/components/solvedacBtn";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import Loading from "@/components/loading";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
 const UserInfoAccordion = () => {
+  const dispatch = useDispatch();
   const customFetch = useFetchWithAuth();
   const urlInputRef = useRef<HTMLInputElement | null>(null);
   const user = useSelector(
@@ -19,6 +21,15 @@ const UserInfoAccordion = () => {
   const [url, setUrl] = useState("");
   const [isChangeUrl, setIsChangeUrl] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if(isEdit) {
+      dispatch(setUrlInputOn());
+    } else {
+      dispatch(setUrlInputOff());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit]);
 
   const urlUpdate = async () => {
     try {
@@ -70,8 +81,7 @@ const UserInfoAccordion = () => {
   return (
     <Accordion defaultExpanded={true} className="!rounded mb-6">
       <Loading open={loading} />
-
-      <AccordionTitle title={user.githubNickname} profileImage={user.profileImage} />
+      <AccordionTitle title={user?.githubNickname} profileImage={user?.profileImage} />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
           <div className="text-lg text-textGray">Pixel</div>
