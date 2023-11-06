@@ -53,14 +53,13 @@ const SolvedacBtn = () => {
           const pixelData: IUserPixel = await resPixel.json();
           console.log("pixelData: ");
           console.log(pixelData);
+          window.alert("solvedac 연동 성공!!");
           dispatch(getUserPixel(pixelData));
         } catch (err) {
           console.error("solvedac.auth 에서 에러 발생:");
           console.error(err);
           window.alert("solvedac 연동 실패!!");
         }
-
-        window.alert("solvedac 연동 성공!!");
     } catch (err) {
         console.error("solvedac/auth에서 에러 발생:");
         console.error(err);

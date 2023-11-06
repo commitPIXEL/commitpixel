@@ -6,6 +6,7 @@ const initialState = {
   totalCredit: 0,
   availablePixel: 0,
   url: "",
+  isSolvedAc: false,
 };
 
 const userSlice = createSlice({
@@ -18,11 +19,13 @@ const userSlice = createSlice({
         githubNickname: string;
         profileImage: string;
         url: string;
+        isSolvedAc: boolean;
       }>
     ) => {
       state.githubNickname = action.payload.githubNickname;
       state.profileImage = action.payload.profileImage;
       state.url = action.payload.url;
+      state.isSolvedAc = action.payload.isSolvedAc;
     },
     getUserPixel: (
       state,
