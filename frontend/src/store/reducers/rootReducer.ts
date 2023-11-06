@@ -4,6 +4,7 @@ import authorizationReducer from "../slices/authorizationSlice";
 import toolReducer from "../slices/toolSlice";
 import deviceReducer from "../slices/deviceSlice";
 import userReducer from "../slices/userSlice";
+import urlInputReducer from "../slices/urlInputSlice";
 
 const rootReducer = combineReducers({
   color: colorReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   tool: toolReducer,
   device: deviceReducer,
   user: userReducer,
+  urlInput: urlInputReducer,
 });
 
 export default rootReducer;
