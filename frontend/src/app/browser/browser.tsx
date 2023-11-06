@@ -8,7 +8,6 @@ import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
-import TestCanvas from "./canvas/testCanvas";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import { IUserInfo, IUserPixel } from "../../interfaces/browser";
 
@@ -18,7 +17,6 @@ const Browser = () => {
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
   );
-  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -37,8 +35,10 @@ const Browser = () => {
         console.log("resUser: ");
         console.log(resUser);
         const userData: IUserInfo = await resUser.json();
-        console.log("userData: ");
-        console.log(userData);
+        const fixelData: IUserFixel = await resFixel.json();
+        console.log("fixelData: ");
+        console.log(fixelData);
+
         dispatch(getUserInfo(userData));
       } catch (err) {
         console.error("Error:", err);
@@ -63,7 +63,7 @@ const Browser = () => {
   }, [accessToken]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log(e.key);
+    if (isUrlInput) return;
     if (e.key === "b" || e.key === "B") {
       dispatch(setTool("painting"));
     } else if (e.key === "i" || e.key === "I") {
