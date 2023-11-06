@@ -6,6 +6,6 @@ export interface IUserInfo {
 
 export interface IUserPixel {
   githubNickname: string;
-  totalPixel: number;
+  totalCredit: number;
   availablePixel: number;
 }
