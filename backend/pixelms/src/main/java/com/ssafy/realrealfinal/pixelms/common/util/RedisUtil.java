@@ -83,7 +83,7 @@ public class RedisUtil {
         if (tempValue == null) {
             throw new RedisNotFoundException();
         }
-        Integer value = Integer.parseInt(hashOperations.get(key, type));
+        Integer value = Integer.parseInt(tempValue);
         return value;
     }
 
