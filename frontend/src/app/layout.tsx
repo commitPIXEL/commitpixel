@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: 'commit Pixel',
   description: 'commit Pixel by SSAFY 9기 자율 프로젝트 진짜_진짜_최종_팀',
   applicationName: 'SSAFY 9기 진짜_진짜_최종_팀의 commit Pixel',
+  verification: {
+    google: '7K6yIIQPoGYgAfRJq9vZliAIG5ZEGaQVA_EaD9wEY3A',
+  },
   authors: [{
     name: "이용현",
   },{name: "김희조"}, {name: "권도현"}, {name: "한다솜"}, {name: "김인범"}, {name: "이예린"}],
