@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState = {
   githubNickname: "",
   profileImage: "",
-  totalPixel: 0,
+  totalCredit: 0,
   availablePixel: 0,
   url: "",
 };
@@ -26,28 +26,24 @@ const userSlice = createSlice({
     },
     getUserPixel: (
       state,
-      action: PayloadAction<{ githubNickname: string; totalPixel: number; availablePixel: number }>
+      action: PayloadAction<{ githubNickname: string; totalCredit: number; availablePixel: number }>
     ) => {
-      state.totalPixel = action.payload.totalPixel;
+      state.totalCredit = action.payload.totalCredit;
       state.availablePixel = action.payload.availablePixel;
     },
     pickPixel: (state, action: PayloadAction<{ availablePixel: number }>) => {
       state.availablePixel = action.payload.availablePixel;
     },
-    addPixel: (state, action: PayloadAction<{ totalPixel: number; availablePixel: number }>) => {
-      state.totalPixel = action.payload.totalPixel;
-      state.availablePixel = action.payload.availablePixel;
-    },
     resetUser: (state) => {
       state.githubNickname = "";
       state.profileImage = "";
-      state.totalPixel = 0;
+      state.totalCredit = 0;
       state.availablePixel = 0;
       state.url = "";
     },
   },
 });
 
-export const { getUserInfo, getUserPixel, pickPixel, addPixel, resetUser } =
+export const { getUserInfo, getUserPixel, pickPixel, resetUser } =
   userSlice.actions;
 export default userSlice.reducer;

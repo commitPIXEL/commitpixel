@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -7,14 +7,26 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import BoardInput from './boardInput';
 import WhiteListInput from './whiteListInput';
+import { useDispatch } from "react-redux";
+import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
 const BoardBtn = () => {
 
-    const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [type, setType] = useState(0);
 
-    const [type, setType] = React.useState(0);
+    useEffect(() => {
+      if (open) {
+        dispatch(setUrlInputOn());
+      } else {
+        dispatch(setUrlInputOff());
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open]);
+
     const handleChange = (event: SelectChangeEvent) => {
         setType(Number(event.target.value));
     };

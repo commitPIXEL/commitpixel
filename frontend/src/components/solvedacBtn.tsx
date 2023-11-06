@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -7,14 +7,28 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import InputAdornment from "@mui/material/InputAdornment";
 import Loading from "./loading";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import { IUserPixel } from "@/interfaces/browser";
+import { useDispatch } from "react-redux";
+import { getUserPixel } from "@/store/slices/userSlice";
+import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
 const SolvedacBtn = () => {
+  const dispatch = useDispatch();
   const customFetch = useFetchWithAuth();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    if (open) {
+      dispatch(setUrlInputOn());
+    } else {
+      dispatch(setUrlInputOff());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const idChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setId(event.target.value);
@@ -28,16 +42,28 @@ const SolvedacBtn = () => {
 
     try {
         setLoading(true);
-        const resFromUser = await customFetch("/user/solvedac/auth", {
+        const connectSolvedac = await customFetch(`/user/solvedac/auth?solvedAcId=${encodeURIComponent(id)}`, {
           method: "PATCH",
-          body: JSON.stringify({ solvedAcId: id }),
         });
 
-        console.log(resFromUser);
-        console.log(resFromUser.json())
+        try {
+          const resPixel = await customFetch("/user/refreshinfo");
+          console.log("resPixel: ");
+          console.log(resPixel);
+          const pixelData: IUserPixel = await resPixel.json();
+          console.log("pixelData: ");
+          console.log(pixelData);
+          dispatch(getUserPixel(pixelData));
+        } catch (err) {
+          console.error("solvedac.auth 에서 에러 발생:");
+          console.error(err);
+          window.alert("solvedac 연동 실패!!");
+        }
+
         window.alert("solvedac 연동 성공!!");
     } catch (err) {
-        console.error("Error:", err);
+        console.error("solvedac/auth에서 에러 발생:");
+        console.error(err);
         window.alert("solvedac 연동 실패!!");
     } finally {
       setLoading(false);

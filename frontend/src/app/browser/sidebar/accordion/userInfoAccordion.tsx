@@ -1,3 +1,5 @@
+"use client";
+
 import { Accordion, AccordionDetails, Input } from "@mui/material";
 import AccordionTitle from "./accordionTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -88,7 +90,7 @@ const UserInfoAccordion = () => {
           <div className="flex justify-between text-textBlack">
             <div>{ user.availablePixel.toLocaleString("ko-KR") }</div>
             <div className="ml-2 mr-2">/</div>
-            <div>{ user.totalPixel.toLocaleString("ko-KR") }</div>
+            <div>{ user.totalCredit.toLocaleString("ko-KR") }</div>
           </div>
         </div>
         <div className="w-full flex items-center">
