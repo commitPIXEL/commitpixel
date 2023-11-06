@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "pixel")
+@FeignClient(name = "pixel", url = "${feign.url}")
 public interface PixelFeignClient {
 
     @GetMapping("pixel/image")
