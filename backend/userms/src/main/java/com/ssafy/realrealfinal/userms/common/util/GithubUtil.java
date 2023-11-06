@@ -31,7 +31,7 @@ public class GithubUtil {
 
     private final WebClient githubWebClient = WebClient
         .builder()
-        .baseUrl("https://api.github.com/user")
+        .baseUrl("https://api.github.com/users")
         .defaultHeader("Accept", "application/vnd.github.v3+json")
         .build();
 
