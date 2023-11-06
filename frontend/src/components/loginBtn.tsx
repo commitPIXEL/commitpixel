@@ -16,7 +16,7 @@ export default function loginBtn() {
   return (
     <>
       <button
-        className="flex justify-around items-center space-x-4 font-bold bg-white rounded h-12 mt-6"
+        className="flex justify-around items-center space-x-4 font-bold bg-white rounded h-12 mt-6 mb-6"
         onClick={oauthLogin}
       >
         <GitHubIcon />
