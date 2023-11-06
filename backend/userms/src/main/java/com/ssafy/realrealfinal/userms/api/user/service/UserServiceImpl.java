@@ -118,6 +118,8 @@ public class UserServiceImpl implements UserService {
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
             githubNickname);
+        // 마지막 크레딧 업데이트 시간 갱신
+        lastUpdateCheckUtil.updateTime(providerId);
         log.info("refreshInfo end: " + refreshedInfoRes);
         return refreshedInfoRes;
     }
