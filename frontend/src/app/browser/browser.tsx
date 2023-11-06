@@ -22,20 +22,36 @@ const Browser = () => {
   useEffect(() => {
     const fetchAsync = async () => {
       try {
-        const [resUser, resFixel] = await Promise.all([
-          customFetch("/user/"),
-          customFetch("/user/refreshinfo"),
-        ]);
-        console.log("resFixel: ");
-        console.log(resFixel);
+        // const [resUser, resFromPixel] = await Promise.all([
+        //   customFetch("/user"),
+        //   customFetch("/pixel"),
+        // ]);
 
+        // const userData: UserInfo = await resUser.json();
+        // const pixelData: UserPixel = await resFromPixel.json();
+        // dispatch(getUserInfo(userData));
+        // dispatch(getUserPixel(pixelData));
+
+        const resUser = await customFetch("/user/");
+        console.log("resUser: ");
+        console.log(resUser);
         const userData: IUserInfo = await resUser.json();
-        const fixelData: IUserPixel = await resFixel.json();
-        console.log("fixelData: ");
-        console.log(fixelData);
+        console.log("userData: ");
+        console.log(userData);
 
         dispatch(getUserInfo(userData));
-        dispatch(getUserPixel(fixelData));
+      } catch (err) {
+        console.error("Error:", err);
+      }
+
+      try {
+        const resPixel = await customFetch("/user/refreshinfo");
+        console.log("resPixel: ");
+        console.log(resPixel);
+        const pixelData: IUserPixel = await resPixel.json();
+        console.log("pixelData: ");
+        console.log(pixelData);
+        dispatch(getUserPixel(pixelData));
       } catch (err) {
         console.error("Error:", err);
       }
