@@ -43,7 +43,11 @@ public class WebSocketHandler {
      */
     @EventListener(ContextRefreshedEvent.class)
     public void start() {
-        server.start();
+        try {
+            server.start();
+        } catch (Exception e) {
+            // TODO: 로깅 또는 재시도 로직
+        }
     }
 
     /**
@@ -95,6 +99,7 @@ public class WebSocketHandler {
         // 사용 가능 픽셀이 0개일 때
         if(pixelService.getAvailableCredit(providerId) == 0) {
             client.sendEvent(NO_CREDIT_ERROR);
+            return;
         }
 
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
