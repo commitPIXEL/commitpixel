@@ -10,7 +10,7 @@ import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
 import TestCanvas from "./canvas/testCanvas";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { IUserInfo, IUserFixel } from "../../interfaces/browser";
+import { IUserInfo, IUserPixel } from "../../interfaces/browser";
 
 const Browser = () => {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const Browser = () => {
         const resPixel = await customFetch("/user/refreshinfo");
         console.log("resPixel: ");
         console.log(resPixel);
-        const pixelData: IUserFixel = await resPixel.json();
+        const pixelData: IUserPixel = await resPixel.json();
         console.log("pixelData: ");
         console.log(pixelData);
         dispatch(getUserPixel(pixelData));

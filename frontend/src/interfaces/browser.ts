@@ -4,7 +4,7 @@ export interface IUserInfo {
   url: string;
 }
 
-export interface IUserFixel {
+export interface IUserPixel {
   githubNickname: string;
   totalPixel: number;
   availablePixel: number;
