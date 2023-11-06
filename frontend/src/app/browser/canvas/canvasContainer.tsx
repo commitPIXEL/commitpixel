@@ -71,9 +71,11 @@ const CanvasContainer = () => {
     const img = new Image(width, height);
     setIsLoading(true);
     fetch("https://dev.commitpixel.com/api/pixel/image/64")
-      .then((res) => res.text())
-      .then((data) => {
+      .then((res) => {
         setIsLoading(false);
+        return res.text();
+        })
+      .then((data) => {
         img.src = "data:image/png;base64," + data;
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
