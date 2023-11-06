@@ -60,17 +60,4 @@ public class PixelController {
         log.info("toBase64Image end: SUCCESS");
         return ResponseEntity.ok().body(base64Image);
     }
-
-    /**
-     * 개발자용 Canvas 초기화 명령 Pixel Redis 의 상태를 초기화한다.
-     *
-     * @return 200(ok)
-     */
-    @GetMapping("/init")
-    public ResponseEntity<?> initCanvas() {
-        log.info("initCanvas start");
-        pixelService.initCanvas();
-        log.info("initCanvas end: SUCCESS");
-        return ResponseEntity.ok().build();
-    }
 }
