@@ -24,7 +24,7 @@ const Sidebar = () => {
       {/* <UserInfoAccordion /> */}
       {/* <PickerAccordion /> */}
       <LoginBtn />
-      <BoardBtn />
+      {/* <BoardBtn /> */}
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
       {/* <RankAccordion title="Pixel 랭킹" type="pixel" /> */}
     </div>
