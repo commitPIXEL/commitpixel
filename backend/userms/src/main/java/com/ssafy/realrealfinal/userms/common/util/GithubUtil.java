@@ -26,15 +26,12 @@ import reactor.core.publisher.Mono;
 @Component
 public class GithubUtil {
 
-    @Value("${github.url}")
-    private String GITHUB_URL;
-
     @Value("${github.user-info-uri}")
     private String userInfoUri;
 
     private final WebClient githubWebClient = WebClient
         .builder()
-        .baseUrl(GITHUB_URL)
+        .baseUrl("https://api.github.com/user")
         .defaultHeader("Accept", "application/vnd.github.v3+json")
         .build();
 
@@ -97,7 +94,7 @@ public class GithubUtil {
         Mono<JsonNode> githubEventList = githubWebClient
             .get()
             .uri(uriBuilder -> uriBuilder
-                .path("/users/{githubNickname}/events")
+                .path("/{githubNickname}/events")
                 .queryParam("per_page", 100)
                 .build(githubNickname))
             .header("Authorization", "Bearer " + githubAccessToken)
