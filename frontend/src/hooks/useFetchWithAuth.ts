@@ -17,13 +17,11 @@ const useFetchWithAuth = () => {
     console.log(headers);
     const reqURL = baseURL + url;
 
-    try {
-      const response = await fetch(reqURL, {...options, headers});
-      return response;
-    } catch (error) {
-      console.error("Fetch error:", error);
-      throw error;
+    const response = await fetch(reqURL, {...options, headers});
+    if(!response.ok) {
+      throw new Error("응답이 ok가 아님");
     }
+    return response;
   };
 
   return fetchWithAuth;
