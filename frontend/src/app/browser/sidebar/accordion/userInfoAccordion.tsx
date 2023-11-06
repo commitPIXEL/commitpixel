@@ -88,9 +88,9 @@ const UserInfoAccordion = () => {
         <div className="w-full flex justify-between items-center mb-4">
           <div className="text-lg text-textGray">Pixel</div>
           <div className="flex justify-between text-textBlack">
-            <div>{ user.availablePixel.toLocaleString("ko-KR") }</div>
+            <div>{ user.availablePixel }</div>
             <div className="ml-2 mr-2">/</div>
-            <div>{ user.totalCredit.toLocaleString("ko-KR") }</div>
+            <div>{ user.totalCredit }</div>
           </div>
         </div>
         <div className="w-full flex items-center">
