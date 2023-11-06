@@ -29,14 +29,15 @@ const BoardInput: React.FC<{
     })
       .then((res) => {
         console.log(res);
+        window.alert("건의사항이 제출되었습니다!!");
       })
       .catch((err) => {
-        console.log("err 발생");
+        console.log("기대하지 않은 err 발생");
         console.log(err);
       })
       .finally(() => {
         setLoading(false);
-        window.alert("건의사항이 제출되었습니다!!");
+        setContent("");
       });
   };
 

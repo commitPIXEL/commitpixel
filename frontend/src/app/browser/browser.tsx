@@ -18,29 +18,24 @@ const Browser = () => {
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
   );
-  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const fetchAsync = async () => {
       try {
-        // const [resFromUser, resFromFixel] = await Promise.all([
-        //   customFetch("/user"),
-        //   customFetch("/fixel"),
-        // ]);
+        const [resUser, resFixel] = await Promise.all([
+          customFetch("/user/"),
+          customFetch("/user/refreshinfo"),
+        ]);
+        console.log("resFixel: ");
+        console.log(resFixel);
 
-        // const userData: UserInfo = await resFromUser.json();
-        // const fixelData: UserFixel = await resFromFixel.json();
-        // dispatch(getUserInfo(userData));
-        // dispatch(getUserPixel(fixelData));
+        const userData: IUserInfo = await resUser.json();
+        const fixelData: IUserFixel = await resFixel.json();
+        console.log("fixelData: ");
+        console.log(fixelData);
 
-        // TODO: test용
-        const resFromUser = await customFetch("/user/");
-        console.log("resFromUser: ");
-        console.log(resFromUser);
-        const userData: IUserInfo = await resFromUser.json();
-        console.log("userData: ");
-        console.log(userData);
         dispatch(getUserInfo(userData));
+        dispatch(getUserPixel(fixelData));
       } catch (err) {
         console.error("Error:", err);
       }

@@ -31,10 +31,20 @@ const WhiteListInput: React.FC<{
         body: JSON.stringify({ type: type, content: url }),
       });
       console.log(data);
-    } catch (err) {
-      console.error("Error:", err);
+      window.alert("url 인가 요청이 제출되었습니다!!");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Caught error message:", err.message);
+        if ("status" in err && (err as any).status === 409) {
+          window.alert("인가된 url을 입력하셨습니다!");
+        }
+      } else {
+        console.error("기대하지 않은 에러 발생:");
+        console.error(err);
+      }
     } finally {
       setLoading(false);
+      setUrl("");
       console.log("통신 끝!");
     }
   };
