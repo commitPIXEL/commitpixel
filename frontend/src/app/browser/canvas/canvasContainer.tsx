@@ -8,6 +8,7 @@ import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
+import { CircularProgress } from '@mui/material';
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const CanvasContainer = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [urlData, setUrlData] = useState<any>(null);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
   const device = useSelector((state: RootState) => state.device.device);
@@ -67,6 +69,7 @@ const CanvasContainer = () => {
 
   useEffect(() => {
     const img = new Image(width, height);
+    setIsLoading(true);
     fetch("https://dev.commitpixel.com/api/pixel/image/64")
       .then((res) => res.text())
       .then((data) => {
@@ -75,6 +78,7 @@ const CanvasContainer = () => {
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
         };
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -263,7 +267,7 @@ const CanvasContainer = () => {
       {socket && (
         <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
-          <div
+          { isLoading ? <CircularProgress /> :<div
             className="overflow-hidden w-full h-full">
             <div className="w-max" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
@@ -278,7 +282,7 @@ const CanvasContainer = () => {
                 </canvas>
               </div>
             </div>
-          </div>
+          </div>}
           <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
         </div>
       )}
