@@ -71,21 +71,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 서버 내에서 호출
-     *
-     * @param providerId 깃허브 provider id
-     * @return RefreshInfoDto
-     */
-    public RefreshedInfoRes refreshedInfoFromServer(Integer providerId) {
-        log.info("refreshCreditFromServer start: " + providerId);
-
-        RefreshedInfoRes refreshedInfo = refreshInfo(providerId);
-
-        log.info("refreshCreditFromServer end: " + refreshedInfo);
-        return refreshedInfo;
-    }
-
-    /**
      * refreshCreditFromClient와 refreshCreditFromServer의 공통 로직
      *
      * @param providerId 깃허브 provider id
@@ -126,11 +111,8 @@ public class UserServiceImpl implements UserService {
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer additionalCredit = commitNum + solvedNum;
-//        // pixelms와 연결된 kafka에 정보 보냄
-//        Map<Integer, Integer> map = Map.of(providerId, additionalCredit);
-//        kafkaTemplate.send("total-credit-topic", map);
 
-        //feign으로 통신.
+        // pixelms와 feign으로 통신 후 프론트로 {totalCredit, availablePixel, githubNickname} 보내기
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
             providerId, additionalCredit);
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
@@ -212,7 +194,6 @@ public class UserServiceImpl implements UserService {
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
-        refreshedInfoFromServer(providerId);
         log.info("login end: " + user);
     }
 
