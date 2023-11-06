@@ -32,6 +32,7 @@ public class WebSocketHandler {
     private final int SCALE = 512;
     private final String CREDIT = "credit";
     private final String PIXEL = "pixel";
+    private final String NO_CREDIT_ERROR = "noCreditError";
     private final String URL = "url";
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
@@ -90,6 +91,12 @@ public class WebSocketHandler {
         }
 
         Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
+
+        // 사용 가능 픽셀이 0개일 때
+        if(pixelService.getAvailableCredit(providerId) == 0) {
+            client.sendEvent(NO_CREDIT_ERROR);
+        }
+
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
         pixelService.updatePixelRedisAndSendRank(providerId, pixelInfo);
 
