@@ -26,6 +26,7 @@ const CanvasContainer = () => {
   const device = useSelector((state: RootState) => state.device.device);
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
   const canvasContainer = useRef<HTMLDivElement>(null);
+  const user = useSelector((state: RootState) => state.user);
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
@@ -133,7 +134,7 @@ const CanvasContainer = () => {
       };
 
       const canvasClick = (e: MouseEvent) => {
-        if(e.button !== 0) return;
+        if(e.button !== 0 || !user) return;
         if(e.detail >= 2) {
           e.preventDefault();
         }
@@ -149,7 +150,7 @@ const CanvasContainer = () => {
             r = color.rgb.r;
             g = color.rgb.g;
             b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
+            setPixel(x, y, { r, g, b }, user.githubNickname, user.url);
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
@@ -172,7 +173,7 @@ const CanvasContainer = () => {
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        if(e.type === "mouse") return;
+        if(e.type === "mouse" || !user) return;
         // e.preventDefault();
         e.stopPropagation();
         if(device !== "mobile" || !e.target) {
@@ -192,7 +193,7 @@ const CanvasContainer = () => {
             r = color.rgb.r;
             g = color.rgb.g;
             b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, "githubNick", "https://www.naver.com/");
+            setPixel(x, y, { r, g, b }, user.githubNickname, user.url);
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
