@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
             githubNickname = jsonNode.get("login").asText();
             providerId = jsonNode.get("id").asInt();
             profileImage = jsonNode.get("avatar_url").asText();
-            url = jsonNode.get("url").asText();
+            url = jsonNode.get("html_url").asText();
 
         } catch (JsonProcessingException e) {
             throw new JsonifyException();
