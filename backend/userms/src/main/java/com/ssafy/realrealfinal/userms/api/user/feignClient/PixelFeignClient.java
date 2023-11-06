@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "pixel")
+@FeignClient(name = "pixel", url = "${feign.url}")
 public interface PixelFeignClient {
 
     @PostMapping("pixel/credit")
