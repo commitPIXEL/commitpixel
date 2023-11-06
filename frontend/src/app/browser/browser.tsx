@@ -17,27 +17,27 @@ const Browser = () => {
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
   );
+  const isUrlInput = useSelector((state: RootState) => state.urlInput.isUrlInput);
 
   useEffect(() => {
     const fetchAsync = async () => {
       try {
-        // const [resUser, resFromFixel] = await Promise.all([
+        // const [resUser, resFromPixel] = await Promise.all([
         //   customFetch("/user"),
-        //   customFetch("/fixel"),
+        //   customFetch("/pixel"),
         // ]);
 
         // const userData: UserInfo = await resUser.json();
-        // const fixelData: UserFixel = await resFromFixel.json();
+        // const pixelData: UserPixel = await resFromPixel.json();
         // dispatch(getUserInfo(userData));
-        // dispatch(getUserPixel(fixelData));
+        // dispatch(getUserPixel(pixelData));
 
         const resUser = await customFetch("/user/");
         console.log("resUser: ");
         console.log(resUser);
         const userData: IUserInfo = await resUser.json();
-        const fixelData: IUserFixel = await resFixel.json();
-        console.log("fixelData: ");
-        console.log(fixelData);
+        console.log("userData: ");
+        console.log(userData);
 
         dispatch(getUserInfo(userData));
       } catch (err) {
