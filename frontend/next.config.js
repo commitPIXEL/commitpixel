@@ -6,4 +6,7 @@ const nextConfig = {
 module.exports = {
   output: 'standalone',
   reactStrictMode: false,
+  images: {
+    domains: ['avatars.githubusercontent.com'],
+  }
 }
