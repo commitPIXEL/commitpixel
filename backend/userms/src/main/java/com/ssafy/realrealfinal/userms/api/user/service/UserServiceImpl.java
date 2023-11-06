@@ -230,7 +230,8 @@ public class UserServiceImpl implements UserService {
         log.info("getUserInfo start: " + accessToken);
         Integer providerId = authFeignClient.withQueryString(accessToken);
         User user = userRepository.findByProviderId(providerId);
-        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user);
+        Boolean isSolvedACAuth = user.getSolvedAcId() != null;
+        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user, isSolvedACAuth);
         log.info("getUserInfo end: " + userInfoRes);
         return userInfoRes;
     }
