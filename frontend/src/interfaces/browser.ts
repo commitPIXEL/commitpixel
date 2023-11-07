@@ -6,7 +6,7 @@ export interface IUserInfo {
 }
 
 export interface IUserPixel {
-  githubNickname: string;
+  githubNickname: string | null;
   totalCredit: number;
   availablePixel: number;
 }

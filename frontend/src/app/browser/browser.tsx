@@ -23,22 +23,8 @@ const Browser = () => {
   
   const fetchAsync = async () => {
     try {
-      // const [resUser, resFromPixel] = await Promise.all([
-      //   customFetch("/user"),
-      //   customFetch("/pixel"),
-      // ]);
-
-      // const userData: UserInfo = await resUser.json();
-      // const pixelData: UserPixel = await resFromPixel.json();
-      // dispatch(getUserInfo(userData));
-      // dispatch(updateUserPixel(pixelData));
-
       const resUser = await customFetch("/user/");
-      console.log("resUser: ");
-      console.log(resUser);
       const userData: IUserInfo = await resUser.json();
-      console.log("userData: ");
-      console.log(userData);
 
       dispatch(getUserInfo(userData));
     } catch (err) {
@@ -47,11 +33,11 @@ const Browser = () => {
 
     try {
       const resPixel = await customFetch("/user/refreshinfo");
-      console.log("resPixel: ");
-      console.log(resPixel);
       const pixelData: IUserPixel = await resPixel.json();
-      console.log("pixelData: ");
-      console.log(pixelData);
+
+      if(pixelData.githubNickname as null) {
+        window.alert("마지막 갱신 이후 15분이 지나지 않았습니다!")
+      }
       dispatch(updateUserPixel(pixelData));
     } catch (err) {
       console.error("Error:", err);

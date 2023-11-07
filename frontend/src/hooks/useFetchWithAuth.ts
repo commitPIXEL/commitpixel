@@ -10,11 +10,10 @@ const useFetchWithAuth = () => {
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const headers = {
       ...options.headers,
-      'Content-Type': 'application/json',
-      ...(authorization !== "" ? { "accesstoken": authorization } : {}),
+      "Content-Type": "application/json",
+      ...(authorization !== "" ? { accesstoken: authorization } : {}),
     };
 
-    console.log(headers);
     const reqURL = baseURL + url;
 
     const response = await fetch(reqURL, {...options, headers});

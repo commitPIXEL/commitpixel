@@ -7,7 +7,6 @@ import { RootState } from "@/store";
 
 const Sidebar = () => {
   const user = useSelector((state: RootState) => state.user);
-  console.log(user);
 
   return user.githubNickname ? (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">

@@ -53,7 +53,7 @@ const BoardBtn = () => {
             method: "POST",
             body: JSON.stringify({ type: type, content: content }),
           });
-          console.log(data);
+          setOpen(false);
           window.alert("건의사항이 제출되었습니다!!");
         } catch (err: unknown) {
           if (err instanceof Error) {
