@@ -9,6 +9,7 @@ import MobileTutorial from "./mobileTutorial";
 export default function Tutorials () {
   const dispatch = useDispatch();
   const device = useSelector((state: RootState) => state.device.device);
+  localStorage.setItem("isVisited", JSON.stringify(true));
 
   const handleResize = () => {
     if (window.innerWidth < 769 && window.innerWidth <= window.innerHeight) {
