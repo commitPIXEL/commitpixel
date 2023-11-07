@@ -12,7 +12,6 @@ export default function loginBtn({color}: {
     const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=repo%20read:user`;
 
     window.location.href = githubURL;
-    console.log(clientId);
   };
 
   return (
