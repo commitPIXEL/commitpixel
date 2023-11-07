@@ -14,3 +14,9 @@ export interface IUserPixel {
 export interface IIsSolvedACAuth {
   isSolvedACAuth: boolean;
 }
+
+export interface IResSolvedAC {
+  totalCredit: number;
+  availablePixel: number;
+}
+

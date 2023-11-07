@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo, getUserPixel } from "@/store/slices/userSlice";
+import { getUserInfo, updateUserPixel } from "@/store/slices/userSlice";
 import { RootState } from "@/store";
 import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav";
@@ -31,7 +31,7 @@ const Browser = () => {
       // const userData: UserInfo = await resUser.json();
       // const pixelData: UserPixel = await resFromPixel.json();
       // dispatch(getUserInfo(userData));
-      // dispatch(getUserPixel(pixelData));
+      // dispatch(updateUserPixel(pixelData));
 
       const resUser = await customFetch("/user/");
       console.log("resUser: ");
@@ -52,7 +52,7 @@ const Browser = () => {
       const pixelData: IUserPixel = await resPixel.json();
       console.log("pixelData: ");
       console.log(pixelData);
-      dispatch(getUserPixel(pixelData));
+      dispatch(updateUserPixel(pixelData));
     } catch (err) {
       console.error("Error:", err);
     }
