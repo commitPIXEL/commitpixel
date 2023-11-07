@@ -17,9 +17,11 @@ public interface PixelService {
 
     void initCanvas();
 
-    void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
+    void updatePixelAndSendRank(Integer providerId, List pixelInfo);
 
-    CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes);
+    CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditReq);
+
+    CreditRes sendCredit(Integer providerId);
 
     PixelInfoRes getUrlAndName(String index);
 }
