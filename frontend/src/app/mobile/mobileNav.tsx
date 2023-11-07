@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const MobileNav = () => {
   return (
-    <div className="bg-mainColor text-textBlack pl-2 pr-2 w-full h-[8%] flex items-center justify-between text-xs">
+    <div className="bg-mainColor text-textBlack pl-2 pr-2 w-full h-[50px] flex items-center justify-between text-xs">
       <div className="relative w-[15%] h-full">
         <Image src="/icon.png" fill style={{
           objectFit: "contain",
