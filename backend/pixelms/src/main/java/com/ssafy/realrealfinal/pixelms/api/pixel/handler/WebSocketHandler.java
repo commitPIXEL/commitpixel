@@ -103,7 +103,7 @@ public class WebSocketHandler {
         }
 
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
-        pixelService.updatePixelRedisAndSendRank(providerId, pixelInfo);
+        pixelService.updatePixelAndSendRank(providerId, pixelInfo);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
         for (SocketClientInfo clientInfo : CLIENTS.values()) {

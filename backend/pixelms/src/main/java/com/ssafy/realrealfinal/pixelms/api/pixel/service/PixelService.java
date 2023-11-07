@@ -17,7 +17,7 @@ public interface PixelService {
 
     void initCanvas();
 
-    void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo);
+    void updatePixelAndSendRank(Integer providerId, List pixelInfo);
 
     CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes);
 
