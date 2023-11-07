@@ -55,8 +55,6 @@ const CanvasContainer = () => {
         }
         ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
-        // CONSOLE: 테스트용 console
-        console.log("크레딧 반영 성공" + x + " : " + y);
       });
     }
   }, [ctx, socket]);
