@@ -33,6 +33,22 @@ public class PixelController {
     }
 
     /**
+     * userms에서 credit만 조회 시(15분 되기 전 refreshinfo) feign으로 요청하는 메서드
+     *
+     * @param providerId providerId
+     * @return creditRes {전체 크레딧, 사용 가능 크레딧}
+     */
+    @GetMapping("/currentcredit")
+    public CreditRes sendCredit(@RequestParam Integer providerId) {
+        log.info("consumeCreditEvent start");
+
+        CreditRes creditRes = pixelService.sendCredit(providerId);
+
+        log.info("consumeCreditEvent end: " + creditRes);
+        return creditRes;
+    }
+
+    /**
      * imageMS에서 scheduled로 요청 들어오면 현 redis 상태 이미지화해서 보내주는 것.
      *
      * @return 픽셀 레디스 데이터 -> 이미지

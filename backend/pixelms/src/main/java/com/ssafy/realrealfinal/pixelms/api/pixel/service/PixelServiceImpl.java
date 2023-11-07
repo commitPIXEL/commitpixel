@@ -45,7 +45,8 @@ public class PixelServiceImpl implements PixelService {
     @Transactional
     @Override
     public void updatePixelAndSendRank(Integer providerId, List pixelInfo) {
-        log.info("updatePixelRedisAndSendRank start: " + providerId + " " + pixelInfo);
+        log.info("updatePixelAndSendRank start: " + providerId + " " + pixelInfo);
+
         Integer x = (Integer) pixelInfo.get(0);
         Integer y = (Integer) pixelInfo.get(1);
         String r = String.valueOf(pixelInfo.get(2));
@@ -55,10 +56,8 @@ public class PixelServiceImpl implements PixelService {
         String githubNickname = (String) pixelInfo.get(6);
         // (x * SCALE + y) 인덱스
         String index = String.valueOf(x * SCALE + y);
-
         // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
         List<Object> prevPixelRankInfo = (List<Object>) redisUtil.getPrevPixel(index).get(0);
-
         // 현재 pixel 정보 Redis에 저장
         Map<String, String> currPixelInfo = Map.of(
                 index + ":R", r,
@@ -84,22 +83,23 @@ public class PixelServiceImpl implements PixelService {
         pixelUpdateInfo.put("currUrl", url);
         pixelUpdateInfo.put("currGithubNickname", githubNickname);
         kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
-        log.info("updatePixelRedisAndSendRank end");
+
+        log.info("updatePixelAndSendRank end");
     }
 
     /**
      * userms와의 feign 통신용 메서드
      *
-     * @param additionalCreditRes 정보 업데이트용
+     * @param additionalCreditReq 정보 업데이트용
      * @return CreditRes
      */
     @Transactional
     @Override
-    public CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes) {
-        log.info("updateAndSendCredit start: " + additionalCreditRes);
+    public CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditReq) {
+        log.info("updateAndSendCredit start: " + additionalCreditReq);
 
-        Integer providerId = additionalCreditRes.getProviderId();
-        Integer additionalCredit = additionalCreditRes.getAdditionalCredit();
+        Integer providerId = additionalCreditReq.getProviderId();
+        Integer additionalCredit = additionalCreditReq.getAdditionalCredit();
         CreditRes creditRes = null;
         // 전체 크레딧 redis 값 변경
         updateTotalCredit(providerId, additionalCredit);
@@ -108,6 +108,25 @@ public class PixelServiceImpl implements PixelService {
         creditRes = new CreditRes(totalCredit, availableCredit);
 
         log.info("updateAndSendCredit start: " + creditRes);
+        return creditRes;
+    }
+
+    /**
+     * userms에서 15분 안에 또 호출했을 때 기존 값 보내주는 메서드
+     * 
+     * @param providerId
+     * @return
+     */
+    @Transactional
+    @Override
+    public CreditRes sendCredit(Integer providerId) {
+        log.info("sendCredit start: " + providerId);
+
+        Integer totalCredit = getCreditOrInit(providerId, "total");
+        Integer availableCredit = getAvailableCredit(providerId);
+        CreditRes creditRes = new CreditRes(totalCredit, availableCredit);
+
+        log.info("sendCredit end: " + creditRes);
         return creditRes;
     }
 
@@ -196,16 +215,17 @@ public class PixelServiceImpl implements PixelService {
      */
     @Transactional
     public Integer getCreditOrInit(Integer providerId, String type) {
-        log.info("getCredit start: " + providerId + " " + type);
+        log.info("getCreditOrInit start: " + providerId + " " + type);
+
         String key = String.valueOf(providerId);
         Integer credit;
         try {
             credit = redisUtil.getData(key, type);
-            log.info("getCredit end: " + credit);
+            log.info("getCreditOrInit end: " + credit);
             return credit;
         } catch (RedisNotFoundException e) {
             redisUtil.setData(key, type, 0);
-            log.warn("getCredit end: " + 0);
+            log.warn("getCreditOrInit end: " + 0);
             return 0;
         }
     }
@@ -241,6 +261,7 @@ public class PixelServiceImpl implements PixelService {
             log.error("Error while converting BufferedImage to byte[]", e);
             return null; // Or handle the error in another way
         }
+
         log.info("redisToImage end: SUCCESS");
         return baos.toByteArray();
     }

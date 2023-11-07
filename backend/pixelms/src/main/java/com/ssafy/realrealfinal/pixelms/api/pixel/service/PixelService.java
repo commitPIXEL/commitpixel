@@ -19,7 +19,9 @@ public interface PixelService {
 
     void updatePixelAndSendRank(Integer providerId, List pixelInfo);
 
-    CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes);
+    CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditReq);
+
+    CreditRes sendCredit(Integer providerId);
 
     PixelInfoRes getUrlAndName(String index);
 }
