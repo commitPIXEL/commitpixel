@@ -97,10 +97,10 @@ const UserInfoAccordion = () => {
           <FontAwesomeIcon onClick={handleEditClick} className="text-textGray cursor-pointer" icon={faPencil} />
         </div>
         <div className="w-full mt-1 pb-1">
-          <Input onKeyDown={handleEnterClick} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} defaultValue={user.url} />
+          <Input onKeyDown={handleEnterClick} value={url} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} defaultValue={user.url} />
         </div>
         <div className="w-full mt-4">
-          <SolvedacBtn isSolvedACAuth = {user?.isSolvedACAuth} />
+          {!user.isSolvedACAuth && <SolvedacBtn />}
         </div>
         <Loading open={loading} />
       </AccordionDetails>

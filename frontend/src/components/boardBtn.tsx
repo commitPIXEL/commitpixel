@@ -42,7 +42,10 @@ const BoardBtn = () => {
     };
 
     const handleSubmit = async () => {
-        if (content.trim().length === 0) return;
+        if (content.trim().length === 0) {
+          window.alert("내용을 입력해주세요!");
+          return;
+        }
     
         setLoading(true);
         try {
@@ -107,6 +110,7 @@ const BoardBtn = () => {
                     className="w-full"
                     placeholder="https://naver.com"
                     id="standard-start-adornment"
+                    value={content}
                     onChange={contentChange}
                     InputProps={{
                       startAdornment: (
@@ -139,6 +143,7 @@ const BoardBtn = () => {
                 <div className="mb-4 h-52 ">
                   <p className="text-xl font-bold mb-2">내용</p>
                   <textarea
+                    value={content}
                     onChange={contentChange}
                     className="w-full p-2 border rounded h-40"
                   />
