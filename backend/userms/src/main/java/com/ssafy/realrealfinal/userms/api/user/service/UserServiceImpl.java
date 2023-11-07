@@ -81,9 +81,13 @@ public class UserServiceImpl implements UserService {
         log.info("refreshInfo start: " + providerId);
 
         Integer lastUpdateStatus = lastUpdateCheckUtil.getLastUpdateStatus(providerId);
-        // 마지막 업데이트 시간이 15분 미만이면 변동 없음(= 0)
+        // 마지막 업데이트 시간이 15분 미만이면 기존 redis 값과 새 닉네임(=null)
         if (lastUpdateStatus == -1) {
-            return null;
+            CreditRes creditRes = pixelFeignClient.sendCredit(providerId);
+            String currentGithubNickname = null;
+            RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
+                    currentGithubNickname);
+            return refreshedInfoRes;
         }
         String githubAccessToken = authFeignClient.getGithubAccessTokenByProviderId(
             String.valueOf(providerId));
