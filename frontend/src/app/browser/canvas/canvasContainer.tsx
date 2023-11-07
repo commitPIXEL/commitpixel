@@ -8,6 +8,7 @@ import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
+import { CircularProgress } from '@mui/material';
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();

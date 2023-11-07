@@ -6,6 +6,7 @@ const initialState = {
   totalCredit: 0,
   availablePixel: 0,
   url: "",
+  isSolvedACAuth: false,
 };
 
 const userSlice = createSlice({
@@ -18,11 +19,17 @@ const userSlice = createSlice({
         githubNickname: string;
         profileImage: string;
         url: string;
+        // TODO: 배포 터져서 임시 타입 추가
+        isSolvedACAuth?: boolean | undefined | string;
       }>
     ) => {
       state.githubNickname = action.payload.githubNickname;
       state.profileImage = action.payload.profileImage;
       state.url = action.payload.url;
+      // TODO: 배포 터져서 임시 타입 추가
+      state.isSolvedACAuth = typeof action.payload.isSolvedACAuth === 'boolean'
+    ? action.payload.isSolvedACAuth
+    : false;
     },
     getUserPixel: (
       state,
@@ -40,6 +47,7 @@ const userSlice = createSlice({
       state.totalCredit = 0;
       state.availablePixel = 0;
       state.url = "";
+      state.isSolvedACAuth = false;
     },
   },
 });
