@@ -82,26 +82,43 @@ const UserInfoAccordion = () => {
 
   return (
     <Accordion defaultExpanded={true} className="!rounded mb-6">
-      <AccordionTitle title={user?.githubNickname} profileImage={user?.profileImage} />
+      <AccordionTitle
+        title={user?.githubNickname}
+        profileImage={user?.profileImage}
+      />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
           <div className="text-lg text-textGray">Pixel</div>
           <div className="flex justify-between text-textBlack">
-            <div>{ user.availablePixel }</div>
+            <div>{user.availablePixel}</div>
             <div className="ml-2 mr-2">/</div>
-            <div>{ user.totalCredit }</div>
+            <div>{user.totalCredit}</div>
           </div>
         </div>
         <div className="w-full flex items-center">
           <div className="w-fit text-textGray text-sm mr-2">홍보 URL</div>
-          <FontAwesomeIcon onClick={handleEditClick} className="text-textGray cursor-pointer" icon={faPencil} />
+          <FontAwesomeIcon
+            onClick={handleEditClick}
+            className="text-textGray cursor-pointer"
+            icon={faPencil}
+          />
         </div>
         <div className="w-full mt-1 pb-1">
-          <Input onKeyDown={handleEnterClick} value={url} onChange={handleInputChange} inputRef={urlInputRef} className="w-full text-xs line-clamp-1" disabled={!isEdit} defaultValue={user.url} />
+          <Input
+            onKeyDown={handleEnterClick}
+            value={url}
+            onChange={handleInputChange}
+            inputRef={urlInputRef}
+            className="w-full text-xs line-clamp-1"
+            disabled={!isEdit}
+            defaultValue={user.url}
+          />
         </div>
-        <div className="w-full mt-4">
-          {!user.isSolvedACAuth && <SolvedacBtn />}
-        </div>
+        {!user.isSolvedACAuth && (
+          <div className="w-full mt-4">
+            <SolvedacBtn />
+          </div>
+        )}
         <Loading open={loading} />
       </AccordionDetails>
     </Accordion>

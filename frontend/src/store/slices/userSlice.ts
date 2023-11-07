@@ -41,6 +41,7 @@ const userSlice = createSlice({
     connectSolvedAC: (state, action: PayloadAction<{totalCredit: number; availablePixel: number;}>) => {
       state.totalCredit = action.payload.totalCredit;
       state.availablePixel = action.payload.availablePixel;
+      state.isSolvedACAuth = true;
     },
     pickPixel: (state, action: PayloadAction<{ availablePixel: number }>) => {
       state.availablePixel = action.payload.availablePixel;
