@@ -51,12 +51,15 @@ const userSlice = createSlice({
       state.url = "";
       state.isSolvedACAuth = false;
     },
+    updateUrl: (state, action: PayloadAction<{url: string}>) => {
+      state.url = action.payload.url;
+    },
     setAvailablePixel: (state, action) => {
       state.availablePixel = action.payload;
     },
   },
 });
 
-export const { getUserInfo, updateUserPixel, resetUser, connectSolvedAC, setAvailablePixel } =
+export const { getUserInfo, updateUserPixel, resetUser, connectSolvedAC, setAvailablePixel, updateUrl } =
   userSlice.actions;
 export default userSlice.reducer;
