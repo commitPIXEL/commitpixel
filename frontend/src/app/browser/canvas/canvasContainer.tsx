@@ -278,7 +278,7 @@ const CanvasContainer = () => {
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
             className="overflow-hidden w-full h-full">
-            <div className="w-max" ref={ref}>
+            <div className="w-max cursor-pointer" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas
                   id="canvas"
