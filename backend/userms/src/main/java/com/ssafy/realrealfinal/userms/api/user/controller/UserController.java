@@ -64,7 +64,7 @@ public class UserController {
      * 사용자 url 변경
      *
      * @param accessToken jwt 액세스 토큰
-     * @param url 사용자 업데이트 희망 url
+     * @param url         사용자 업데이트 희망 url
      * @return newUrl, HttpStatus.OK
      */
     @PatchMapping("/url")
@@ -72,7 +72,7 @@ public class UserController {
         @RequestBody Url url) {
         log.info("updateUrl start: " + url);
         String newUrl = userService.updateUrl(accessToken, url.getUrl());
-        log.info("updateUrl end: " + SUCCESS);
+        log.info("updateUrl end: " + newUrl);
         return ResponseEntity.ok().body(newUrl);
     }
 
