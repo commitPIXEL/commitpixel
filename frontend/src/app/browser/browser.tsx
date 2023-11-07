@@ -63,23 +63,30 @@ const Browser = () => {
     }
   }, [accessToken]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (isUrlInput) return;
-    if (e.key === "b" || e.key === "B") {
-      dispatch(setTool("painting"));
-    } else if (e.key === "i" || e.key === "I") {
-      dispatch(setTool("copying"));
-    } else if (e.key === "Escape") {
-      dispatch(setTool(null));
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isUrlInput) return;
+      if (e.key === "b" || e.key === "B") {
+        dispatch(setTool("painting"));
+      } else if (e.key === "i" || e.key === "I") {
+        dispatch(setTool("copying"));
+      } else if (e.key === "Escape") {
+        dispatch(setTool(null));
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
     }
-  };
+  }, []);
+
   return (
-    <main onKeyDown={handleKeyDown} className="w-screen h-screen bg-bgColor">
+    <main className="w-screen h-screen bg-bgColor">
       <Nav />
       <div className="grid grid-cols-4 w-full h-[92%] place-items-stretch p-4">
         {/* TODO: 개발 버전과 Test버전 캔버스 잘 구별하기 */}
         <CanvasContainer />
-        {/* <TestCanvas /> */}
         <Sidebar />
       </div>
     </main>
