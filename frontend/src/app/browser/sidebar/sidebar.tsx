@@ -2,7 +2,6 @@ import LoginBtn from "@/components/loginBtn";
 import BoardBtn from "@/components/boardBtn"
 import PickerAccordion from "./accordion/pickerAccordion";
 import UserInfoAccordion from "./accordion/userInfoAccordion";
-import RankAccordion from "./accordion/rankAccordion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
@@ -22,7 +21,7 @@ const Sidebar = () => {
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
       {/* TODO: dev 테스트 용 */}
       {/* <UserInfoAccordion /> */}
-      {/* <PickerAccordion /> */}
+      <PickerAccordion />
       <LoginBtn />
       {/* <BoardBtn /> */}
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
