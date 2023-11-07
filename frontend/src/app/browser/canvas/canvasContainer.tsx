@@ -9,6 +9,7 @@ import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
 import { CircularProgress } from '@mui/material';
+import { setAvailablePixel } from "@/store/slices/userSlice";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,9 @@ const CanvasContainer = () => {
       });
       socket.on("url", (urlData) => {
         setUrlData(urlData);
+      });
+      socket.on("availableCredit", (availablePixel) => {
+        dispatch(setAvailablePixel(availablePixel));
       });
     }
   }, [socket, ctx]);
