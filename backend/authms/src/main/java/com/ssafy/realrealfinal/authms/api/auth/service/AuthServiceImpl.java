@@ -50,9 +50,9 @@ public class AuthServiceImpl implements AuthService {
             } catch (JsonProcessingException e) {
                 throw new JsonifyException();
             }
-
+            Integer providerId = oauthUserRes.getId();
             String jwtRefreshToken = jwtUtil.createRefreshToken();
-            String jwtAccessToken = jwtUtil.createAccessToken(jwtRefreshToken);
+            String jwtAccessToken = jwtUtil.createAccessToken(providerId);
             saveTokens(oauthUserRes.getId().toString(), jwtRefreshToken,
                 jsonToken.getAccessToken());
             TokenRes tokenRes = AuthMapper.INSTANCE.toTokenRes(jwtAccessToken, jwtRefreshToken);
@@ -106,5 +106,19 @@ public class AuthServiceImpl implements AuthService {
         Integer providerId = jwtUtil.getProviderIdFromToken(accessToken);
         log.info("getProviderIDFromAccessToken end: " + providerId);
         return providerId;
+    }
+
+    /**
+     * providerId로 githubAccessToken을 redis에서 빼서 리턴해주기
+     *
+     * @param providerId github providerId
+     * @return githubAccessToken
+     */
+    @Override
+    public String getGithubAccessTokenByProviderId(String providerId) {
+        log.info("getGithubAccessTokenByProviderId start: " + providerId);
+        String githubAccessToken = redisUtil.getData(providerId);
+        log.info("getGithubAccessTokenByProviderId end: " + githubAccessToken);
+        return githubAccessToken;
     }
 }

@@ -11,4 +11,6 @@ public interface AuthService {
     void logout(String refreshToken);
 
     Integer getProviderIDFromAccessToken(String accessToken);
+
+    String getGithubAccessTokenByProviderId(String providerId);
 }
