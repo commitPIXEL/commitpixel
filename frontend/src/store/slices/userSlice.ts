@@ -54,9 +54,12 @@ const userSlice = createSlice({
       state.url = "";
       state.isSolvedACAuth = false;
     },
+    setAvailablePixel: (state, action) => {
+      state.availablePixel = action.payload;
+    },
   },
 });
 
-export const { getUserInfo, updateUserPixel, pickPixel, resetUser, connectSolvedAC } =
+export const { getUserInfo, updateUserPixel, pickPixel, resetUser, connectSolvedAC, setAvailablePixel } =
   userSlice.actions;
 export default userSlice.reducer;

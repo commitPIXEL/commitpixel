@@ -9,6 +9,7 @@ import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
 import { CircularProgress } from '@mui/material';
+import { setAvailablePixel } from "@/store/slices/userSlice";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,9 @@ const CanvasContainer = () => {
       });
       socket.on("url", (urlData) => {
         setUrlData(urlData);
+      });
+      socket.on("availableCredit", (availablePixel) => {
+        dispatch(setAvailablePixel(availablePixel));
       });
     }
   }, [socket, ctx]);
@@ -274,7 +278,7 @@ const CanvasContainer = () => {
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
             className="overflow-hidden w-full h-full">
-            <div className="w-max" ref={ref}>
+            <div className="w-max cursor-pointer" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas
                   id="canvas"
