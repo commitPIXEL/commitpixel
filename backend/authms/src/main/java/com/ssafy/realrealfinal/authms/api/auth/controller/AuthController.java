@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,11 +78,38 @@ public class AuthController {
      * @return providerId
      */
     @GetMapping("/token")
-    public Integer getProviderIdByAccessToken(String accessToken) {
+    public Integer getProviderIdByAccessToken(@RequestParam String accessToken) {
         log.info("getProviderIdByJWT start: " + accessToken);
         Integer providerId = authService.getProviderIDFromAccessToken(accessToken);
         log.info("getProviderIdByJWT end: " + providerId);
         return providerId;
     }
 
+    /**
+     * feign test 용 메서드
+     *
+     * @param test 문자열
+     * @return 문자열 추가한거.
+     */
+    @PostMapping("/feigntest")
+    String feignTest(@RequestBody String test) {
+        log.info("feignTest start: " + test);
+        String result = test + " connected by feign";
+        log.info("feignTest end: " + result);
+        return result;
+    }
+
+    /**
+     * providerId로 깃허브 accesstoken 얻기
+     *
+     * @param providerId 깃허브 providerId 
+     * @return 깃허브 accesstoken
+     */
+    @GetMapping("/token/github")
+    public String getGithubAccessTokenByProviderId(@RequestParam String providerId) {
+        log.info("getGithubAccessTokenByProviderId start: " + providerId);
+        String githubAccessToken = authService.getGithubAccessTokenByProviderId(providerId);
+        log.info("getGithubAccessTokenByProviderId end: " + githubAccessToken);
+        return githubAccessToken;
+    }
 }
