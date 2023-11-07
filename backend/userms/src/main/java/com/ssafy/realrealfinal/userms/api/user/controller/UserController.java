@@ -70,8 +70,9 @@ public class UserController {
     @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
         @RequestBody UrlReq urlReq) {
-        log.info("updateUrl start: " + urlReq.getUrl());
-        String newUrl = userService.updateUrl(accessToken, urlReq.getUrl());
+        String url = urlReq.getUrl();
+        log.info("updateUrl start: " + url);
+        String newUrl = userService.updateUrl(accessToken, url);
         log.info("updateUrl end: " + newUrl);
         return ResponseEntity.ok().body(newUrl);
     }
