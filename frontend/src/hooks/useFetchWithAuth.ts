@@ -19,7 +19,7 @@ const useFetchWithAuth = () => {
 
     const response = await fetch(reqURL, {...options, headers});
     if(!response.ok) {
-      throw new Error("응답이 ok가 아님");
+      throw new Error(`${response.status}`);
     }
     return response;
   };
