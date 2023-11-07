@@ -1,9 +1,6 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Nav from "../browser/nav";
 import PatchNote from "./patchNote";
 import TutorialDesc from "./tutorialDescription";
-import { faEyeDropper, faPaintBrush } from "@fortawesome/free-solid-svg-icons";
-import MoveButton from "./moveButton";
 import ToolDescription from "./toolDescription";
 
 const BrowserTutorial = () => {
