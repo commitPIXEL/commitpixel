@@ -7,12 +7,13 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import InputAdornment from "@mui/material/InputAdornment";
 import Loading from "./loading";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { IIsSolvedACAuth, IUserPixel } from "@/interfaces/browser";
+import { IResSolvedAC, IUserPixel } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
-import { getUserPixel } from "@/store/slices/userSlice";
+import { updateUserPixel } from "@/store/slices/userSlice";
+import { connectSolvedAC } from "@/store/slices/userSlice";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
-const SolvedacBtn = ({isSolvedACAuth}: IIsSolvedACAuth) => {
+const SolvedacBtn = () => {
   const dispatch = useDispatch();
   const customFetch = useFetchWithAuth();
   const [loading, setLoading] = useState(false);
@@ -40,42 +41,14 @@ const SolvedacBtn = ({isSolvedACAuth}: IIsSolvedACAuth) => {
         return;
     }
 
-    if(isSolvedACAuth) {
-      try {
-        const resPixel = await customFetch("/user/refreshinfo");
-        console.log("resPixel: ");
-        console.log(resPixel);
-        const pixelData: IUserPixel = await resPixel.json();
-        console.log("pixelData: ");
-        console.log(pixelData);
-        window.alert("solvedac 갱신 완료!!");
-        dispatch(getUserPixel(pixelData));
-      } catch (err) {
-        console.error("refreshinfo 에서 에러 발생:");
-        console.error(err);
-        window.alert("solvedac 갱신 실패!!");
-      }
-    } else {
-      try {
-        setLoading(true);
-        const connectSolvedac = await customFetch(`/user/solvedac/auth?solvedAcId=${encodeURIComponent(id)}`, {
-          method: "PATCH",
-        });
-
-        try {
-          const resPixel = await customFetch("/user/refreshinfo");
-          console.log("resPixel: ");
-          console.log(resPixel);
-          const pixelData: IUserPixel = await resPixel.json();
-          console.log("pixelData: ");
-          console.log(pixelData);
-          window.alert("solvedac 연동 성공!!");
-          dispatch(getUserPixel(pixelData));
-        } catch (err) {
-          console.error("refreshinfo 에서 에러 발생:");
-          console.error(err);
-          window.alert("solvedac 연동 실패!!");
-        }
+    try {
+      setLoading(true);
+      const resPixel = await customFetch(`/user/solvedac/auth?solvedAcId=${encodeURIComponent(id)}`, {
+        method: "PATCH",
+      });
+      const dataPixel: IResSolvedAC = await resPixel.json();
+      dispatch(connectSolvedAC(dataPixel));
+      window.alert("solvedac 연동 성공!!");
     } catch (err) {
         console.error("solvedac/auth에서 에러 발생:");
         console.error(err);
@@ -83,9 +56,8 @@ const SolvedacBtn = ({isSolvedACAuth}: IIsSolvedACAuth) => {
     } finally {
       setLoading(false);
       setOpen(false);
-    }
-  };
-    }
+    }  
+  }
 
   return (
     <div className="w-full">
