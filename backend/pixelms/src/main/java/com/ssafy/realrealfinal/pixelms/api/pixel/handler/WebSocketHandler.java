@@ -32,7 +32,8 @@ public class WebSocketHandler {
     private final int SCALE = 512;
     private final String CREDIT = "credit";
     private final String PIXEL = "pixel";
-    private final String NO_CREDIT_ERROR = "noCreditError";
+    private final String IS_PIXEL_SUCCESS = "isPixelSuccess";
+    private final String AVAILABLE_CREDIT = "availableCredit";
     private final String URL = "url";
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
@@ -66,10 +67,8 @@ public class WebSocketHandler {
         String githubNickname = client.getHandshakeData().getSingleUrlParam("githubNickname");
         Integer providerId;
         // 비회원을 위해 임시로 providerId를 세팅
-        if ((accessToken == null || accessToken.isEmpty() || accessToken.equals("")) || (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals(""))) {
-            // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
+        if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
             providerId = -1;
-            githubNickname = "githubNick";
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
@@ -96,32 +95,37 @@ public class WebSocketHandler {
 
         Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
 
+        // 비회원이면 return
+        if (providerId == -1) {
+            return;
+        }
+
         // 사용 가능 픽셀이 0개일 때
         if(pixelService.getAvailableCredit(providerId) == 0) {
-            client.sendEvent(NO_CREDIT_ERROR);
+            // 픽셀 정보 업데이트 실패!
+            client.sendEvent(IS_PIXEL_SUCCESS, false);
             return;
         }
 
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
-        pixelService.updatePixelRedisAndSendRank(providerId, pixelInfo);
+        pixelService.updatePixelAndSendRank(providerId, pixelInfo);
+
+        // 현재 클라이언트의 usedPixel redis 값 변경 후 클라이언트에게 반환
+        pixelService.updateUsedPixel(providerId);
+        Integer availableCredit = pixelService.getAvailableCredit(providerId);
+        client.sendEvent(AVAILABLE_CREDIT, availableCredit);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
         for (SocketClientInfo clientInfo : CLIENTS.values()) {
             SocketIOClient clientSession = clientInfo.getSocketIOClient();
             if (!client.getSessionId().equals(clientSession.getSessionId())
-                && clientSession.isChannelOpen()) {
+                    && clientSession.isChannelOpen()) {
                 clientSession.sendEvent(PIXEL, pixelInfo);
             }
         }
+        // 픽셀 정보 성공적으로 업데이트됨
+        client.sendEvent(IS_PIXEL_SUCCESS, true);
 
-        // 비회원이면 return
-        if (providerId == -1) {
-            return;
-        }
-        // 현재 클라이언트의 usedPixel redis 값 변경 후 클라이언트에게 반환
-        pixelService.updateUsedPixel(providerId);
-        Integer availableCredit = pixelService.getAvailableCredit(providerId);
-        client.sendEvent(PIXEL, availableCredit);
     }
 
     /**

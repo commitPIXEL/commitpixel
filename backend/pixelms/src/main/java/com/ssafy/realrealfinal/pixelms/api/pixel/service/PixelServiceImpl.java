@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -36,10 +37,105 @@ public class PixelServiceImpl implements PixelService {
     private int SCALE;
 
     /**
+     * Pixel Redis 업데이트하고 RankMS 로 보내주는 메서드
+     *
+     * @param providerId providerId
+     * @param pixelInfo  픽셀 한개의 정보 [x, y, r, g, b, url, githubNickname]
+     */
+    @Transactional
+    @Override
+    public void updatePixelAndSendRank(Integer providerId, List pixelInfo) {
+        log.info("updatePixelAndSendRank start: " + providerId + " " + pixelInfo);
+
+        Integer x = (Integer) pixelInfo.get(0);
+        Integer y = (Integer) pixelInfo.get(1);
+        String r = String.valueOf(pixelInfo.get(2));
+        String g = String.valueOf(pixelInfo.get(3));
+        String b = String.valueOf(pixelInfo.get(4));
+        String url = (String) pixelInfo.get(5);
+        String githubNickname = (String) pixelInfo.get(6);
+        // (x * SCALE + y) 인덱스
+        String index = String.valueOf(x * SCALE + y);
+        // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
+        List<Object> prevPixelRankInfo = (List<Object>) redisUtil.getPrevPixel(index).get(0);
+        // 현재 pixel 정보 Redis에 저장
+        Map<String, String> currPixelInfo = Map.of(
+                index + ":R", r,
+                index + ":G", g,
+                index + ":B", b,
+                index + ":url", url,
+                index + ":id", String.valueOf(providerId));
+        redisUtil.setCurrPixel(currPixelInfo);
+
+        // ==================================
+        // rankMS 로 변경된 픽셀 정보 보내기
+        String prevUrl = null;
+        String prevGithubNickname = null;
+        if (prevPixelRankInfo.get(0) != null && prevPixelRankInfo.get(1) != null) {
+            prevUrl = (String) prevPixelRankInfo.get(0);
+            prevGithubNickname = idNameUtil.getNameById(Integer.valueOf(
+                    (String) prevPixelRankInfo.get(1)));
+        }
+
+        Map<String, String> pixelUpdateInfo = new TreeMap<>();
+        pixelUpdateInfo.put("prevUrl", prevUrl);
+        pixelUpdateInfo.put("prevGithubNickname", prevGithubNickname);
+        pixelUpdateInfo.put("currUrl", url);
+        pixelUpdateInfo.put("currGithubNickname", githubNickname);
+        kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
+
+        log.info("updatePixelAndSendRank end");
+    }
+
+    /**
+     * userms와의 feign 통신용 메서드
+     *
+     * @param additionalCreditReq 정보 업데이트용
+     * @return CreditRes
+     */
+    @Transactional
+    @Override
+    public CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditReq) {
+        log.info("updateAndSendCredit start: " + additionalCreditReq);
+
+        Integer providerId = additionalCreditReq.getProviderId();
+        Integer additionalCredit = additionalCreditReq.getAdditionalCredit();
+        CreditRes creditRes = null;
+        // 전체 크레딧 redis 값 변경
+        updateTotalCredit(providerId, additionalCredit);
+        Integer totalCredit = getCreditOrInit(providerId, "total");
+        Integer availableCredit = getAvailableCredit(providerId);
+        creditRes = new CreditRes(totalCredit, availableCredit);
+
+        log.info("updateAndSendCredit start: " + creditRes);
+        return creditRes;
+    }
+
+    /**
+     * userms에서 15분 안에 또 호출했을 때 기존 값 보내주는 메서드
+     * 
+     * @param providerId
+     * @return
+     */
+    @Transactional
+    @Override
+    public CreditRes sendCredit(Integer providerId) {
+        log.info("sendCredit start: " + providerId);
+
+        Integer totalCredit = getCreditOrInit(providerId, "total");
+        Integer availableCredit = getAvailableCredit(providerId);
+        CreditRes creditRes = new CreditRes(totalCredit, availableCredit);
+
+        log.info("sendCredit end: " + creditRes);
+        return creditRes;
+    }
+
+    /**
      * 누적 사용 픽셀 수 업데이트
      *
      * @param providerId 깃허브 providerId
      */
+    @Transactional
     @Override
     public void updateUsedPixel(Integer providerId) {
         log.info("updateUsedPixel start: " + providerId);
@@ -51,21 +147,87 @@ public class PixelServiceImpl implements PixelService {
     }
 
     /**
+     * 전체 크레딧 업데이트
+     *
+     * @param providerId       providerId
+     * @param additionalCredit 추가 크레딧 수
+     */
+    @Transactional
+    public void updateTotalCredit(Integer providerId, Integer additionalCredit) {
+        log.info("updateTotalCredit start: " + providerId + ", " + additionalCredit);
+
+        Integer totalCredit = getCreditOrInit(providerId, TOTAL_CREDIT_KEY);
+        redisUtil.setData(String.valueOf(providerId), TOTAL_CREDIT_KEY,
+                totalCredit + additionalCredit);
+
+        log.info("updateTotalCredit end");
+    }
+
+    /**
      * 사용자가 픽셀 찍고 나서 남은 사용 가능한 픽셀 수 반환
      *
      * @param providerId 깃허브 providerId
      * @return 가용 픽셀 수
      */
+    @Transactional
     @Override
     public Integer getAvailableCredit(Integer providerId) {
         log.info("getTotalAndAvailableCredit start: " + providerId);
 
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        Integer usedPixel = getCredit(providerId, USED_PIXEL_KEY);
+        Integer totalCredit = getCreditOrInit(providerId, TOTAL_CREDIT_KEY);
+        Integer usedPixel = getCreditOrInit(providerId, USED_PIXEL_KEY);
         Integer availableCredit = totalCredit - usedPixel;
 
         log.info("getTotalAndAvailableCredit end: " + availableCredit);
         return availableCredit;
+    }
+
+    /**
+     * 픽셀 클릭 시 사용자 닉네임과 url을 리턴
+     *
+     * @param index
+     * @return
+     */
+    @Transactional
+    @Override
+    public PixelInfoRes getUrlAndName(String index) {
+        log.info("getUrlAndName start: " + index);
+
+        String url = redisUtil.getData(index + ":url");
+        String githubNickname = null;
+        String providerId = redisUtil.getData(index + ":id");
+        if (providerId != null) {
+            githubNickname = idNameUtil.getNameById(Integer.valueOf(providerId));
+        }
+
+        PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
+
+        log.info("getUrlAndName end: " + pixelInfoRes);
+        return pixelInfoRes;
+    }
+
+    /**
+     * 크레딧 반환 메서드 없다면(최초 가입) 0으로 set
+     *
+     * @param providerId providerId
+     * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
+     * @return Integer 크레딧
+     */
+    @Transactional
+    public Integer getCreditOrInit(Integer providerId, String type) {
+        log.info("getCreditOrInit start: " + providerId + " " + type);
+
+        String key = String.valueOf(providerId);
+        Integer credit;
+        try {
+            credit = redisUtil.getData(key, type);
+            log.info("getCreditOrInit end: " + credit);
+            return credit;
+        } catch (RedisNotFoundException e) {
+            redisUtil.setData(key, type, 0);
+            log.warn("getCreditOrInit end: " + 0);
+            return 0;
+        }
     }
 
     /**
@@ -99,6 +261,7 @@ public class PixelServiceImpl implements PixelService {
             log.error("Error while converting BufferedImage to byte[]", e);
             return null; // Or handle the error in another way
         }
+
         log.info("redisToImage end: SUCCESS");
         return baos.toByteArray();
     }
@@ -147,133 +310,8 @@ public class PixelServiceImpl implements PixelService {
     }
 
     /**
-     * 크레딧 반환 메서드 없다면(최초 가입) 0으로 set
-     *
-     * @param providerId providerId
-     * @param type       전체크레딧 또는 누적 사용픽셀수를 의미. total, used
-     * @return Integer 크레딧
+     * 캔버스 초기화
      */
-    private Integer getCredit(Integer providerId, String type) {
-        log.info("getCredit start: " + providerId + " " + type);
-        String key = String.valueOf(providerId);
-        Integer credit;
-        try {
-            credit = redisUtil.getData(key, type);
-            log.info("getCredit end: " + credit);
-            return credit;
-        } catch (RedisNotFoundException e) {
-            redisUtil.setData(key, type, 0);
-            log.warn("getCredit end: " + 0);
-            return 0;
-        }
-    }
-
-    /**
-     * 전체 크레딧 업데이트
-     *
-     * @param providerId       providerId
-     * @param additionalCredit 추가 크레딧 수
-     */
-    private void updateTotalCredit(Integer providerId, Integer additionalCredit) {
-        log.info("updateTotalCredit start: " + providerId + ", " + additionalCredit);
-
-        Integer totalCredit = getCredit(providerId, TOTAL_CREDIT_KEY);
-        redisUtil.setData(String.valueOf(providerId), TOTAL_CREDIT_KEY,
-            totalCredit + additionalCredit);
-
-        log.info("updateTotalCredit end");
-    }
-
-    /**
-     * Pixel Redis 업데이트하고 RankMS 로 보내주는 메서드
-     *
-     * @param providerId providerId
-     * @param pixelInfo  픽셀 한개의 정보 [x, y, r, g, b, url, githubNickname]
-     */
-    @Override
-    public void updatePixelRedisAndSendRank(Integer providerId, List pixelInfo) {
-        log.info("updatePixelRedisAndSendRank start: " + providerId + " " + pixelInfo);
-        Integer x = (Integer) pixelInfo.get(0);
-        Integer y = (Integer) pixelInfo.get(1);
-        String r = String.valueOf(pixelInfo.get(2));
-        String g = String.valueOf(pixelInfo.get(3));
-        String b = String.valueOf(pixelInfo.get(4));
-        String url = (String) pixelInfo.get(5);
-        String githubNickname = (String) pixelInfo.get(6);
-        // (x * SCALE + y) 인덱스
-        String index = String.valueOf(x * SCALE + y);
-
-        // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
-        List<Object> prevPixelRankInfo = (List<Object>) redisUtil.getPrevPixel(index).get(0);
-
-        // 현재 pixel 정보 Redis에 저장
-        Map<String, String> currPixelInfo = Map.of(
-            index + ":R", r,
-            index + ":G", g,
-            index + ":B", b,
-            index + ":url", url,
-            index + ":id", String.valueOf(providerId));
-        redisUtil.setCurrPixel(currPixelInfo);
-
-        // ==================================
-        // rankMS 로 변경된 픽셀 정보 보내기
-        String prevUrl = null;
-        String prevGithubNickname = null;
-        if (prevPixelRankInfo.get(0) != null && prevPixelRankInfo.get(1) != null) {
-            prevUrl = (String) prevPixelRankInfo.get(0);
-            prevGithubNickname = idNameUtil.getNameById(Integer.valueOf(
-                (String) prevPixelRankInfo.get(1)));
-        }
-
-        Map<String, String> pixelUpdateInfo = new TreeMap<>();
-        pixelUpdateInfo.put("prevUrl", prevUrl);
-        pixelUpdateInfo.put("prevGithubNickname", prevGithubNickname);
-        pixelUpdateInfo.put("currUrl", url);
-        pixelUpdateInfo.put("currGithubNickname", githubNickname);
-        kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
-        log.info("updatePixelRedisAndSendRank end");
-    }
-
-    /**
-     * feign 통신용 메서드
-     *
-     * @param additionalCreditRes 정보 업데이트용
-     * @return CreditRes
-     */
-    @Override
-    public CreditRes updateAndSendCredit(AdditionalCreditReq additionalCreditRes) {
-        log.info("updateAndSendCredit start: " + additionalCreditRes);
-
-        Integer providerId = additionalCreditRes.getProviderId();
-        Integer additionalCredit = additionalCreditRes.getAdditionalCredit();
-        CreditRes creditRes = null;
-        // 전체 크레딧 redis 값 변경
-        updateTotalCredit(providerId, additionalCredit);
-        Integer totalCredit = getCredit(providerId, "total");
-        Integer availableCredit = getAvailableCredit(providerId);
-        creditRes = new CreditRes(totalCredit, availableCredit);
-
-        log.info("updateAndSendCredit start: " + creditRes);
-        return creditRes;
-    }
-
-    @Override
-    public PixelInfoRes getUrlAndName(String index) {
-        log.info("getUrlAndName start: " + index);
-
-        String url = redisUtil.getData(index + ":url");
-        String githubNickname = null;
-        String providerId = redisUtil.getData(index + ":id");
-        if (providerId != null) {
-            githubNickname = idNameUtil.getNameById(Integer.valueOf(providerId));
-        }
-
-        PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
-
-        log.info("getUrlAndName end: " + pixelInfoRes);
-        return pixelInfoRes;
-    }
-
     @Override
     public void initCanvas() {
         log.info("initCanvas start");
