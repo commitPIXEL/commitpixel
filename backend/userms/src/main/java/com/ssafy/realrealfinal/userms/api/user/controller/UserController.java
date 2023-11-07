@@ -2,6 +2,7 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
+import com.ssafy.realrealfinal.userms.api.user.request.UrlReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
@@ -63,12 +64,13 @@ public class UserController {
      * 사용자 url 변경
      *
      * @param accessToken jwt 액세스 토큰
-     * @param url 사용자 업데이트 희망 url
+     * @param urlReq      사용자 업데이트 희망 url
      * @return newUrl, HttpStatus.OK
      */
     @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
-        String url) {
+        @RequestBody UrlReq urlReq) {
+        String url = urlReq.getUrl();
         log.info("updateUrl start: " + url);
         String newUrl = userService.updateUrl(accessToken, url);
         log.info("updateUrl end: " + newUrl);
