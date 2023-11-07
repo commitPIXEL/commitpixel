@@ -19,21 +19,21 @@ const userSlice = createSlice({
         githubNickname: string;
         profileImage: string;
         url: string;
-        // TODO: 배포 터져서 임시 타입 추가
-        isSolvedACAuth?: boolean | undefined | string;
+        isSolvedACAuth: boolean;
       }>
     ) => {
       state.githubNickname = action.payload.githubNickname;
       state.profileImage = action.payload.profileImage;
       state.url = action.payload.url;
-      // TODO: 배포 터져서 임시 타입 추가
-      state.isSolvedACAuth = typeof action.payload.isSolvedACAuth === 'boolean'
-    ? action.payload.isSolvedACAuth
-    : false;
+      state.isSolvedACAuth = action.payload.isSolvedACAuth;
     },
     getUserPixel: (
       state,
-      action: PayloadAction<{ githubNickname: string; totalCredit: number; availablePixel: number }>
+      action: PayloadAction<{
+        githubNickname: string;
+        totalCredit: number;
+        availablePixel: number;
+      }>
     ) => {
       state.totalCredit = action.payload.totalCredit;
       state.availablePixel = action.payload.availablePixel;
