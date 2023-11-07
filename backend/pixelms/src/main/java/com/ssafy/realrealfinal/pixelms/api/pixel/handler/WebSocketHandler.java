@@ -66,10 +66,8 @@ public class WebSocketHandler {
         String githubNickname = client.getHandshakeData().getSingleUrlParam("githubNickname");
         Integer providerId;
         // 비회원을 위해 임시로 providerId를 세팅
-        if ((accessToken == null || accessToken.isEmpty() || accessToken.equals("")) || (githubNickname == null || githubNickname.isEmpty() || githubNickname.equals(""))) {
-            // 비회원 테스트를 위해 임시로 providerId, githubNickname을 세팅
+        if (accessToken == null || accessToken.isEmpty() || accessToken.equals("")) {
             providerId = -1;
-            githubNickname = "githubNick";
         } else {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
