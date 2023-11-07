@@ -78,7 +78,7 @@ public class PixelServiceImpl implements PixelService {
         log.info("redisToImage start");
         BufferedImage bufferedImage = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_ARGB);
 
-        List<Object> rgbValues = redisUtil.getRGBValues();
+        List<Object> rgbValues = (List<Object>) redisUtil.getRGBValues().get(0);
         int rgbIndex = -1;
 
         for (int x = 0; x < SCALE; ++x) {
