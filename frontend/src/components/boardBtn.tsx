@@ -33,7 +33,7 @@ const BoardBtn = () => {
 
     return(
     <>
-        <Button onClick={handleOpen} variant="contained" className="mt-6 shadow-md rounded-lg bg-black text-white p-2 hover:bg-gray-800">건의하기</Button>
+        <Button onClick={handleOpen} variant="contained" className="!mt-6 rounded-lg bg-black text-white p-2 hover:bg-gray-800">건의하기</Button>
 
         <Modal
             className="fixed top-0 left-0 w-full h-full flex items-center justify-center"
