@@ -7,7 +7,6 @@ import { RootState } from "@/store";
 
 const Sidebar = () => {
   const user = useSelector((state: RootState) => state.user);
-  console.log(user);
 
   return user.githubNickname ? (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
@@ -21,7 +20,7 @@ const Sidebar = () => {
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
       {/* TODO: dev 테스트 용 */}
       {/* <UserInfoAccordion /> */}
-      <PickerAccordion />
+      {/* <PickerAccordion /> */}
       <LoginBtn />
       {/* <BoardBtn /> */}
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}

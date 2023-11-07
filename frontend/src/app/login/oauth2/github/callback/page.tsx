@@ -16,8 +16,6 @@ export default function LoginHandler() {
       axios
         .get(`https://dev.commitpixel.com/api/auth/login/github?code=${code}`) // 배포용
         .then((res) => {
-          console.log(res);
-          console.log(res.headers);
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
             dispatch(login(accesstoken));

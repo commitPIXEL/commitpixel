@@ -7,9 +7,8 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import InputAdornment from "@mui/material/InputAdornment";
 import Loading from "./loading";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { IResSolvedAC, IUserPixel } from "@/interfaces/browser";
+import { IResSolvedAC } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
-import { updateUserPixel } from "@/store/slices/userSlice";
 import { connectSolvedAC } from "@/store/slices/userSlice";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
@@ -64,7 +63,7 @@ const SolvedacBtn = () => {
       <Button
         onClick={handleOpen}
         variant="contained"
-        sx={{ bgcolor: 'green', '&:hover': { bgcolor: 'darkgreen' } }}
+        sx={{ bgcolor: "green", "&:hover": { bgcolor: "darkgreen" } }}
         className="shadow-md rounded-lg text-white p-2 w-full"
       >
         solved.ac 연동
@@ -111,16 +110,10 @@ const SolvedacBtn = () => {
             />
           </div>
           <div className="flex justify-end space-x-4">
-            <Button
-              onClick={handleSubmit}
-              className="px-4 py-2 rounded"
-            >
+            <Button onClick={handleSubmit} className="px-4 py-2 rounded">
               제출
             </Button>
-            <Button
-              onClick={handleClose}
-              className="px-4 py-2 rounded"
-            >
+            <Button onClick={handleClose} className="px-4 py-2 rounded">
               취소
             </Button>
           </div>

@@ -11,6 +11,7 @@ import Loading from "@/components/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
+import RefreshBtn from "@/components/refreshBtn";
 
 const UserInfoAccordion = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const UserInfoAccordion = () => {
     (state: RootState) => state.user
   );
   const [isEdit, setIsEdit] = useState(false);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(user.url);
   const [isChangeUrl, setIsChangeUrl] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -41,10 +42,7 @@ const UserInfoAccordion = () => {
         body: JSON.stringify({ url: url }),
       });
 
-      console.log(resFromUser);
-
-      const data: {newUrl: string} = await resFromUser.json(); 
-      console.log(data)
+      const data: { newUrl: string } = await resFromUser.json(); 
       setUrl(data.newUrl);
       window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
@@ -88,7 +86,10 @@ const UserInfoAccordion = () => {
       />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
+          <div className="flex ">
           <div className="text-lg text-textGray">Pixel</div>
+          <RefreshBtn />
+          </div>
           <div className="flex justify-between text-textBlack">
             <div>{user.availablePixel}</div>
             <div className="ml-2 mr-2">/</div>
