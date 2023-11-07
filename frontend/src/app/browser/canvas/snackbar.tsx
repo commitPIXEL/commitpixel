@@ -15,7 +15,7 @@ const BrowserSnackBar = ({ open, handleClose, urlData }: {
           <div
             className="cursor-pointer"
             onClick={() => {
-              window.open("https://www.naver.com/", "_blank");
+              window.open(urlData.url, "_blank");
             }}
           >
             {urlData?.url}

@@ -46,16 +46,16 @@ const CanvasContainer = () => {
     userId: string
   ) => {
     if(ctx && socket) {
-      ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
-        // CONSOLE: 테스트용 console
-        console.log(response);
         if (response === false) {
           alert("크레딧이 부족합니다!");
           return;
         }
+        ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
         ctx.fillRect(x, y, 1, 1);
+        // CONSOLE: 테스트용 console
+        console.log("크레딧 반영 성공" + x + " : " + y);
       });
     }
   }, [ctx, socket]);
