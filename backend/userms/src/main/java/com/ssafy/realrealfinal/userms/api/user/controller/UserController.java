@@ -2,6 +2,7 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
+import com.ssafy.realrealfinal.userms.api.user.request.Url;
 import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
@@ -67,9 +68,9 @@ public class UserController {
      */
     @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
-        String url) {
+        @RequestBody Url url) {
         log.info("updateUrl start: " + url);
-        userService.updateUrl(accessToken, url);
+        userService.updateUrl(accessToken, url.getUrl());
         log.info("updateUrl end: " + SUCCESS);
         return ResponseEntity.ok().build();
     }
