@@ -7,4 +7,5 @@ public interface RankService {
 
     void test();
 
+    String getOrderedDataAsJson();
 }

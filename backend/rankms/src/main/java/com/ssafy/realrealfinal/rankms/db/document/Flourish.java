@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @ToString
 @Setter
-@Document(collection = "real_real_final")
+@Document(collection = "flourish")
 public class Flourish {
     @Id
     private ObjectId _id; // org.bson.types.ObjectId type

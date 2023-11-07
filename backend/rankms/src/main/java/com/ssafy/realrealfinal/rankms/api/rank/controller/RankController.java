@@ -18,7 +18,7 @@ public class RankController {
     public String findById(){
         System.out.println("test");
         rankService.test();
-        return null;
+        return rankService.getOrderedDataAsJson();
     }
 
 }
