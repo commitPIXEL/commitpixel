@@ -13,7 +13,6 @@ import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.common.exception.user.JsonifyException;
 import com.ssafy.realrealfinal.userms.common.exception.user.SolvedAcAuthException;
-import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotFoundException;
 import com.ssafy.realrealfinal.userms.common.exception.user.WhitelistNotSavedException;
 import com.ssafy.realrealfinal.userms.common.util.GithubUtil;
 import com.ssafy.realrealfinal.userms.common.util.LastUpdateCheckUtil;
@@ -51,14 +50,13 @@ public class UserServiceImpl implements UserService {
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
-    private final KafkaTemplate<String, Map<Integer, Integer>> pixelKafkaTemplate;
     private final PixelFeignClient pixelFeignClient;
 
     /**
      * 커밋 수와 문제 수 불러오기 15분 간격 pixelms에서 kafka로 호출해야 함
      *
      * @param accessToken jwt 토큰
-     * @return CreditRes
+     * @return RefreshedInfoRes
      */
     @Override
     public RefreshedInfoRes refreshInfoFromClient(String accessToken) {
@@ -68,21 +66,6 @@ public class UserServiceImpl implements UserService {
         RefreshedInfoRes refreshedInfo = refreshInfo(providerId);
 
         log.info("refreshCreditFromClient end: " + refreshedInfo);
-        return refreshedInfo;
-    }
-
-    /**
-     * 서버 내에서 호출
-     *
-     * @param providerId 깃허브 provider id
-     * @return RefreshInfoDto
-     */
-    public RefreshedInfoRes refreshedInfoFromServer(Integer providerId) {
-        log.info("refreshCreditFromServer start: " + providerId);
-
-        RefreshedInfoRes refreshedInfo = refreshInfo(providerId);
-
-        log.info("refreshCreditFromServer end: " + refreshedInfo);
         return refreshedInfo;
     }
 
@@ -127,16 +110,15 @@ public class UserServiceImpl implements UserService {
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer additionalCredit = commitNum + solvedNum;
-//        // pixelms와 연결된 kafka에 정보 보냄
-//        Map<Integer, Integer> map = Map.of(providerId, additionalCredit);
-//        kafkaTemplate.send("total-credit-topic", map);
 
-        //feign으로 통신.
+        // pixelms와 feign으로 통신 후 프론트로 {totalCredit, availablePixel, githubNickname} 보내기
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
             providerId, additionalCredit);
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
             githubNickname);
+        // 마지막 크레딧 업데이트 시간 갱신
+        lastUpdateCheckUtil.updateTime(providerId);
         log.info("refreshInfo end: " + refreshedInfoRes);
         return refreshedInfoRes;
     }
@@ -200,7 +182,7 @@ public class UserServiceImpl implements UserService {
             githubNickname = jsonNode.get("login").asText();
             providerId = jsonNode.get("id").asInt();
             profileImage = jsonNode.get("avatar_url").asText();
-            url = jsonNode.get("url").asText();
+            url = jsonNode.get("html_url").asText();
 
         } catch (JsonProcessingException e) {
             throw new JsonifyException();
@@ -213,7 +195,6 @@ public class UserServiceImpl implements UserService {
         } else {
             user = UserMapper.INSTANCE.toUser(githubNickname, profileImage, user);
         }
-        refreshedInfoFromServer(providerId);
         log.info("login end: " + user);
     }
 
@@ -222,10 +203,11 @@ public class UserServiceImpl implements UserService {
      *
      * @param solvedAcId  solved 아이디
      * @param accessToken 깃허브 providerid. 추후 token으로 바뀔 예정
+     * @return creditRes
      */
     @Override
     @Transactional
-    public void authSolvedAc(String solvedAcId, String accessToken) {
+    public CreditRes authSolvedAc(String solvedAcId, String accessToken) {
         log.info("authSolvedAc start: " + solvedAcId + " " + accessToken);
         Integer providerId = authFeignClient.withQueryString(accessToken);
         Integer solvedCount = solvedAcUtil.authorizeSolvedAc(solvedAcId);
@@ -238,11 +220,11 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-        //TODO:받는 쪽에서 (pixelMS) 받은 값을 total에 더해줘야.
-        Map<Integer, Integer> map = Map.of(providerId, solvedCount);
-        pixelKafkaTemplate.send("solvedac-update-topic", map);
-        log.info("authSolvedAc mid: kafka sent data: " + solvedCount);
-        log.info("authSolvedAc end: success");
+        AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
+            providerId, solvedCount);
+        CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
+        log.info("authSolvedAc end: " + creditRes);
+        return creditRes;
     }
 
     @Override
@@ -250,21 +232,24 @@ public class UserServiceImpl implements UserService {
         log.info("getUserInfo start: " + accessToken);
         Integer providerId = authFeignClient.withQueryString(accessToken);
         User user = userRepository.findByProviderId(providerId);
-        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user);
+        Boolean isSolvedACAuth = user.getSolvedAcId() != null;
+        UserInfoRes userInfoRes = UserMapper.INSTANCE.toUserInfoRes(user, isSolvedACAuth);
         log.info("getUserInfo end: " + userInfoRes);
         return userInfoRes;
     }
 
     /**
-     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인. 없으면 예외
+     * 사용자가 요청한 url이 Whitelist를 포함 하는지 확인
      *
      * @param accessToken jwt 토큰
      * @param url         사용자 요청 url
+     * @return 1)인가 url이면 요청 url, 2)비인가 url이면 이전 사용자 url
      */
     @Transactional
-    public void updateUrl(String accessToken, String url) {
+    public String updateUrl(String accessToken, String url) {
         log.info("updateUrl start: " + url);
         Integer providerId = authFeignClient.withQueryString(accessToken);
+        User user = userRepository.findByProviderId(providerId);
         List<Whitelist> whitelistList = new ArrayList<>();
         whitelistList = whitelistRepository.findAll();
 
@@ -272,14 +257,15 @@ public class UserServiceImpl implements UserService {
             if (url.contains(whitelist.getUrl())) {
                 log.info("updateUrl mid: " + whitelist.getUrl());
 
-                User user = userRepository.findByProviderId(providerId);
                 user.updateUrl(url);
-                log.info("updateUrl end: " + user);
-                return;
+                log.info("updateUrl end: " + user.getUrl());
+                return url;
             }
         }
 
-        throw new WhitelistNotFoundException();
+        String preUrl = user.getUrl();
+        log.info("updateUrl end: " + preUrl);
+        return preUrl;
     }
 
     /**
@@ -293,7 +279,7 @@ public class UserServiceImpl implements UserService {
         String key = "solvedProblem" + providerId;
         Map<String, String> data = redisUtil.getSolvedAcData(key);
         String solvedAcId = null;
-        Integer solvedProblem = 0;
+        int solvedProblem = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
             solvedAcId = entry.getKey();
             solvedProblem = Integer.parseInt(entry.getValue());
@@ -302,8 +288,9 @@ public class UserServiceImpl implements UserService {
             log.info("solvedAcNewSolvedProblem end: " + 0);
             return 0;
         }
-        solvedProblem = solvedAcUtil.getSolvedCount(solvedAcId) - solvedProblem;
-        redisUtil.setData(key, solvedAcId, solvedProblem);
+        int newProblemCount = solvedAcUtil.getSolvedCount(solvedAcId);
+        solvedProblem = newProblemCount - solvedProblem;
+        redisUtil.setData(key, solvedAcId, newProblemCount);
         log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
         return solvedProblem;
     }

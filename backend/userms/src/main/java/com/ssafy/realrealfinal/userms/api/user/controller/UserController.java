@@ -3,6 +3,7 @@ package com.ssafy.realrealfinal.userms.api.user.controller;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.request.Url;
+import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.service.UserService;
@@ -63,16 +64,16 @@ public class UserController {
      * 사용자 url 변경
      *
      * @param accessToken jwt 액세스 토큰
-     * @param url
-     * @return 200 Ok(url 변경 성공), 404 NOT_FOUND(변경 url whitelist에 없음)
+     * @param url 사용자 업데이트 희망 url
+     * @return newUrl, HttpStatus.OK
      */
     @PatchMapping("/url")
     public ResponseEntity<?> updateUrl(@RequestHeader(value = "accesstoken") String accessToken,
         @RequestBody Url url) {
         log.info("updateUrl start: " + url);
-        userService.updateUrl(accessToken, url.getUrl());
+        String newUrl = userService.updateUrl(accessToken, url.getUrl());
         log.info("updateUrl end: " + SUCCESS);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(newUrl);
     }
 
 
@@ -81,16 +82,15 @@ public class UserController {
      *
      * @param solvedAcId  사용자가 직접 입력한 아이디
      * @param accessToken 추후 header token으로 변경할 예정.
-     * @return 인증 성공/실패
+     * @return solved ac 연동되서 업데이트된 pixel 수.
      */
     @PatchMapping("/solvedac/auth")
     public ResponseEntity<?> authSolvedAc(@RequestHeader(value = "accesstoken") String accessToken,
         @RequestParam String solvedAcId) {
         log.info("authSolvedAc start: " + solvedAcId + " " + accessToken);
-        userService.authSolvedAc(solvedAcId, accessToken);
-        log.info("authSolvedAc end: success");
-        return ResponseEntity.ok().build();
-
+        CreditRes creditRes = userService.authSolvedAc(solvedAcId, accessToken);
+        log.info("authSolvedAc end: " + creditRes);
+        return ResponseEntity.ok(creditRes);
 
     }
 

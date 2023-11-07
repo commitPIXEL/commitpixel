@@ -37,7 +37,7 @@ public class RedisUtil {
         log.info("getSolvedAcData start: " + key);
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
         Map<String, String> data = hashOperations.entries(key);
-        log.info("setData end: " + data);
+        log.info("getSolvedAcData end: " + data);
         return data;
     }
 
