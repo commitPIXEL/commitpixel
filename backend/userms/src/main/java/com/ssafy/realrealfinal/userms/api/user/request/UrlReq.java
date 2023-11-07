@@ -2,16 +2,18 @@ package com.ssafy.realrealfinal.userms.api.user.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
-public class Url {
+@NoArgsConstructor
+public class UrlReq {
 
     private String url;
 
     @Builder
-    public Url(String url) {
+    public UrlReq(String url) {
         this.url = url;
     }
 }
