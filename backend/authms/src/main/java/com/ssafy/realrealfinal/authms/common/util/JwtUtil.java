@@ -1,14 +1,11 @@
 package com.ssafy.realrealfinal.authms.common.util;
 
 import com.ssafy.realrealfinal.authms.common.exception.auth.CreateTokenException;
-import com.ssafy.realrealfinal.authms.common.exception.auth.EmptyTokenException;
 import com.ssafy.realrealfinal.authms.common.exception.auth.ExpiredTokenException;
 import com.ssafy.realrealfinal.authms.common.exception.auth.InvalidTokenException;
-import com.ssafy.realrealfinal.authms.common.exception.auth.RefreshTokenExpiredException;
-import com.ssafy.realrealfinal.authms.common.exception.auth.UnexpectedTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
+
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,12 +39,12 @@ public class JwtUtil {
     /**
      * access token 생성
      *
-     * @param payload 토큰에 저장할 정보. 우리는 userId (providerId 아님)
+     * @param  providerId Integer
      * @return 생성된 token
      */
-    public String createAccessToken(String payload) {
-        log.info("createAccessToken start: " + payload);
-        String token = createToken(payload, accessTokenValidityInMilliseconds);
+    public String createAccessToken(Integer providerId) {
+        log.info("createAccessToken start: " + providerId);
+        String token = createToken(String.valueOf(providerId), accessTokenValidityInMilliseconds);
         log.info("createAccessToken end: " + token);
         return token;
     }
@@ -70,7 +67,7 @@ public class JwtUtil {
     /**
      * 토큰 생성. (access, refresh 토큰 생성시 사용하기 위한 메서드)
      *
-     * @param payload      토큰에 저장할 정보. 우리는 userId (providerId 아님)
+     * @param payload      토큰에 저장할 정보. providerId 또는 랜덤 문자열 (refreshtoken 생성용)
      * @param expireLength 만료 기간
      * @return 만들어진 토큰
      */
@@ -108,8 +105,11 @@ public class JwtUtil {
     public Integer getProviderIdFromToken(String accessToken) {
         log.info("getUserIdFromToken start: " + accessToken);
         try {
+            byte[] apiKeySecretBytes = secretKey.getBytes();
+            Key signingKey = new SecretKeySpec(apiKeySecretBytes,
+                SignatureAlgorithm.HS256.getJcaName());
             Integer providerId = Integer.parseInt(Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody()
@@ -125,67 +125,5 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new InvalidTokenException();
         }
-    }
-
-    /**
-     * 토큰 유효성 체크
-     *
-     * @param token 체크하고 싶은 토큰
-     * @return 유효하면 true, 아니면 false 리턴
-     */
-    public Boolean validateToken(String token) {
-        log.info("validateToken start: " + token);
-        try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token);
-            Boolean result = !claimsJws.getBody().getExpiration().before(new Date());
-            log.info("validateToken end: " + result);
-            return result;
-        } catch (ExpiredJwtException exception) {
-            log.info("validateToken end: " + false);
-            return false;
-        } catch (Exception e) {
-            log.warn("validateToken end: unexpected Exception occured");
-            throw new UnexpectedTokenException();
-        }
-    }
-
-    /**
-     * Refresh Token의 유효성 + 데이터 담겨있는지 검사. 문제 있으면 에러 던짐.
-     *
-     * @param refreshToken Refresh Token 문자열
-     */
-    public void refreshTokenExtractor(String refreshToken) {
-        log.info("refreshTokenExtractor start: " + refreshToken);
-        // Token 유효성 검사
-        if (refreshToken == null || refreshToken.trim().isEmpty()) {
-            throw new EmptyTokenException();
-        }
-        if (!validateToken(refreshToken)) {
-            throw new ExpiredTokenException();
-        }
-        log.info("refreshTokenExtractor end: success");
-    }
-
-    /**
-     * access token 재발급
-     *
-     * @param refreshToken 레디스에 저장된 토큰. 확인 후 access token 재발급 시 사용
-     * @return 새로 발급된 access token
-     */
-    public String recreateAccessToken(String refreshToken) {
-        log.info("recreateAccessToken start: " + refreshToken);
-        refreshTokenExtractor(refreshToken);
-        String data = redisUtil.getData(refreshToken); // userId
-        if (data == null) { //리프레시도 만료된 경우.
-            log.info("recreateAccessToken mid: refresh token expired: "
-                + refreshToken);
-            throw new RefreshTokenExpiredException();
-        }
-        String newAccessToken = createAccessToken(data);
-        log.info("recreateAccessToken_end: " + newAccessToken);
-        return newAccessToken;
     }
 }

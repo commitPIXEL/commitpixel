@@ -15,13 +15,13 @@ public class OauthUserRes {
     private String login;
     private Integer id;
     private String avatar_url;
-    private String url;
+    private String html_url;
 
     @Builder
-    public OauthUserRes(String login, Integer id, String avatar_url, String url) {
+    public OauthUserRes(String login, Integer id, String avatar_url, String html_url) {
         this.login = login;
         this.id = id;
         this.avatar_url = avatar_url;
-        this.url = url;
+        this.html_url = html_url;
     }
 }
