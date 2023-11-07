@@ -50,14 +50,13 @@ public class UserServiceImpl implements UserService {
     private final SolvedAcUtil solvedAcUtil;
     private final AuthFeignClient authFeignClient;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
-    private final KafkaTemplate<String, Map<Integer, Integer>> pixelKafkaTemplate;
     private final PixelFeignClient pixelFeignClient;
 
     /**
      * 커밋 수와 문제 수 불러오기 15분 간격 pixelms에서 kafka로 호출해야 함
      *
      * @param accessToken jwt 토큰
-     * @return CreditRes
+     * @return RefreshedInfoRes
      */
     @Override
     public RefreshedInfoRes refreshInfoFromClient(String accessToken) {
@@ -204,10 +203,11 @@ public class UserServiceImpl implements UserService {
      *
      * @param solvedAcId  solved 아이디
      * @param accessToken 깃허브 providerid. 추후 token으로 바뀔 예정
+     * @return creditRes
      */
     @Override
     @Transactional
-    public void authSolvedAc(String solvedAcId, String accessToken) {
+    public CreditRes authSolvedAc(String solvedAcId, String accessToken) {
         log.info("authSolvedAc start: " + solvedAcId + " " + accessToken);
         Integer providerId = authFeignClient.withQueryString(accessToken);
         Integer solvedCount = solvedAcUtil.authorizeSolvedAc(solvedAcId);
@@ -220,11 +220,11 @@ public class UserServiceImpl implements UserService {
 
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
-        //TODO:받는 쪽에서 (pixelMS) 받은 값을 total에 더해줘야.
-        Map<Integer, Integer> map = Map.of(providerId, solvedCount);
-        pixelKafkaTemplate.send("solvedac-update-topic", map);
-        log.info("authSolvedAc mid: kafka sent data: " + solvedCount);
-        log.info("authSolvedAc end: success");
+        AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
+            providerId, solvedCount);
+        CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
+        log.info("authSolvedAc end: " + creditRes);
+        return creditRes;
     }
 
     @Override
@@ -279,7 +279,7 @@ public class UserServiceImpl implements UserService {
         String key = "solvedProblem" + providerId;
         Map<String, String> data = redisUtil.getSolvedAcData(key);
         String solvedAcId = null;
-        Integer solvedProblem = 0;
+        int solvedProblem = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
             solvedAcId = entry.getKey();
             solvedProblem = Integer.parseInt(entry.getValue());
@@ -288,7 +288,7 @@ public class UserServiceImpl implements UserService {
             log.info("solvedAcNewSolvedProblem end: " + 0);
             return 0;
         }
-        Integer newProblemCount = solvedAcUtil.getSolvedCount(solvedAcId);
+        int newProblemCount = solvedAcUtil.getSolvedCount(solvedAcId);
         solvedProblem = newProblemCount - solvedProblem;
         redisUtil.setData(key, solvedAcId, newProblemCount);
         log.info("solvedAcNewSolvedProblem end: " + solvedProblem);
