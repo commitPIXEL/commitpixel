@@ -1,0 +1,1898 @@
+[33mcommit f6de30aa7e494df56a7a433c219306492bef8db9[m[33m ([m[1;36mHEAD -> [m[1;32mms/pixel[m[33m)[m
+Merge: afbe102 5b44ea6
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Nov 7 16:32:37 2023 +0900
+
+    Merge branch 'backend' of https://lab.ssafy.com/s09-final/S09P31A709 into ms/pixel
+
+[33mcommit 5b44ea6ca6d6bae59e87e67ab0e19f6d9a90a89e[m[33m ([m[1;31morigin/backend[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: c4c2935 a0e558c
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Nov 7 16:26:38 2023 +0900
+
+    Merge branch 'revert-c4c29359' into 'backend'
+    
+    Revert "Merge branch 'be/backend/remove' into 'backend'"
+    
+    See merge request s09-final/S09P31A709!236
+
+[33mcommit a0e558c40950e793c78461dbc623f381c448de76[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Nov 7 16:25:28 2023 +0900
+
+    Revert "Merge branch 'be/backend/remove' into 'backend'"
+    
+    This reverts merge request !233
+
+[33mcommit c4c293591dec8425c564a5e2b2a3c50ae12fce10[m[33m ([m[1;32mbackend[m[33m)[m
+Merge: 7674369 daa92c2
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Nov 7 16:07:54 2023 +0900
+
+    Merge branch 'be/backend/remove' into 'backend'
+    
+    Fix: merge를 위한 폴더 삭제
+    
+    See merge request s09-final/S09P31A709!233
+
+[33mcommit daa92c26c72160596d1eb23adeea0250cde9f570[m[33m ([m[1;31morigin/be/backend/remove[m[33m, [m[1;32mbe/backend/remove[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Nov 7 16:06:27 2023 +0900
+
+    remove: merge를 위한 폴더 삭제
+
+[33mcommit afbe102bf0f7c06d17c41f35b27610ac18881840[m[33m ([m[1;31morigin/ms/pixel[m[33m)[m
+Merge: d842148 0ac350b
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Nov 7 14:58:38 2023 +0900
+
+    Merge branch 'be/pixelms/refactor/transactional-exception' into 'ms/pixel'
+    
+    Fix: 리팩토링, userms와의 feign, 웹소켓 로직 추가
+    
+    See merge request s09-final/S09P31A709!227
+
+[33mcommit 0ac350b32ed076b22f8adf886ad24c89ebab532f[m[33m ([m[1;31morigin/be/pixelms/refactor/transactional-exception[m[33m, [m[1;32mbe/pixelms/refactor/transactional-exception[m[33m)[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Nov 7 14:53:26 2023 +0900
+
+    fix: 비회원은 픽셀을 못 찍도록 함
+
+[33mcommit d842148829f50b647f5b1bca9a0515f4f2a9a2d1[m
+Merge: 4d2592e 2dba0e7
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Nov 7 14:39:39 2023 +0900
+
+    Merge branch 'be/pixelms/fix/redis_to_image' into 'ms/pixel'
+    
+    Fix: redisToImage함수의 rgbValues를 List<Object>로 캐스팅하도록 수정
+    
+    See merge request s09-final/S09P31A709!225
+
+[33mcommit 6b7b0a007c5994db180e173ea015e74ada801adc[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Nov 7 14:39:19 2023 +0900
+
+    feat: 프론트 웹소켓으로 보내는 이벤트 구체화
+
+[33mcommit 2dba0e76b6bcba7f0dbeeade4be91d79ccca9e57[m[33m ([m[1;32mbe/pixelms/fix/redis_to_image[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Nov 7 14:36:59 2023 +0900
+
+    fix: redisToImage함수의 rgbValues를 List<Object>로 캐스팅하도록 수정
+
+[33mcommit 54a727e1a3f7be111b03da012d4ee391ca6abe55[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Nov 7 13:43:56 2023 +0900
+
+    feat: userms에서 단순 조회 요청 보낼 때 주는 메서드 생성
+
+[33mcommit b8d3cf78b8100d467b468bfa5f35d9a95c4f2436[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Nov 7 13:43:30 2023 +0900
+
+    refactor: 비회원 닉네임 조건 삭제
+
+[33mcommit fab3b2903a20326ed2edc6cfc08c8659880f9ca7[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Nov 7 11:10:24 2023 +0900
+
+    chore: 가독성 좋게 메서드 위치 변경 및 이름 변경
+
+[33mcommit 4d2592e4b256f46b77b14745061a4dc5f53cce28[m
+Merge: 8b8859f 1bd2649
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 17:48:52 2023 +0900
+
+    Merge branch 'be/pixelms/fix/feignclienturl' into 'ms/pixel'
+    
+    Fix: feign client url yml파일로 관리하기
+    
+    See merge request s09-final/S09P31A709!205
+
+[33mcommit 1bd2649eb0b15ed3c05a754421808d0631d6e67a[m[33m ([m[1;32mbe/pixelms/fix/feignclienturl[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 17:40:11 2023 +0900
+
+    fix: url yml파일로 관리하기
+
+[33mcommit e03eeccb738bf3ee2b0f49aae1ce040440794bb8[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 17:37:21 2023 +0900
+
+    fix: url yml파일로 관리하기
+
+[33mcommit 8b8859fc9919b513f4b14cd55b61c431ed2afbcb[m
+Merge: d6e8cc5 d5983c7
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 17:19:32 2023 +0900
+
+    Merge branch 'be/pixelms/fix/getinfo' into 'ms/pixel'
+    
+    Fix: @getter 어노테이션 추가
+    
+    See merge request s09-final/S09P31A709!202
+
+[33mcommit d5983c75e8667228e20c2325580b1071beb13cfe[m[33m ([m[1;32mbe/pixelms/fix/getinfo[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 17:13:23 2023 +0900
+
+    fix: @getter 어노테이션 추가
+
+[33mcommit d6e8cc5c2468726266f43560b1a51540e7a82bf6[m[33m ([m[1;32mbe/pixelms/fix/getPixelInfo[m[33m)[m
+Merge: 14ae368 2d8e99a
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 16:13:44 2023 +0900
+
+    Merge branch 'be/pixelms/fix/no-pixel' into 'ms/pixel'
+    
+    Fix: websocket port 에러 고치기, 가용 픽셀 0개 시 return문 추가
+    
+    See merge request s09-final/S09P31A709!196
+
+[33mcommit 2d8e99ae160ceb48258b5ab7502955d5fb3afa25[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Nov 6 16:11:12 2023 +0900
+
+    fix: websocket port 에러 고치기, 가용 픽셀 0개 시 return문 추가
+
+[33mcommit 14ae368382571a63454f23e78f71b69f414cc3e7[m
+Merge: 2c5d51b adeb0a5
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 15:18:52 2023 +0900
+
+    Merge branch 'be/pixelms/feature/no-available-credit' into 'ms/pixel'
+    
+    Add: 사용 가능 픽셀 수가 0이면 noCreditError 이벤트 전송
+    
+    See merge request s09-final/S09P31A709!187
+
+[33mcommit adeb0a5806effef5969c815b6fb8420a065e2229[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Nov 6 14:26:01 2023 +0900
+
+    feat: 사용 가능 픽셀 수가 0이면 noCreditError 이벤트 전송
+
+[33mcommit 2c5d51bd476832a6fe36e7031e0f866ecd30c748[m
+Merge: e14e02b bf456bd
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 14:12:22 2023 +0900
+
+    Merge branch 'be/pixelms/fix/res-annotation' into 'ms/pixel'
+    
+    Fix: CreditRes에 @Getter 추가
+    
+    See merge request s09-final/S09P31A709!185
+
+[33mcommit bf456bdb5062d962bd6c5cb20ce070ab4cddbef1[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Nov 6 14:11:14 2023 +0900
+
+    fix: CreditRes에 @Getter 추가
+
+[33mcommit e14e02b7acb0066e2336b347488ab9908e5f5b8c[m
+Merge: 2b5c60a 3dea0da
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 14:05:41 2023 +0900
+
+    Merge branch 'be/pixelms/redis-exception' into 'ms/pixel'
+    
+    Fix: parse null String 에러를 방지하기 위해 get하고 null check를 하는 걸로 변경
+    
+    See merge request s09-final/S09P31A709!183
+
+[33mcommit 3dea0da46122eb0dd64f60743ff40093e2bc181e[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Nov 6 14:03:22 2023 +0900
+
+    fix: parse null String 에러를 방지하기 위해 get하고 null check를 하는 걸로 변경
+
+[33mcommit 2b5c60a3e07ef6ee721a33ed76d7f00bb99c35e8[m
+Merge: e01234f a70291a
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 13:41:02 2023 +0900
+
+    Merge branch 'be/pixelms/fix/api-controller' into 'ms/pixel'
+    
+    Fix: requestbody인데 getmapping이어서 postmapping으로 바꿔줌
+    
+    See merge request s09-final/S09P31A709!182
+
+[33mcommit a70291ae4c682bfc1db0015fdb973459439582d0[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Nov 6 13:39:18 2023 +0900
+
+    fix: requestbody인데 getmapping이어서 postmapping으로 바꿔줌
+
+[33mcommit e01234f46fe1dbc21ec7bd5094b29078c6e92478[m
+Merge: 1c0a820 0a7106e
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 13:39:08 2023 +0900
+
+    Merge branch 'be/pixelms/feature/cors' into 'ms/pixel'
+    
+    Add: cors필터 추가, 필요없는 주석 삭제
+    
+    See merge request s09-final/S09P31A709!173
+
+[33mcommit 1c0a8203b470e008e46150cf0105181ea909eada[m
+Merge: 6b5d28a d892bd5
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Nov 6 10:20:35 2023 +0900
+
+    Merge branch 'be/pixelms/remove/canvas-init-function' into 'ms/pixel'
+    
+    Delete: 캔버스 redis를 초기화 시키는 api 삭제
+    
+    See merge request s09-final/S09P31A709!174
+
+[33mcommit d892bd5a2ca6814ae1c136eacddb080f771f4b26[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Nov 6 10:17:58 2023 +0900
+
+    remove: 캔버스 redis를 초기화 시키는 api 삭제
+
+[33mcommit 0a7106ea60f6c2dabcf41c51ae912e05081051bb[m[33m ([m[1;32mbe/pixelms/feature/cors[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 10:08:42 2023 +0900
+
+    fix: 필요없는 주석 삭제
+
+[33mcommit a4d22102ed985b5278bbb359a963ff72e8442c84[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 10:00:13 2023 +0900
+
+    feature: cors필터 추가
+
+[33mcommit 7a11472abcc7ff93e781a9a074d816feb474706d[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Nov 6 09:59:43 2023 +0900
+
+    feature: cors필터 추가
+
+[33mcommit 6b5d28ad5959f8431cb34bff2f59fe05940e595f[m
+Merge: 131ba56 d6238b1
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Nov 6 09:56:18 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixel-info-casting-bug' into 'ms/pixel'
+    
+    Fix: pixelinfo casting 오류 수정 중
+    
+    See merge request s09-final/S09P31A709!171
+
+[33mcommit d6238b1ea39030f814d15ce54493606c4eebe281[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Nov 6 09:54:31 2023 +0900
+
+    fix: pixelinfo casting 오류 수정 중
+
+[33mcommit 131ba56e1c4370a4df2b0071bb75d9e6abeeee03[m
+Merge: 0145676 ab78d6e
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:54:10 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixelinfo-casting-bug' into 'ms/pixel'
+    
+    Fix: casting 버그 수정중
+    
+    See merge request s09-final/S09P31A709!169
+
+[33mcommit ab78d6e22adc4a4cb10f920ba30823b2f471b390[m
+Merge: 290a59b 0145676
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:53:31 2023 +0900
+
+    Merge branch 'ms/pixel' of https://lab.ssafy.com/s09-final/S09P31A709 into be/pixelms/fix/pixelinfo-casting-bug
+    
+    # Conflicts:
+    #       backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelServiceImpl.java
+
+[33mcommit 290a59b1648d08f838748dbb96e0253a230eb59d[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:51:05 2023 +0900
+
+    fix: casting 버그 수정중
+
+[33mcommit 01456764af7a757b013e6b25ae84aa3e99232d48[m
+Merge: 2c688a9 2f63ea3
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 17:36:14 2023 +0900
+
+    Merge branch 'be/pixelms/fix/not-user-show' into 'ms/pixel'
+    
+    Fix: 비회원도 볼 수 있게 로직 수정
+    
+    See merge request s09-final/S09P31A709!166
+
+[33mcommit 2f63ea3b54a49ed35afd7a703b1a813303066a42[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Nov 3 17:35:17 2023 +0900
+
+    chore: 확인용 로그 추가
+
+[33mcommit d341ebbe62e2bb09315b4ef5d712b01c465fec93[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Nov 3 17:33:10 2023 +0900
+
+    fix: 비회원 if 조건 수정
+
+[33mcommit 0d193d7d956270b264f295fbe6ab13784ca8f5b8[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Nov 3 17:25:59 2023 +0900
+
+    fix: 비회원도 볼 수 있게 로직 수정
+    CLIENTS_BY_PROVIDERID 에서 -1로 키가 같으면 덮어씌워져서
+    이전처럼 새 클래스를 만들어서 value로 저장하게 함
+
+[33mcommit 2c688a97cdbd057c5116296573599a956590392c[m
+Merge: 22b273e 576da40
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 17:24:14 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixel-info-casting-bug' into 'ms/pixel'
+    
+    fix: casting 버그 수정 중
+    
+    See merge request s09-final/S09P31A709!163
+
+[33mcommit 576da400888098d4bdab665f72387759c84e4531[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:23:29 2023 +0900
+
+    fix: casting 버그 수정 중
+
+[33mcommit 22b273ed33862624e4e799679243a2e805721598[m
+Merge: f9da267 fe2c65e
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:08:01 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixel-info-casting-bug' into 'ms/pixel'
+    
+    fix: casting bug 수정중
+    
+    See merge request s09-final/S09P31A709!162
+
+[33mcommit fe2c65e6974b835fd999d6418e22965237dacc0b[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 17:06:33 2023 +0900
+
+    fix: casting bug 수정중
+
+[33mcommit f9da2675c1a9a4ed56c4d64ba116a3e24be48df5[m
+Merge: 97bfffd 917c08d
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 16:17:44 2023 +0900
+
+    Merge branch 'be/pixelms/fix/idNameUtil' into 'ms/pixel'
+    
+    Fix: 비회원 테스트를 위한 로직 변경
+    
+    See merge request s09-final/S09P31A709!158
+
+[33mcommit 917c08d6ebe919a9a0e836d3da1167d7b4617d88[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Nov 3 16:12:10 2023 +0900
+
+    fix
+    : 비회원 테스트를 위한 로직 오류 해결
+
+[33mcommit 97bfffd5c79e51b7ea471321e7b442c7b56621b5[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 15:45:23 2023 +0900
+
+    hotfix: 캐스팅 오류 버그 수정 시도
+
+[33mcommit d722fff94886f51f525cf9afc1cdc8a773c1142c[m
+Merge: 9e3be09 61fe3bf
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 14:59:23 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixelinfo-casting-bug' into 'ms/pixel'
+    
+    Fix: casting 버그 수정 시도
+    
+    See merge request s09-final/S09P31A709!152
+
+[33mcommit 61fe3bfdc06ae29e9d7ea97abf2f402b00abab45[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:58:14 2023 +0900
+
+    fix: casting 버그 수정 시도
+
+[33mcommit 9e3be093b044cb11421956928de3012f7771492d[m
+Merge: 7486aed 1e23a6e
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 14:46:24 2023 +0900
+
+    Merge branch 'be/pixelms/fix/req-wsquery' into 'ms/pixel'
+    
+    Fix: userms와 주고받는 dto를 일단은 req로 변경, ws에서 토큰과 닉네임을 헤더에 담는 게 불가능하므로 쿼리로 변경
+    
+    See merge request s09-final/S09P31A709!149
+
+[33mcommit 7486aed5adbd1755b1d43f12ef3494753691fdf3[m
+Merge: 37523b1 1bb923a
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Nov 3 14:43:49 2023 +0900
+
+    Merge branch 'be/pixelms/fix/pixel-info-casting-bug' into 'ms/pixel'
+    
+    fix: pixelinfo String casting 문제 해결
+    
+    See merge request s09-final/S09P31A709!148
+
+[33mcommit 1e23a6e468bf1829c07a1949e66cb34eb4d08181[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Nov 3 14:41:15 2023 +0900
+
+    fix: userms와 주고받는 dto를 일단은 req로 변경, ws에서 토큰과 닉네임을 헤더에 담는 게 불가능하므로 쿼리로 변경
+
+[33mcommit 1bb923a8d6462ef1b4f84a4e644a8dcdf761be0c[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:41:09 2023 +0900
+
+    fix: pixelinfo String casting 문제 해결
+
+[33mcommit 37523b13b1670013f7c357f159547dc41430b9e6[m
+Merge: 09f78d2 48e8a25
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:29:08 2023 +0900
+
+    Merge branch 'be/pixelms/feature/optimize-redis' into 'ms/pixel'
+    
+    Add: pixel 이미지화 로직 변경 최적화
+    
+    See merge request s09-final/S09P31A709!147
+
+[33mcommit 48e8a25c2cfbbe8ab4ffdfce9474158f5bc9dc66[m[33m ([m[1;32mbe/pixelms/feature/optimize-redis[m[33m)[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:27:33 2023 +0900
+
+    fix:Feign url 제거, 주석 오타 수정
+
+[33mcommit 9c947a1789abaca56e99fe6ef6fd20350c7a17e0[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:18:02 2023 +0900
+
+    fix: rankMS에 pixel업데이트 내역 providerId->githubNickname, redisUtil log 삭제
+
+[33mcommit a611f4a3b6347a0da5a45c9070e936c7ce869787[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 14:08:17 2023 +0900
+
+    comment: 주석내용, 빈줄, 로그 변경
+
+[33mcommit ff134cb7e28be1bc79b9dbbbb484ab5e5799cddd[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 13:55:02 2023 +0900
+
+    feat: pixel Redis 최적화 & String으로 변환 작업 완료
+    
+    - pipeline 사용
+    - String으로 변환 완료
+
+[33mcommit 7fefc872601f3eacb30737860a2faf5ae345c359[m
+Author: heejo <heejo515@naver.com>
+Date:   Fri Nov 3 10:35:47 2023 +0900
+
+    feat: conflict 해결
+
+[33mcommit 2955c3dc1396726912be8c48dfdb209b6e5b494c[m
+Merge: 08b5694 09f78d2
+Author: heejo <heejo515@naver.com>
+Date:   Fri Nov 3 10:22:04 2023 +0900
+
+    Merge branch 'ms/pixel' of https://lab.ssafy.com/s09-final/S09P31A709 into be/pixelms/feature/optimize-redis
+    
+    # Conflicts:
+    #       backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/controller/PixelController.java
+    #       backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelService.java
+    #       backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelServiceImpl.java
+
+[33mcommit 08b5694b2e99815dcd585da6d0bee5d20b671418[m
+Author: heejo <heejo515@naver.com>
+Date:   Fri Nov 3 09:57:58 2023 +0900
+
+    feat: 안쓰는 메서드 삭제
+
+[33mcommit efd992765bc676e842b509d72d475a628c08877e[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 09:54:59 2023 +0900
+
+    feat: Redis pixel Set 최적화 구현 완료
+
+[33mcommit 88cad3c923ab193a60125548368821e6c668190d[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Nov 3 09:45:02 2023 +0900
+
+    feat: keys 추가구현중
+
+[33mcommit 09f78d20857f94078b1105f447ebb0a5a16da0ae[m
+Merge: 5a761f6 28ae3b8
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Nov 2 17:31:14 2023 +0900
+
+    Merge branch 'be/pixelms/feature/rank-and-image' into 'ms/pixel'
+    
+    Add: 어제 논의한 대로 구현하고 그 외 놓친 기능들 추가
+    
+    See merge request s09-final/S09P31A709!123
+
+[33mcommit 28ae3b8b4b80737a23153ebf0b9eda9ec02c027d[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 17:30:59 2023 +0900
+
+    chore: import, 객체 삭제
+
+[33mcommit 676356cae2f36c383ee8c7823804e49a520a10b3[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 17:29:19 2023 +0900
+
+    fix: 문제 생겼던 메서드 삭제
+
+[33mcommit 2c7aa16053699e26fb42deabc3fa0ab0b547fa50[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 17:23:29 2023 +0900
+
+    refactor: 중복되는 부분 합치고 메서드 이름 변경
+
+[33mcommit 1f45fdca246b7c2752bd3a2f73b1d30c54d39947[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 17:13:40 2023 +0900
+
+    fix: feign controller 리턴 타입 바꿈
+
+[33mcommit 4f1a75255c3407840cf2ab0a519ea4f0cc5c6006[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Nov 2 17:12:30 2023 +0900
+
+    feat: pixel 이미지화 로직 변경 최적화
+    
+    - redis 저장 type, key name 변경
+    - redis multiget 구현, 시간 단축
+
+[33mcommit 166b02fc18f20ae5212ad0067d6616d0397dc4ab[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 15:40:18 2023 +0900
+
+    style: 변수명 변경
+
+[33mcommit 6455ff3d5007fee867fa6f657cef6dc0c9219290[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 15:35:38 2023 +0900
+
+    feat: userms에서 오는 feign 요청을 핸들하는 api , 서비스 생성
+
+[33mcommit c433c37a2821c7060c22af6c4367ebd3d8df57c6[m
+Merge: c870f5f 0bd50de
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 15:24:36 2023 +0900
+
+    fix: conflict 해결
+
+[33mcommit 0bd50de9f2cefe9455a9312c698f0b7f0b964343[m
+Merge: 44e8efe 5a761f6
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 05:56:40 2023 +0000
+
+    Merge branch 'ms/pixel' into 'be/pixelms/feature/rank-and-image'
+    
+    # Conflicts:
+    #   backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelService.java
+
+[33mcommit c870f5f88601dadf5005b5f78a87aace26065d6b[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 14:47:33 2023 +0900
+
+    feat: credit을 feign으로 고치는 중, url 이벤트 로직을 서비스로 나눔
+
+[33mcommit 5a761f65fdf66eb901d1aa5bfe3b7e74c97a88f3[m
+Merge: fe0685c 3427985
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Nov 2 14:10:02 2023 +0900
+
+    Merge branch 'be/pixelms/test/pixel-to-s3-scheduled' into 'ms/pixel'
+    
+    test: pixel test
+    
+    See merge request s09-final/S09P31A709!131
+
+[33mcommit 3427985e725a3a9471100a03c1533dbbbe6bc614[m
+Author: heejo <heejo515@naver.com>
+Date:   Thu Nov 2 14:07:19 2023 +0900
+
+    test: pixel test
+
+[33mcommit 44e8efe6974e11d0a8a68509e129cddda2d49981[m
+Merge: 4534e92 fe0685c
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 04:45:13 2023 +0000
+
+    Merge branch 'ms/pixel' into 'be/pixelms/feature/rank-and-image'
+    
+    # Conflicts:
+    #   backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelService.java
+    #   backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/api/pixel/service/PixelServiceImpl.java
+
+[33mcommit 4534e92fd66aeb24d9fa8fe557492990d22240bd[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 13:44:25 2023 +0900
+
+    style: redis field명 수정, rank로 보내는 변수명 수정
+
+[33mcommit 64eae44318bb96ccc423a33f63f75963de42ce16[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 13:34:20 2023 +0900
+
+    chore: 불필요한 return 문 삭제
+
+[33mcommit 531a927f2b5d9c0002a307979da94c8bc2b56916[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 13:33:00 2023 +0900
+
+    comment: sendCreditToClient 주석 추가
+
+[33mcommit fe0685ca9423a9b12f8a6cbac989d97bd59d9625[m
+Merge: f9460a9 37887c3
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Nov 2 13:26:54 2023 +0900
+
+    Merge branch 'be/pixelms/test/pixel-to-s3-scheduled' into 'ms/pixel'
+    
+    test: pixel test
+    
+    See merge request s09-final/S09P31A709!125
+
+[33mcommit 37887c396b63944ab8e47f45d1eebf9246c3ff74[m
+Author: heejo <heejo515@naver.com>
+Date:   Thu Nov 2 13:25:27 2023 +0900
+
+    test: pixel test
+
+[33mcommit e2f67d3929517b2aa2d984690747ba917cb24aa2[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 13:11:49 2023 +0900
+
+    fix: 픽셀 찍은 유저의 닉네임을 pixelms 내장 맵에서 불러옴
+
+[33mcommit c69335fdadeea13f6d7e0c065da2164c3d9cc521[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 12:13:42 2023 +0900
+
+    refactor: sessionId가 key, providerId가 value인 맵으로 간소화
+
+[33mcommit 09d4602be3addf8d440ff72453511403b62ce0e4[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 11:27:18 2023 +0900
+
+    feat: solvedac 최초 연동, refreshCredit 시 전체,가능 크레딧 클라이언트에게 웹소켓으로 보내는 기능 구현
+
+[33mcommit 10ae5a417b12f0f1af304dd564193912d1e41e5e[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 11:25:09 2023 +0900
+
+    feat: 편의를 위해 <providerId-client> 맵 생성, credit 보내는 메서드 구현
+
+[33mcommit 52e2ae401accb59fe6a4bf4fb37dba185a744cec[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Nov 2 11:23:24 2023 +0900
+
+    feat: 웹소켓으로 전체, 사용가능 크레딧 보낼 때 사용하는 dto 생성
+
+[33mcommit f9460a9f69518efb6d678d485b37e61896b49bd5[m
+Merge: a0b5711 e8422d5
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Nov 2 09:27:45 2023 +0900
+
+    Merge branch 'be/pixelms/feature/redis-to-image' into 'ms/pixel'
+    
+    add: 현 pixel redis 상태 BufferedImage로 전환 코드 구현
+    
+    See merge request s09-final/S09P31A709!117
+
+[33mcommit e8422d5a307d72f9e2611ac6a0e7839b5568b618[m
+Author: 김희조 <heejo515@naver.com>
+Date:   Thu Nov 2 09:27:44 2023 +0900
+
+    add: 현 pixel redis 상태 BufferedImage로 전환 코드 구현
+
+[33mcommit fc319eb3486b34f51b9d47fb8b3b9fb3107a3b72[m
+Author: Amyhds <dasomhan524@gmail.com>
+Date:   Thu Nov 2 00:02:22 2023 +0900
+
+    feat: id-name 맵 구현 및 업데이트 로직 추가
+
+[33mcommit 6f946080a5144e5f9c13a65bdf18365cbfb08181[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 17:58:21 2023 +0900
+
+    feat: rank에 정보 넘기는 로직 추가
+
+[33mcommit dd8590f605745d0c463ec57885722161534a88ab[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 17:46:05 2023 +0900
+
+    feat: providerId-nickname 맵 구현 중
+
+[33mcommit a0b57112e5440a3087663cd075c34f9e8d32ef5e[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Wed Nov 1 15:02:24 2023 +0900
+
+    setting: 최상단에 gitignore 추가
+    
+    - .gradle
+    - .idea
+    - sonarqube 관련
+    - 등등
+
+[33mcommit 3ec593b2433d137c3ba5ad2b26602a44c59875cd[m
+Merge: 1b4731e bb4fc82
+Author: 권도현 <yup8229@gmail.com>
+Date:   Wed Nov 1 10:33:59 2023 +0900
+
+    Merge branch 'be/pixelms/hotfix/feign' into 'ms/pixel'
+    
+    fix: feign 클라이언트 못찾는 에러 해결
+    
+    See merge request s09-final/S09P31A709!106
+
+[33mcommit bb4fc82e42c8ff364c5aa0c00047ed02cf6a1d24[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Nov 1 10:31:40 2023 +0900
+
+    fix: @EnableFeignClients 어노테이션이 없어서 feign 못찾는 에러 해결
+
+[33mcommit 1b4731e121cba33510724b44624652f4d5168757[m
+Merge: 9f1bb88 029c2fc
+Author: 권도현 <yup8229@gmail.com>
+Date:   Wed Nov 1 10:10:40 2023 +0900
+
+    Merge branch 'be/pixelms/refactor/userms-transplant' into 'ms/pixel'
+    
+    Add: userms redis 로직 이동
+    
+    See merge request s09-final/S09P31A709!102
+
+[33mcommit 029c2fce4dab86f83f4684f3f2510b8bdbe31192[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 10:08:02 2023 +0900
+
+    chore: 변수명 변경 및 불필요한 파일 삭제
+
+[33mcommit 565910604de50676ce179b269a99796905f7f86b[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 10:03:07 2023 +0900
+
+    comment: 주석 추가
+
+[33mcommit 39b3ae0979a0dcfeee03d925b4d1c0a34693cccc[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:56:31 2023 +0900
+
+    style: 변수명 좀 더 직관적으로 변경
+
+[33mcommit e1ae946c22241fe1834ef0d1bb0012196be87cc9[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:49:10 2023 +0900
+
+    style: 카프카 메서드 이름 변경
+
+[33mcommit 1ad71b49c3854ee0750581fa3b71baafde4de109[m
+Merge: a9078b0 be5f304
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:46:15 2023 +0900
+
+    Merge branch 'be/pixelms/refactor/userms-transplant' of https://lab.ssafy.com/s09-final/S09P31A709 into be/pixelms/refactor/userms-transplant
+
+[33mcommit a9078b0f219de414abc79d85be5025dbfdb87391[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:43:00 2023 +0900
+
+    fix: 소켓 클라이언트 관련 불필요한 로직 삭제
+
+[33mcommit af96de99a0dcb41605a647bd8a3edea444def8f7[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:34:10 2023 +0900
+
+    style: 이름 컨벤션에 맞춰 변경
+
+[33mcommit c6dc7ae3458b50950fdf7dced4ce18f00b287479[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Wed Nov 1 09:32:09 2023 +0900
+
+    remove: 불필요한 파일 삭제
+
+[33mcommit be5f304e2b27a4c621f5a08e1962857771153571[m
+Merge: d8f591a 9f1bb88
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 08:36:04 2023 +0000
+
+    Merge branch 'ms/pixel' into 'be/pixelms/refactor/userms-transplant'
+    
+    # Conflicts:
+    #   backend/pixelms/build.gradle
+
+[33mcommit d8f591a0f36df30815df05f3dcb83903e1e30cca[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 17:05:56 2023 +0900
+
+    feat: 많은 기능 추가
+    최초 연결 시 providerId feign으로 얻어옴
+    pixel 이벤트가 생기면 pixel redis 업데이트, 현재 유저의 누적 사용 픽셀 수 + 1하고 가용 픽셀 수를 클라이언트에 보냄
+    url 이벤트 발생 시, 그 픽셀의 url과 사용자 이름 보내줌
+
+[33mcommit 509787bfea966b6a821fb688184192d92cf561b3[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 17:02:35 2023 +0900
+
+    feat: user 기능 옮기고 userms가 보낸 kafka 메시지 소비 메서드 추가
+
+[33mcommit cae12f88a63d059441fa33dd4b880f86f84cad55[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 17:01:34 2023 +0900
+
+    feat: 클라이언트가 픽셀 클릭 시 url, githubNickname(userId) 리턴하는 dto 추가
+
+[33mcommit 00c619b96dfd40b16b3d7d0329016fd5a5b90b51[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 17:00:28 2023 +0900
+
+    feat: 웹소켓 연결 시 클라이언트와 providerId를 담는 dto 추가
+
+[33mcommit 312e806f20e0466305f554d020602a6070e87ad0[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 16:59:08 2023 +0900
+
+    feat: auth에서 토큰으로 providerId를 얻어오는 feign 추가
+
+[33mcommit 960b0e8ebd2e1aa810d8fe92179427de72b4e907[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 16:58:01 2023 +0900
+
+    feat: getData, setData를 리턴과 파라미터 형식에 따라 메서드 분리
+
+[33mcommit 92f09b2c1173b4fe77255d5fddfccdb07920d8e8[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 31 16:56:40 2023 +0900
+
+    setting: feign, kafka 의존성 추가
+
+[33mcommit 9f1bb884c79b5495214ea5b0ffdc56bcccfa3756[m
+Merge: 2360b05 4428b14
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 30 17:52:04 2023 +0900
+
+    Merge branch 'be/pixelms/feature/settimeout' into 'ms/pixel'
+    
+    Add: 웹소켓 연결 90초 이내에 끊기지 않도록 타임아웃 설정
+    
+    See merge request s09-final/S09P31A709!82
+
+[33mcommit 2360b055a2ff54c88af9a6913126faf8a0668636[m
+Merge: 63424af 276c879
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 30 17:50:55 2023 +0900
+
+    Merge branch 'be/pixelms/feature/cloudconfig' into 'ms/pixel'
+    
+    Add: spring cloud config 연결을 위한 의존성 추가
+    
+    See merge request s09-final/S09P31A709!88
+
+[33mcommit 4428b14eec2e0134411ad75a535e5e410295e967[m
+Merge: 4f7d568 63424af
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Oct 30 08:50:52 2023 +0000
+
+    Merge branch 'ms/pixel' into 'be/pixelms/feature/settimeout'
+    
+    # Conflicts:
+    #   backend/pixelms/src/main/java/com/ssafy/realrealfinal/pixelms/config/WebSocketConfig.java
+
+[33mcommit a454be6e756479b2186283795adb2c674ed878cc[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:49:19 2023 +0900
+
+    feat: providerId를 map에 저장하도록 수정
+
+[33mcommit aac0e3f4a61c0e4f9fc8db2027769fe63075f1e8[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:48:51 2023 +0900
+
+    feat: redis 저장 로직 옮기는 중
+
+[33mcommit a4194151f05fc4f7bea4b85124e90e3b01e2443b[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:48:04 2023 +0900
+
+    feat: 예외처리 추가
+
+[33mcommit 6ae4de0b464e061fb43634e2ac0e516d47e06386[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:47:17 2023 +0900
+
+    feat: redis util 추가
+
+[33mcommit 8de6a3237570ee8eb347794c55505a221eca3b46[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:46:54 2023 +0900
+
+    feat: 에러코드, 예외처리 추가
+
+[33mcommit ca3d1cd9dea11e4174bb3ec6c026a8652c5385c5[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 30 17:46:20 2023 +0900
+
+    setting: redis 의존성 추가
+
+[33mcommit 276c879b21b384f3b9ab45ec8649048eec1e5444[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 17:33:11 2023 +0900
+
+    setting: cloudconfig 사용을 위한 의존성 추가
+
+[33mcommit 4f7d5688654594e15d69534028d9e85e6a35720d[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 14:24:07 2023 +0900
+
+    feature: 웹소켓 연결 타임아웃 시간 600초로 설정
+
+[33mcommit 63424afb2b8fcba92c6382616a603b168b1fe74f[m
+Merge: bc485f9 8344361
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Oct 30 14:07:02 2023 +0900
+
+    Merge branch 'be/pixelms/hoxfix' into 'ms/pixel'
+    
+    Fix: 로그 계속 찍히는 문제 해결
+    
+    See merge request s09-final/S09P31A709!81
+
+[33mcommit 83443619597fd76f52c29171579cc3fcad18c75f[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 14:02:51 2023 +0900
+
+    hotfix: 같은 로그 여러개 찍히는 문제 해결
+
+[33mcommit bc485f9c14b5d058b77d1d7615786682aa23c0cf[m
+Merge: 474cf67 15fe2ed
+Author: 권도현 <yup8229@gmail.com>
+Date:   Mon Oct 30 10:25:54 2023 +0900
+
+    Merge branch 'be/pixelms/feature/websocket' into 'ms/pixel'
+    
+    Fix: gradle 수정과 웹소켓 연결설정 변경
+    
+    See merge request s09-final/S09P31A709!73
+
+[33mcommit 15fe2edc7d8ce27f86177fdfb5cb2a540e186166[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 10:25:16 2023 +0900
+
+    setting: 필요없는 의존성 삭제
+
+[33mcommit eebf52dd5a4258fd87a1eff73384d4f45d542a1c[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 10:22:03 2023 +0900
+
+    fix: dev.commitpixel.com 에서 접근할 수 있도록 호스트네임 변경, cors에러 해결을 위한 코드 추가
+
+[33mcommit a75490740f4b3f7357c7048484b2bc19b9d07f26[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 30 10:21:13 2023 +0900
+
+    setting: 필요없는 의존성 삭제
+
+[33mcommit 474cf67dee7b358c7ce04e6de257a8cf9efd6913[m
+Merge: 1f11fd3 9c6ff3f
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 17:20:46 2023 +0900
+
+    Merge branch 'be/pixelms/setting' into 'ms/pixel'
+    
+    Fix: backend 반영, pixelms만 보존
+    
+    See merge request s09-final/S09P31A709!68
+
+[33mcommit 9c6ff3fddbf5422adc460fa6d37ccf91993bf46e[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 27 17:11:15 2023 +0900
+
+    setting: pixel브랜치 정화작업
+
+[33mcommit 1f11fd3bd607c8d9cc9365c2c1cc59f9799093ed[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 16:28:43 2023 +0900
+
+    setting: jar 여러개 파일 해결
+
+[33mcommit 767436903f926e2b872114dd1db8c719c6b91061[m[33m ([m[1;31morigin/be/feature/setting-config[m[33m)[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 16:24:39 2023 +0900
+
+    setting: jar 여러개 해결
+
+[33mcommit 77777789519426eca8ed1f5b75e90d6ae3c14ad7[m
+Merge: ddb266c 2379010
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 15:35:03 2023 +0900
+
+    Merge branch 'be/backend/feature' into 'backend'
+    
+    Fix: 필요없는 설정파일 삭제,주석 처리 및 eureka등록 확인
+    
+    See merge request s09-final/S09P31A709!62
+
+[33mcommit 23790107f1b7b7a6fe1512b2fbf343a63bf14150[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 27 15:26:12 2023 +0900
+
+    setting: 필요없는 설정파일 삭제,주석 처리 및 eureka등록 확인
+
+[33mcommit ddb266ca2b4a9f6fead80ff3c2f629cc85852e56[m
+Merge: 9bdd9cb aab58d1
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 11:26:36 2023 +0900
+
+    Merge branch 'ms/user' into 'backend'
+    
+    Add: userms를 backend로 merge
+    
+    See merge request s09-final/S09P31A709!59
+
+[33mcommit aab58d19efed9bdf9ab4e03115bcfedf1f3456aa[m
+Merge: 0ce81eb 16fa8ce
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 11:26:06 2023 +0900
+
+    Merge branch 'be/userms/feature/solvedac-connect' into 'ms/user'
+    
+    Add: solvedac 연동
+    
+    See merge request s09-final/S09P31A709!57
+
+[33mcommit 9bdd9cb0c497178eb8347bffe70b63f66eeb4f44[m
+Merge: 46b3226 b1a0021
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 11:22:30 2023 +0900
+
+    Merge branch 'ms/rank' into 'backend'
+    
+    Add: rankms를 backend로 merge
+    
+    See merge request s09-final/S09P31A709!56
+
+[33mcommit 46b322619c61ce2e5fdddc8422ac5f9e47ca39b6[m
+Merge: 747266e 32428e6
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 11:22:25 2023 +0900
+
+    Merge branch 'ms/pixel' into 'backend'
+    
+    Add: pixelms를 backend로 merge
+    
+    See merge request s09-final/S09P31A709!55
+
+[33mcommit 747266e78b8b60dd9dc6376c2e2ca6d5940cb883[m
+Merge: 470d1a2 38c7ffb
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 11:22:20 2023 +0900
+
+    Merge branch 'ms/auth' into 'backend'
+    
+    Add: authms를 backend로 merge
+    
+    See merge request s09-final/S09P31A709!53
+
+[33mcommit 470d1a2841e9e37d77d3d9851498123ce7fc1b90[m
+Merge: f105a19 f80cb45
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 11:22:15 2023 +0900
+
+    Merge branch 'ms/image' into 'backend'
+    
+    Add: imagems를 backend로 merge
+    
+    See merge request s09-final/S09P31A709!54
+
+[33mcommit 32428e68c98d6702cb5af288c30879e1179dabeb[m
+Merge: b18bbdd 021c253
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 11:16:53 2023 +0900
+
+    Merge branch 'be/pixelms/fix' into 'ms/pixel'
+    
+    Fix: webSocket 연결문제 해결
+    
+    See merge request s09-final/S09P31A709!58
+
+[33mcommit 16fa8ce58d2c6f3c5b6e026d39d99c78802127d2[m
+Merge: 5bb449d 0ce81eb
+Author: heejo <heejo515@naver.com>
+Date:   Fri Oct 27 11:15:09 2023 +0900
+
+    Merge branch 'ms/user' of https://lab.ssafy.com/s09-final/S09P31A709 into be/userms/feature/solvedac-connect
+    
+    # Conflicts:
+    #       backend/userms/build.gradle
+    #       backend/userms/src/main/java/com/ssafy/realrealfinal/userms/UsermsApplication.java
+
+[33mcommit 021c253311ed0c85cd052311c2e57e3a8e3f00ec[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 27 11:15:05 2023 +0900
+
+    fix: webSocket 연결문제 해결
+
+[33mcommit 5bb449d3915c1038e8dd2fcfd90bbdfebe9f3f5a[m
+Author: heejo <heejo515@naver.com>
+Date:   Fri Oct 27 11:11:23 2023 +0900
+
+    feat: solvedac 연동
+
+[33mcommit 38c7ffba7a2e5fc9928fc0e2772461f2e3b58ba1[m
+Merge: e82966a 06bbefb
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 10:44:35 2023 +0900
+
+    Merge branch 'be/authms/setting' into 'ms/auth'
+    
+    Add: spring cloud config를 위한 세팅
+    
+    See merge request s09-final/S09P31A709!51
+
+[33mcommit 0ce81ebeca25bbb99bb646bf6e26a65d72c346dc[m
+Merge: cb45860 b90829f
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 10:44:23 2023 +0900
+
+    Merge branch 'be/userms/setting' into 'ms/user'
+    
+    Add: spring cloud config를 위한 세팅
+    
+    See merge request s09-final/S09P31A709!52
+
+[33mcommit b90829f3013d8cfb5fee503bca4e5499110a733d[m
+Author: Inbeom Kim <dlsqja970210@naver.com>
+Date:   Fri Oct 27 10:39:02 2023 +0900
+
+    setting: spring cloud config를 위한 세팅
+
+[33mcommit 06bbefb8c67983e3b3d69c36d925a8f7088eb093[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 10:35:42 2023 +0900
+
+    setting: config 설정
+
+[33mcommit b18bbdd9a2a7617daa66d7d63691acf83687cab8[m
+Merge: 379dc4b 1776ff6
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 10:32:42 2023 +0900
+
+    Merge branch 'be/pixelms/setting' into 'ms/pixel'
+    
+    Add: spring cloud config를 위한 세팅
+    
+    See merge request s09-final/S09P31A709!50
+
+[33mcommit b1a0021a4f093f605b1eb3c6c83faa5f946df7b6[m
+Merge: eec46ea bc31236
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 10:30:29 2023 +0900
+
+    Merge branch 'be/rankms/setting' into 'ms/rank'
+    
+    Add: spring cloud config를 위한 세팅
+    
+    See merge request s09-final/S09P31A709!49
+
+[33mcommit f80cb45f1f0c0068ce962f82e145c78383bee169[m
+Merge: a5d10ba 6e68f27
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 27 10:30:20 2023 +0900
+
+    Merge branch 'be/imagems/setting' into 'ms/image'
+    
+    Add: spring cloud config를 위한 세팅
+    
+    See merge request s09-final/S09P31A709!47
+
+[33mcommit 6e68f27fb8cc690df58e93a97cb3f663f75b656f[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Oct 27 10:29:18 2023 +0900
+
+    chore: 줄바꿈
+
+[33mcommit bc31236dbe8f3b7ef2b9cfe8d73c0b41fdfccc84[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 10:26:04 2023 +0900
+
+    setting: web-services -> web
+
+[33mcommit 1776ff661ec09eff5d9b51ae9970e35e53694946[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 27 10:25:39 2023 +0900
+
+    setting: spring cloud config를 위한 세팅
+
+[33mcommit 1a4414325049ab52d82a05d27081fb25cd70ecfd[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Oct 27 10:24:15 2023 +0900
+
+    setting: web-services -> web으로 변경
+    모두 이렇게 변경해야 합니다git add .!
+
+[33mcommit 65f9f30196d63631dbd37411d0e1f686f8972007[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 27 10:21:29 2023 +0900
+
+    setting: spring cloud config를 위한 세팅
+
+[33mcommit 56ddbd1ca46065894f932ac82d1a0282940460be[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Fri Oct 27 10:09:17 2023 +0900
+
+    setting: spring cloud config를 위한 세팅
+
+[33mcommit cb458600bad31321a7895afaf88c84c3108a1261[m
+Merge: 124a8ae 1912367
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 26 16:24:58 2023 +0900
+
+    Merge branch 'be/userms/feature/info-url' into 'ms/user'
+    
+    Add: kafka 연결 - login 작업 처리
+    
+    See merge request s09-final/S09P31A709!44
+
+[33mcommit 191236758888b2382253205501ee90abeef3f64a[m
+Author: heejo <heejo515@naver.com>
+Date:   Thu Oct 26 16:06:43 2023 +0900
+
+    feat: kafka 연결 - login 작업 처리
+
+[33mcommit 124a8aeccf189cadb796b33f4f977ba0c1c0d197[m
+Merge: 942b7bc 596d6de
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 26 14:21:29 2023 +0900
+
+    Merge branch 'be/userms/feature/board' into 'ms/user'
+    
+    Add: 건의사항 구현
+    
+    See merge request s09-final/S09P31A709!42
+
+[33mcommit 596d6dec6107683b70a98cf141f70b2263423dfa[m
+Author: Inbeom Kim <dlsqja970210@naver.com>
+Date:   Thu Oct 26 14:14:02 2023 +0900
+
+    fix: 코드 ë² 어ë버그 ì어노Entië²Entity 버그 수정 및 board 기능 코드 수정
+
+[33mcommit e82966a7b3ea4a7809666b5e24211914eec327ed[m
+Merge: a7e3c27 ec4a9f0
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 26 14:04:49 2023 +0900
+
+    Merge branch 'be/authms/feature/kafka-connect' into 'ms/auth'
+    
+    Be/authms/feature/kafka connect
+    
+    See merge request s09-final/S09P31A709!43
+
+[33mcommit ec4a9f035dacd9dc1f3ddecee471488c04b3c1d0[m
+Author: 김희조 <heejo515@naver.com>
+Date:   Thu Oct 26 14:04:48 2023 +0900
+
+    Be/authms/feature/kafka connect
+
+[33mcommit 4c58167c9820cedba31f8aa33048907984c1b23f[m
+Merge: 4e37f9b b457d0c
+Author: Inbeom Kim <dlsqja970210@naver.com>
+Date:   Thu Oct 26 11:38:11 2023 +0900
+
+    feat: board 구현
+
+[33mcommit a5d10ba44b2abe10a4d6f50a394bc30de9b3db32[m
+Merge: 2a986b4 f71cd3b
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 26 09:11:06 2023 +0900
+
+    Merge branch 'be/imagems/feature/s3-connect' into 'ms/image'
+    
+    Add: 이미지 픽셀화 기능 구현 완료
+    
+    See merge request s09-final/S09P31A709!41
+
+[33mcommit f71cd3ba5fd7970808f1de412227b32f97c07e60[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Thu Oct 26 09:11:06 2023 +0900
+
+    Add: 이미지 픽셀화 기능 구현 완료
+
+[33mcommit 4e37f9b3aca9db376a0f1dd9a7016f321e12c4a3[m
+Author: Inbeom Kim <dlsqja970210@naver.com>
+Date:   Wed Oct 25 16:05:38 2023 +0900
+
+    feat: mapper 추가
+
+[33mcommit 379dc4bc1e83a00cfb2d9166066a392a1e81dd88[m
+Merge: 01b4aae 463346e
+Author: 권도현 <yup8229@gmail.com>
+Date:   Wed Oct 25 09:54:10 2023 +0900
+
+    Merge branch 'be/pixelms/feature/nettysocketio' into 'ms/pixel'
+    
+    Add: webSocket 서버 구현
+    
+    See merge request s09-final/S09P31A709!33
+
+[33mcommit 463346e3aa5afec79f9948e8390ac8986f604ef7[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:51:03 2023 +0900
+
+    fix: int에서 Integer로 변경
+
+[33mcommit cb5c74969966fb7b871dca06d1c3fe787c894e24[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:44:31 2023 +0900
+
+    chore: pixelDto 파일명 수정에 의한 패키지 경로 수정
+
+[33mcommit a09d536038cf15b6bb04365e28aa1399a8640e55[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:44:11 2023 +0900
+
+    fix: pixelDto에 url, userId 추가
+
+[33mcommit 984f66f04ad6615ed58b2d4a53ccced87f22769a[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:43:14 2023 +0900
+
+    remove: db패키지 삭제
+
+[33mcommit d132a25a02ca52b47ebe2138bc34c4cf93f26e1b[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:28:59 2023 +0900
+
+    feat: socket.io 웹소켓 구현
+
+[33mcommit ca1cdee02deea7c409df44a5046f6c2bbee2a501[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Wed Oct 25 09:24:23 2023 +0900
+
+    comment: 엔티티 주석처리
+
+[33mcommit 793fccfa739d19046ea6cb3781121bba704c09fd[m
+Author: Dohyun822 <yup8229@gmail.com>
+Date:   Wed Oct 25 06:43:21 2023 +0900
+
+    feat: socket.io 라이브러리 사용한 웹소켓 구현
+
+[33mcommit f105a191c4af5c557cfb18d41f979bf8353ef7ce[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 17:45:41 2023 +0900
+
+    init: msaconfig.yml 담을 폴더 생성
+
+[33mcommit f1d077eada939204bd8feac81cf564742baa6e47[m
+Author: Inbeom Kim <dlsqja970210@naver.com>
+Date:   Tue Oct 24 16:57:29 2023 +0900
+
+    feat: board 구현중
+
+[33mcommit d84bc910cc94dd05a60941201e4ab4ada82f024e[m
+Merge: 603b6cd 53cef4b
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 16:15:06 2023 +0900
+
+    Merge branch 'be/feature/springcloud' into 'backend'
+    
+    init: springcloud 서버들 banner.txt 생성
+    
+    See merge request s09-final/S09P31A709!31
+
+[33mcommit 53cef4bc77b58352bef5e3ca920239ed83f5882c[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 24 15:55:38 2023 +0900
+
+    init: springcloudgateway 프로젝트 생성
+
+[33mcommit 591fa4991e6347c1a764de172991584bdd1c4b5d[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 24 15:55:10 2023 +0900
+
+    init : eureka 프로젝트 생성
+
+[33mcommit 01b4aae097cc672436f5081d2866154a1e314619[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 13:53:39 2023 +0900
+
+    setting: gradle-wrapper.jar 추가
+
+[33mcommit 3eb217b9502aa9924cc96c37d1eb03c3a9f22081[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 13:52:54 2023 +0900
+
+    setting: gradle-wrapper.jar 추가
+
+[33mcommit eec46ead315134c2634cf9c5636f64eb5a1f4113[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 13:52:34 2023 +0900
+
+    setting: gradle-wrapper.jar 추가
+
+[33mcommit a7e3c27b2d5918b1599a461cb39646ae6ec7170c[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 24 13:51:47 2023 +0900
+
+    setting: gradle-wrapper.jar 추가
+
+[33mcommit a459ae76d1523d5747983d03fa4c698fccf9796c[m
+Merge: a5bd5f3 d52727a
+Author: 이용현 <3246lyh@naver.com>
+Date:   Tue Oct 24 11:05:55 2023 +0900
+
+    Merge branch 'be/authms/feature/userms-feign-connect' into 'ms/auth'
+    
+    Add: feign 세팅, user login 호출 코드 구현
+    
+    See merge request s09-final/S09P31A709!27
+
+[33mcommit d52727aa3735e5629ed40e7b2dcfda875c8b3638[m
+Author: heejo <heejo515@naver.com>
+Date:   Tue Oct 24 10:49:42 2023 +0900
+
+    feat: feign 세팅, user login 호출 코드 구현
+
+[33mcommit b457d0c067059892584854a2bdf6b82866ed09aa[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 24 10:35:22 2023 +0900
+
+    feat: 어노테이션 변경
+
+[33mcommit ec03415ef12f6987f9aa5435ea9983b91ace99a1[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 24 10:24:24 2023 +0900
+
+    feat: 유저 엔티티 생성
+
+[33mcommit f7f771a5a10cacd66b31a128969c6cc9580cd8cb[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Tue Oct 24 10:24:11 2023 +0900
+
+    setting: validation 의존성 추가
+
+[33mcommit 7003c61738f9bb1a088a36f8dde183c88e4569fe[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 23 17:47:47 2023 +0900
+
+    feat: 유저 엔티티 생성 중...
+    @NotNull 이 안되는 이유를 찾아야 함
+
+[33mcommit 942b7bc8413dc392e6dd2fe77311e6bf0370e099[m
+Merge: 1a18fc2 2dd2633
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 23 16:57:59 2023 +0900
+
+    Merge branch 'be/userms/hot-fix' into 'ms/user'
+    
+    Add: redistemplate 오류 해결
+    
+    See merge request s09-final/S09P31A709!25
+
+[33mcommit 2dd263319b4b9ef8cd34f5742c115d4ed81b1ed8[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 23 16:57:59 2023 +0900
+
+    Add: redistemplate 오류 해결
+
+[33mcommit 1a18fc2f9b8c62cdbd61491c83644d09fb767840[m
+Merge: 9adbd83 37478a2
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 23 16:26:20 2023 +0900
+
+    Merge branch 'be/userms/feature/get-commit' into 'ms/user'
+    
+    Add: 깃허브 연동해 커밋 수 가져오기 구현
+    
+    See merge request s09-final/S09P31A709!24
+
+[33mcommit 37478a286ce37947bfb04670679ff822308e9f57[m
+Author: 한다솜 <hmdasom@naver.com>
+Date:   Mon Oct 23 16:26:19 2023 +0900
+
+    Add: 깃허브 연동해 커밋 수 가져오기 구현
+
+[33mcommit a5bd5f3c9638ad3c4681a163fac4fe2e80791918[m
+Merge: 8c23f91 b7ee021
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 23 13:53:26 2023 +0900
+
+    Merge branch 'be/authms/feature/token-api' into 'ms/auth'
+    
+    Add: logout, getProviderId by JWT 구현 완.
+    
+    See merge request s09-final/S09P31A709!22
+
+[33mcommit b7ee0210cc3783d06dcab8e6eba40c7fa97a1828[m
+Author: heejo <heejo515@naver.com>
+Date:   Mon Oct 23 11:35:35 2023 +0900
+
+    feat: @CookieValue로 수정완
+
+[33mcommit 65104c23b4350a5ad616ec0e53d3ff3bdfc8641b[m
+Author: heejo <heejo515@naver.com>
+Date:   Mon Oct 23 11:20:39 2023 +0900
+
+    feat: logout, getProviderId by JWT 구현 완.
+
+[33mcommit 603b6cd105949889bb921f4f7f19bbc9b690381c[m
+Merge: 0947176 1a12c8e
+Author: 이용현 <3246lyh@naver.com>
+Date:   Mon Oct 23 09:48:39 2023 +0900
+
+    Merge branch 'be/feature/create-config' into 'backend'
+    
+    init: cloudconfig 서버 생성
+    
+    See merge request s09-final/S09P31A709!21
+
+[33mcommit 1a12c8ecff9cae884d99765fca6575c73009a662[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Mon Oct 23 09:12:28 2023 +0900
+
+    chore : gitignore 수정
+
+[33mcommit 2c50d5bd22246cfccff690c40a1439821815d09a[m
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 20 17:56:53 2023 +0900
+
+    remove : msaconfig 파일 삭제
+
+[33mcommit 8c23f91e61f833464050956480509dbb8e64810b[m
+Merge: e80b1fb 4f2c2bb
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 20 17:54:53 2023 +0900
+
+    Merge branch 'be/authms/feature/github-connect' into 'ms/auth'
+    
+    Be/authms/feature/github connect
+    
+    See merge request s09-final/S09P31A709!20
+
+[33mcommit 4f2c2bb494938bc15c1a008e41fb6324ba0b36a6[m
+Author: 김희조 <heejo515@naver.com>
+Date:   Fri Oct 20 17:54:53 2023 +0900
+
+    Be/authms/feature/github connect
+
+[33mcommit 6369237463fedaaf70b42866825a180d0b99d4e2[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 20 17:49:22 2023 +0900
+
+    init: cloudconfig 프로젝트 생성
+
+[33mcommit a944d1d2e34e2ccbe9db14a80d2215897979809d[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 20 17:23:38 2023 +0900
+
+    init: cloudconfig 프로젝트 생성
+
+[33mcommit 09471763ae7d5bef6741c6a763bb8b101d117bdd[m
+Merge: dd379d6 949557d
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 20 16:31:04 2023 +0900
+
+    Merge branch 'be/feature/create-gateway' into 'backend'
+    
+    Add: Gateway 생성
+    
+    See merge request s09-final/S09P31A709!18
+
+[33mcommit 949557d6ab483e243983a6ad72a682949aca3290[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 20 16:29:19 2023 +0900
+
+    fix: eureka java17 호환 문제 해결
+
+[33mcommit 1b1db64fd04a99862052c3b7f01d0aa3221b4d77[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Fri Oct 20 16:28:42 2023 +0900
+
+    fix: java17 호환 문제 해결
+
+[33mcommit e89a0d9caeab373255f5cf5c9c5f6e28076dc20d[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 20 15:54:57 2023 +0900
+
+    init: springcloudgateway 프로젝트 생성
+
+[33mcommit dd379d60f14cf0544856bfc122453518defe013a[m
+Merge: 663d378 b6403b8
+Author: 권도현 <yup8229@gmail.com>
+Date:   Fri Oct 20 15:16:33 2023 +0900
+
+    Merge branch 'be/feature/create-eureka' into 'backend'
+    
+    init : eureka 프로젝트 생성
+    
+    See merge request s09-final/S09P31A709!17
+
+[33mcommit b6403b86d1b09fcd7830ec47d999f151837f76a7[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 20 15:12:58 2023 +0900
+
+    init : eureka 프로젝트 생성
+
+[33mcommit 9adbd836427d17cf20f1270f4ea7bf9c22087299[m
+Merge: 663d378 452fb39
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:15:35 2023 +0900
+
+    Merge branch 'be/userms/refactor/fix-response' into 'ms/user'
+    
+    fix: Response 방식 변경
+    
+    See merge request s09-final/S09P31A709!15
+
+[33mcommit 6182495bd022101b10b9c79ac438289ac0b0354c[m
+Merge: 663d378 64ec28e
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:15:30 2023 +0900
+
+    Merge branch 'be/rankms/refactor/fix-response' into 'ms/rank'
+    
+    fix: Response 방식 변경
+    
+    See merge request s09-final/S09P31A709!14
+
+[33mcommit e1d6864b4e493230254a5f1dd162932c64aed220[m
+Merge: 663d378 baf9f13
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:15:20 2023 +0900
+
+    Merge branch 'be/pixelms/refactor/fix-response' into 'ms/pixel'
+    
+    Fix: Response 방식 변경
+    
+    See merge request s09-final/S09P31A709!13
+
+[33mcommit 2a986b46ff8b84a0c7bbb35c7bc6cb0eed8f0d01[m
+Merge: 663d378 7dfeead
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:15:15 2023 +0900
+
+    Merge branch 'be/imagems/refactor/fix-response' into 'ms/image'
+    
+    fix: Response 방식 변경
+    
+    See merge request s09-final/S09P31A709!12
+
+[33mcommit e80b1fbdc5c29d361ba3be572e695883e811fc20[m
+Merge: 663d378 284b756
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:14:50 2023 +0900
+
+    Merge branch 'be/authms/refactor/fix-response' into 'ms/auth'
+    
+    Fix: Response 방식 변경
+    
+    See merge request s09-final/S09P31A709!11
+
+[33mcommit 452fb39e3bfe21809811256f07199cea5325aba2[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:04:36 2023 +0900
+
+    fix: Response 방식 변경
+
+[33mcommit 64ec28ef8f4d27731b2325940745fe2fc62d85fb[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 16:00:31 2023 +0900
+
+    fix: Response 방식 변경
+
+[33mcommit baf9f13b723b44f16caa47eb6c2ac404021b4828[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 15:52:31 2023 +0900
+
+    fix: Response 방식 변경
+
+[33mcommit 7dfeead71f94261c56fd59d0502c33a6900024ef[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 15:38:56 2023 +0900
+
+    fix: Response 방식 변경
+
+[33mcommit 284b75613c0afda95cff8617edc17a044b419e7c[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Thu Oct 19 15:28:16 2023 +0900
+
+    fix: Response 방식 변경
+
+[33mcommit 663d378558b4b707b0ab446d68179ddd08257ea8[m
+Merge: 126134a 73bcbf6
+Author: 권도현 <yup8229@gmail.com>
+Date:   Wed Oct 18 09:17:59 2023 +0900
+
+    Merge branch 'be/feature/create-image_project' into 'backend'
+    
+    image 프로젝트 생성
+    
+    See merge request s09-final/S09P31A709!10
+
+[33mcommit 73bcbf605d4064023467185fd32a5e55d8147246[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:48:22 2023 +0900
+
+    Init : image 프로젝트 생성
+
+[33mcommit b2a9d5cf16e6109514a76d7ed1ab80016423659b[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:46:40 2023 +0900
+
+    Init : image 프로젝트 생성
+
+[33mcommit 1338d1ed88d2cedb389a388e1d32ba48713209f5[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:46:07 2023 +0900
+
+    Init : gitignore 생성
+
+[33mcommit 126134a2be7ef390e05fb810554eb0b41091d234[m
+Merge: b9274bb bb0619b
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 17 17:34:19 2023 +0900
+
+    Merge branch 'be/feature/create-rankms_project' into 'backend'
+    
+    Init:rankms project
+    
+    See merge request s09-final/S09P31A709!9
+
+[33mcommit bb0619b0bbc2749332cea88af02b539526692058[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:33:07 2023 +0900
+
+    Init : rank 프로젝트 생성
+
+[33mcommit 3eff0c9b2bc391bdbc3faed1e7e4b85b7aad4c07[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:26:42 2023 +0900
+
+    Init : rank 프로젝트 생성
+
+[33mcommit 996fd5c83a2e238159eaa0001316b63f1befb23c[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 17:25:01 2023 +0900
+
+    Init : gitignore 생성
+
+[33mcommit b9274bbd5fb31edd7156477b550a85ed81e15cf8[m
+Merge: 0478552 03d09cf
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 17 16:55:13 2023 +0900
+
+    Merge branch 'be/refactor/fix-gitignore' into 'backend'
+    
+    Be/refactor/fix gitignore
+    
+    See merge request s09-final/S09P31A709!8
+
+[33mcommit 03d09cfc88aff5916c99a66ac54956c40723e446[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:43:45 2023 +0900
+
+    remove : gitignore에 포함된 파일들 삭제
+
+[33mcommit bce44aee9bf68f0ba7d875d58ec3ea63ac6821b9[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:41:25 2023 +0900
+
+    setting : gitignore 파일 수정
+
+[33mcommit a52dccafa1da5f809b9af73c8e7e7ac6dbc03022[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:30:59 2023 +0900
+
+    remove : gitignore에 포함된 파일들 삭제
+
+[33mcommit d48c17e4bb32bac6469eb658cbe58b73b2817760[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:26:52 2023 +0900
+
+    setting : gitignore 파일 수정
+
+[33mcommit e364431dd86a8bb6d8c7b26e701697831bbd5f07[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:14:57 2023 +0900
+
+    Init : auth 프로젝트 생성
+
+[33mcommit 9fc4de9e3a122f6cbefac9d16f76e1ea05e4c6ba[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 16:08:19 2023 +0900
+
+    Init : gitignore 생성
+
+[33mcommit 04785522d22a82d227aba02b4f55aead7696b545[m
+Merge: aa505b9 281ff81
+Author: 이용현 <3246lyh@naver.com>
+Date:   Tue Oct 17 15:32:26 2023 +0900
+
+    Merge branch 'be/refactor/fix-import' into 'backend'
+    
+    refactor : tempEntity import문 수정
+    
+    See merge request s09-final/S09P31A709!6
+
+[33mcommit 281ff8118cd7cab3527b61a09ba4b3faabc11ae5[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 15:13:03 2023 +0900
+
+    refactor : tempEntity import문 수정
+
+[33mcommit aa505b9075bbbbc8649a3f61e55aa5325a15888d[m
+Merge: 7a7e7cb 7162ec7
+Author: 권도현 <yup8229@gmail.com>
+Date:   Tue Oct 17 14:51:41 2023 +0900
+
+    Merge branch 'be/feature/create-user_project' into 'backend'
+    
+    Init: user 프로젝트 생성
+    
+    See merge request s09-final/S09P31A709!5
+
+[33mcommit 7162ec7702ea232e7320444c571ccc0119310103[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Tue Oct 17 13:14:24 2023 +0900
+
+    Init: user 프로젝트 생성
+
+[33mcommit 7a7e7cb957eeaa094607397b05af0c819e072aaf[m
+Merge: 1610b3c 1f59216
+Author: 이용현 <3246lyh@naver.com>
+Date:   Tue Oct 17 10:47:55 2023 +0900
+
+    Merge branch 'be/feature/create-pixel_project' into 'backend'
+    
+    Be/feature/create pixel project
+    
+    See merge request s09-final/S09P31A709!3
+
+[33mcommit 1f592160b2e8283332f4693d6d3f9b1cbfa90813[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Tue Oct 17 10:37:02 2023 +0900
+
+    feat: gitlab MR 템플릿 추가
+
+[33mcommit 8b5dd196b024101b2e273a7dad79c252184465c8[m
+Author: 이용현 <3246lyh@naver.com>
+Date:   Tue Oct 17 10:35:51 2023 +0900
+
+    Init: pixel 프로젝트 생성
+
+[33mcommit 1610b3cfd8bf5cc21c4cec57d2774b61eb993f09[m[33m ([m[1;31morigin/release[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/develop[m[33m)[m
+Author: yup8229@gmail.com <yup8229@gmail.com>
+Date:   Fri Oct 13 10:11:56 2023 +0900
+
+    add README
