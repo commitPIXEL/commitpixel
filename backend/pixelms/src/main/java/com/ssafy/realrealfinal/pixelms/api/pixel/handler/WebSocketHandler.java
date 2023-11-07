@@ -95,6 +95,11 @@ public class WebSocketHandler {
 
         Integer providerId = CLIENTS.get(client.getSessionId()).getProviderId();
 
+        // 비회원이면 return
+        if (providerId == -1) {
+            return;
+        }
+
         // 사용 가능 픽셀이 0개일 때
         if(pixelService.getAvailableCredit(providerId) == 0) {
             // 픽셀 정보 업데이트 실패!
@@ -105,18 +110,6 @@ public class WebSocketHandler {
         // pixel redis 업데이트 & Rank에 kafka로 정보 보냄
         pixelService.updatePixelAndSendRank(providerId, pixelInfo);
 
-        // 비회원이면 return
-        if (providerId == -1) {
-            // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
-            for (SocketClientInfo clientInfo : CLIENTS.values()) {
-                SocketIOClient clientSession = clientInfo.getSocketIOClient();
-                if (!client.getSessionId().equals(clientSession.getSessionId())
-                        && clientSession.isChannelOpen()) {
-                    clientSession.sendEvent(PIXEL, pixelInfo);
-                }
-            }
-            return;
-        } else {
         // 현재 클라이언트의 usedPixel redis 값 변경 후 클라이언트에게 반환
         pixelService.updateUsedPixel(providerId);
         Integer availableCredit = pixelService.getAvailableCredit(providerId);
@@ -132,7 +125,7 @@ public class WebSocketHandler {
         }
         // 픽셀 정보 성공적으로 업데이트됨
         client.sendEvent(IS_PIXEL_SUCCESS, true);
-        }
+
     }
 
     /**
