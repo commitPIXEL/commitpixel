@@ -47,11 +47,11 @@ const UserInfoAccordion = () => {
       const resUrl: string = await resFromUser.text();
 
       if(resUrl === user.url) {
-        window.alert("Modal 띄울 예정!");
+        window.alert("인가된 url이 아닙니다!");
+        setOpen(true);
       } else {
         dispatch(updateUrl({url: resUrl}));
         window.alert("홍보 url이 변경되었습니다!");
-        setLoading(true);
       }
       setUrl(resUrl);
     } catch (err) {
