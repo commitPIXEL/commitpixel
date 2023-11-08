@@ -47,17 +47,16 @@ const UserInfoAccordion = () => {
       const resUrl: string = await resFromUser.text();
 
       if(resUrl === user.url) {
-        window.alert("Modal 띄울 예정!");
+        window.alert("인가된 url이 아닙니다!");
+        setOpen(true);
       } else {
         dispatch(updateUrl({url: resUrl}));
         window.alert("홍보 url이 변경되었습니다!");
-        setLoading(true);
       }
       setUrl(resUrl);
     } catch (err) {
-        setUrl("변경 예정");
         console.error("Error:", err);
-        window.alert("인가된 url이 아닙니다!");
+        window.alert("알 수 없는 에러...");
     } finally {
       setLoading(false);
     }
@@ -130,7 +129,7 @@ const UserInfoAccordion = () => {
         )}
         <Loading open={loading} />
       </AccordionDetails>
-      <BoardInput open={open} type={1} />
+      <BoardInput open={open} setOpen={setOpen} />
     </Accordion>
   );
 };
