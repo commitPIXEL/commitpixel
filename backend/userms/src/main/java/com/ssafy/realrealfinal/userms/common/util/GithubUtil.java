@@ -2,10 +2,12 @@ package com.ssafy.realrealfinal.userms.common.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ssafy.realrealfinal.userms.common.exception.user.GithubException;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -84,8 +86,8 @@ public class GithubUtil {
      * @return 커밋 수
      */
     public Integer getCommit(String githubAccessToken, String githubNickname,
-        Integer lastUpdateStatus,
-        Long lastUpdateTime) {
+                             Integer lastUpdateStatus,
+                             Long lastUpdateTime) {
 
         log.info(
             "getCommit start: " + githubNickname + " " + lastUpdateStatus + " " + lastUpdateTime);
@@ -114,7 +116,7 @@ public class GithubUtil {
      * @return
      */
     private Integer filterEvent(Mono<JsonNode> githubEventList, Integer lastUpdateStatus,
-        Long lastUpdateTime) {
+                                Long lastUpdateTime) {
         // 현재 시간 설정
         ZonedDateTime now = ZonedDateTime.now();
 
@@ -141,9 +143,14 @@ public class GithubUtil {
             .count()
             // 최근 90일 이내 아무런 이벤트가 없다면 0 리턴
             .defaultIfEmpty(0L)
-            .map(Long::intValue)
+            .map(count -> {
+                int countAsInt = count.intValue(); // Long을 Integer로 변환
+                if (lastUpdateStatus == 0) { // 최초 사용자라면 500을 추가
+                    return countAsInt + 500;
+                } else {
+                    return countAsInt;
+                }
+            })
             .block();
     }
-
-
 }
