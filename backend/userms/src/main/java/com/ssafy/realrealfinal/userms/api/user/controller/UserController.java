@@ -122,4 +122,18 @@ public class UserController {
         log.info("getUserInfo end: " + userInfoRes);
         return ResponseEntity.ok(userInfoRes);
     }
+
+    /**
+     * rank에서 feign으로 닉네임 요청
+     * 
+     * @param providerId 깃허브 providerID
+     * @return 닉네임
+     */
+    @GetMapping("/nickname")
+    public String getNickname(@RequestParam Integer providerId) {
+        log.info("getNickname start: " + providerId);
+        String nickname = userService.getNickname(providerId);
+        log.info("getNickname end: " + providerId);
+        return nickname;
+    }
 }
