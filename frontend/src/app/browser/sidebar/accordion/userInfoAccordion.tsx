@@ -51,6 +51,7 @@ const UserInfoAccordion = () => {
       } else {
         dispatch(updateUrl({url: resUrl}));
         window.alert("홍보 url이 변경되었습니다!");
+        setLoading(true);
       }
       setUrl(resUrl);
     } catch (err) {
