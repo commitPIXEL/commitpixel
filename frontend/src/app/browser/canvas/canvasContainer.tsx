@@ -39,9 +39,7 @@ const CanvasContainer = () => {
     if(!ctx) {
       return;
     }
-    if (response === false) {
-      alert("크레딧이 부족합니다!");
-    } else {
+    if (response) {
       ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
       ctx.fillRect(x, y, 1, 1);
     }
