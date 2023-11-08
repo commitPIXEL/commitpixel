@@ -42,11 +42,15 @@ const UserInfoAccordion = () => {
         method: "PATCH",
         body: JSON.stringify({ url: url }),
       });
+      const resUrl: string = await resFromUser.text();
 
-      const resUrl: string = await resFromUser.text(); 
+      if(resUrl === user.url) {
+        window.alert("Modal 띄울 예정!");
+      } else {
+        dispatch(updateUrl({url: resUrl}));
+        window.alert("홍보 url이 변경되었습니다!");
+      }
       setUrl(resUrl);
-      dispatch(updateUrl({url: resUrl}));
-      window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
         setUrl("변경 예정");
         console.error("Error:", err);
@@ -114,7 +118,6 @@ const UserInfoAccordion = () => {
             inputRef={urlInputRef}
             className="w-full text-xs line-clamp-1"
             disabled={!isEdit}
-            defaultValue={user.url}
           />
         </div>
         {!user.isSolvedACAuth && (
