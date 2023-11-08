@@ -1,18 +1,24 @@
+import { RootState } from "@/store";
+import { setSnackbarOff } from "@/store/slices/snackbarSlice";
 import { Snackbar } from "@mui/material";
+import { memo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const BrowserSnackBar = ({ open, handleClose, urlData }: {
-  open: boolean,
-  handleClose: any,
+const BrowserSnackBar = memo(({ urlData }: {
   urlData: {
     githubNickname: string,
     url: string,
   },
 }) => {
-  if(!urlData?.githubNickname && !urlData.url) {
+  const dispatch = useDispatch();
+  const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
+  if(!urlData?.url && !urlData?.githubNickname) {
+    dispatch(setSnackbarOff());
     return;
   }
+
   return (
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={isSnackbarOpen}>
         <div className="bg-mainColor rounded p-4 max-w-[1000px] h-fit break-words">
           <div className="cursor-pointer text-lg mb-4 text-bgColor">{urlData?.githubNickname}</div>
           <div
@@ -26,6 +32,6 @@ const BrowserSnackBar = ({ open, handleClose, urlData }: {
         </div>
       </Snackbar>
   );
-}
+});
 
 export { BrowserSnackBar };
