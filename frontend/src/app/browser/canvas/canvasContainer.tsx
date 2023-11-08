@@ -175,9 +175,14 @@ const CanvasContainer = () => {
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         if(tool === null || tool === undefined) {
-          socket?.emit("url", [x, y]);
-          return;
-        } 
+          if(!isSnackbarOpen) {
+            socket?.emit("url", [x, y]);
+            dispatch(setSnackbarOpen());
+            return;
+          } else {
+            dispatch(setSnackbarOff());
+          }
+        }
         let r, g, b;
         if(tool == "painting") {
           panzoomInstance?.pause();
@@ -201,13 +206,13 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        if(isSnackbarOpen && tool === null && e.button !== 2) {
-          dispatch(setSnackbarOff());
-          return;
-        }
-        if (!isSnackbarOpen && tool === null && e.button !== 2) {
-          dispatch((setSnackbarOpen()));
-        } 
+        // if(isSnackbarOpen && tool === null && e.button !== 2) {
+        //   dispatch(setSnackbarOff());
+        //   return;
+        // }
+        // if (!isSnackbarOpen && tool === null && e.button !== 2) {
+        //   dispatch((setSnackbarOpen()));
+        // } 
         panzoomInstance.resume();
       };
 
