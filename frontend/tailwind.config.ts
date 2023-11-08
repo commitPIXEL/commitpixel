@@ -19,6 +19,15 @@ const config: Config = {
         "textGray": "#7B7B7B",
         "textBlack": "#222222",
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite', // 'spin'은 @keyframes의 이름, 'spin-slow'는 이 애니메이션의 별칭입니다.
+      },
+      keyframes: {
+        spin: {
+          'from': { transform: 'rotate(0deg)' },
+          'to': { transform: 'rotate(360deg)' },
+        },
+      },
     },
   },
   plugins: [],

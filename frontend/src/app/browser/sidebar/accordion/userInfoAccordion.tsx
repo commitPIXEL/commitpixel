@@ -42,11 +42,15 @@ const UserInfoAccordion = () => {
         method: "PATCH",
         body: JSON.stringify({ url: url }),
       });
+      const resUrl: string = await resFromUser.text();
 
-      const resUrl: string = await resFromUser.text(); 
+      if(resUrl === user.url) {
+        window.alert("Modal 띄울 예정!");
+      } else {
+        dispatch(updateUrl({url: resUrl}));
+        window.alert("홍보 url이 변경되었습니다!");
+      }
       setUrl(resUrl);
-      dispatch(updateUrl({url: resUrl}));
-      window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
         setUrl("변경 예정");
         console.error("Error:", err);
@@ -88,9 +92,9 @@ const UserInfoAccordion = () => {
       />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
-          <div className="flex ">
-          <div className="text-lg text-textGray">Pixel</div>
-          <RefreshBtn />
+          <div className="flex items-center gap-1">
+            <div className="text-lg text-textGray h-full">Pixel</div>
+            <RefreshBtn />
           </div>
           <div className="flex justify-between text-textBlack">
             <div>{user.availablePixel}</div>
@@ -114,7 +118,6 @@ const UserInfoAccordion = () => {
             inputRef={urlInputRef}
             className="w-full text-xs line-clamp-1"
             disabled={!isEdit}
-            defaultValue={user.url}
           />
         </div>
         {!user.isSolvedACAuth && (
