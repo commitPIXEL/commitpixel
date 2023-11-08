@@ -1,10 +1,10 @@
-package com.ssafy.realrealfinal.pixelms.common.model;
+package com.ssafy.realrealfinal.authms.common.model;
 
-import com.ssafy.realrealfinal.pixelms.common.exception.ErrorCode;
+import com.ssafy.realrealfinal.authms.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class BaseException extends RuntimeException  {
+public class BaseException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
