@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -82,9 +83,13 @@ public class PixelServiceImpl implements PixelService {
         }
 
         try {
+            Map<String, String> pixelUpdateInfo = new TreeMap<>();
+            pixelUpdateInfo.put("prevUrl", prevUrl);
+            pixelUpdateInfo.put("prevGithubNickname", prevGithubNickname);
+            pixelUpdateInfo.put("currUrl", url);
+            pixelUpdateInfo.put("currGithubNickname", githubNickname);
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonMessage = objectMapper.writeValueAsString(
-                    Map.of("prevUrl", prevUrl, "prevGithubNickname", prevGithubNickname, "currUrl", url, "currGithubNickname", githubNickname));
+            String jsonMessage = objectMapper.writeValueAsString(pixelUpdateInfo);
             rankKafkaTemplate.send("pixel-update-topic", jsonMessage);
             log.info("updatePixelAndSendRank end");
         } catch (JsonProcessingException e) {
