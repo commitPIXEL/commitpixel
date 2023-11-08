@@ -4,16 +4,19 @@ const BrowserSnackBar = ({ open, handleClose, urlData }: {
   open: boolean,
   handleClose: any,
   urlData: {
-    userId: string,
+    githubNickname: string,
     url: string,
   },
 }) => {
+  if(!urlData?.githubNickname && !urlData.url) {
+    return;
+  }
   return (
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <div className="bg-mainColor rounded p-4">
-          <div className="cursor-pointer">{urlData?.userId}</div>
+        <div className="bg-mainColor rounded p-4 max-w-[1000px] h-fit break-words">
+          <div className="cursor-pointer text-lg mb-4 text-bgColor">{urlData?.githubNickname}</div>
           <div
-            className="cursor-pointer"
+            className="cursor-pointer text-sm"
             onClick={() => {
               window.open(urlData.url, "_blank");
             }}
