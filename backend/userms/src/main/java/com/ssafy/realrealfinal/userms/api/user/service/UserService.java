@@ -18,4 +18,6 @@ public interface UserService {
     UserInfoRes getUserInfo(String accessToken);
 
     String updateUrl(String accessToken, String url);
+
+    String getNickname(Integer providerId);
 }

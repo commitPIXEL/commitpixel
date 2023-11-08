@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
             CreditRes creditRes = pixelFeignClient.sendCredit(providerId);
             String currentGithubNickname = null;
             RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
-                    currentGithubNickname);
+                currentGithubNickname);
             return refreshedInfoRes;
         }
         String githubAccessToken = authFeignClient.getGithubAccessTokenByProviderId(
@@ -273,9 +273,24 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 새로고침 때 solvedAc 새로 푼 문제수만 가져오기
+     * feign으로 닉네임 요청시 사용
      *
      * @param providerId 깃허브 provider id
+     * @return 닉네임
+     */
+    @Override
+    public String getNickname(Integer providerId) {
+        log.info("getNickname start: " + providerId);
+        User user = userRepository.findByProviderId(providerId);
+        String nickname = user.getGithubNickname();
+        log.info("getNickname end: " + nickname);
+        return nickname;
+    }
+
+    /**
+     * 새로고침 때 solvedAc 새로 푼 문제수만 가져오기
+     *
+     * @param providerId
      * @return 새로 푼 문제수 (차이)
      */
     public Integer solvedAcNewSolvedProblem(Integer providerId) {
