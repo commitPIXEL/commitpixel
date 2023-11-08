@@ -14,6 +14,7 @@ import { IUserInfo, IUserPixel } from "../../interfaces/browser";
 const Browser = () => {
   const dispatch = useDispatch();
   const customFetch = useFetchWithAuth();
+  const user = useSelector((state: RootState) => state.user);
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
   );
@@ -44,7 +45,7 @@ const Browser = () => {
     }
   };
   useEffect(() => {
-    if (accessToken.length) {
+    if (accessToken && user.githubNickname) {
       fetchAsync();
     }
   }, [accessToken]);
