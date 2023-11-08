@@ -13,6 +13,7 @@ import { RootState } from "@/store";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 import RefreshBtn from "@/components/refreshBtn";
 import { updateUrl } from "@/store/slices/userSlice";
+import BoardInput from "@/components/boardInput";
 
 const UserInfoAccordion = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const UserInfoAccordion = () => {
   const user = useSelector(
     (state: RootState) => state.user
   );
+  const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [url, setUrl] = useState(user.url);
   const [isChangeUrl, setIsChangeUrl] = useState(false);
@@ -127,6 +129,7 @@ const UserInfoAccordion = () => {
         )}
         <Loading open={loading} />
       </AccordionDetails>
+      <BoardInput open={open} type={1} />
     </Accordion>
   );
 };
