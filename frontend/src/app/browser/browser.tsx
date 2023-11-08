@@ -66,7 +66,7 @@ const Browser = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     }
-  }, []);
+  }, [isUrlInput]);
 
   return (
     <main className="w-screen h-screen bg-bgColor">
