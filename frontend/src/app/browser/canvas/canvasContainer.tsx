@@ -296,7 +296,7 @@ const CanvasContainer = () => {
           {isCanvasLoading ? <div className="w-full h-full absolute flex justify-center items-center">
             <CircularProgress />
           </div> : null}
-          <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
+          {urlData ? <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} /> : null}
         </div>
       )}
     </div>
