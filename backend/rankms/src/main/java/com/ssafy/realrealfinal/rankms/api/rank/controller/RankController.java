@@ -4,6 +4,7 @@ import com.ssafy.realrealfinal.rankms.api.rank.response.RankRes;
 import com.ssafy.realrealfinal.rankms.api.rank.service.RankService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +25,12 @@ public class RankController {
      * @return 내 랭킹(없으면 null), 내 픽셀(없으면 null), 상위 10개의 픽셀 정보, 상위 10개의 url 정보
      */
     @GetMapping()
-    public RankRes getRank(
+    public ResponseEntity<RankRes> getRank(
         @RequestHeader(value = "accesstoken", required = false) String accessToken) {
         log.info("getRank start");
         RankRes rankRes = rankService.getRankFromRedis(accessToken);
 
         log.info("getRank end: " + rankRes);
-        return rankRes;
+        return ResponseEntity.ok().body(rankRes);
     }
 }

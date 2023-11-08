@@ -65,7 +65,7 @@ public class RankServiceImpl implements RankService {
             redisUtil.increaseScore(GITHUBNICKNAME, currGithubNickname);
             redisUtil.increaseScore(URL, currUrl);
 
-            log.info("consumeRankingEvent_end");
+            log.info("consumeRankingEvent end");
         } catch (JsonProcessingException e) {
             log.warn("consumeRankingEvent end: JsonProcessingException");
             throw new JsonifyException();
