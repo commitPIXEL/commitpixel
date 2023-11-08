@@ -40,7 +40,7 @@ const Nav = () => {
           <div className="text-xl font-bold">Pixel</div>
         </div>
       </div>
-      <div className="text-bgColor ml-8">Tutorials & Patchnote</div>
+      <div onClick={handleTutorialClick} className="text-bgColor ml-16 cursor-pointer text-xl">Tutorials & Patch Note</div>
       <div>
         <Button variant="text" color="inherit" onClick={clickLogout} className="text-xl font-bold">LOGOUT</Button>
       </div>
