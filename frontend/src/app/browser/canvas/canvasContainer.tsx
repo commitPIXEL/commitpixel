@@ -10,6 +10,7 @@ import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
 import { CircularProgress } from '@mui/material';
 import { setAvailablePixel } from "@/store/slices/userSlice";
+import { setSnackbarOff, setSnackbarOpen } from "@/store/slices/snackbarSlice";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,6 @@ const CanvasContainer = () => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [urlData, setUrlData] = useState<any>(null);
-  const [open, setOpen] = useState(false);
   const [isCanvasLoading, setIsCanvasLoading] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
@@ -30,6 +30,7 @@ const CanvasContainer = () => {
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
   const canvasContainer = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.user);
+  const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
@@ -60,20 +61,39 @@ const CanvasContainer = () => {
     }
   }, [ctx, socket]);
 
+  const handlePixel = useCallback((pixel: any) => {
+    if(!ctx) return;
+    const [x, y, r, g, b] = pixel;
+    ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
+    ctx.fillRect(x, y, 1, 1);
+  }, [ctx]);
+
+  const handleUrl = useCallback((urlData: any) => {
+    setUrlData(urlData);
+  }, []);
+
+  const handleAvailableCredit = useCallback((availablePixel: number) => {
+    dispatch(setAvailablePixel(availablePixel));
+  }, [dispatch]);
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
       socket.on("pixel", (pixel) => {
-        const [x, y, r, g, b] = pixel;
-        ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
-        ctx.fillRect(x, y, 1, 1);
+        handlePixel(pixel);
       });
       socket.on("url", (urlData) => {
-        setUrlData(urlData);
+        handleUrl(urlData);
       });
       socket.on("availableCredit", (availablePixel) => {
-        dispatch(setAvailablePixel(availablePixel));
+        handleAvailableCredit(availablePixel);
       });
+
+      return () => {
+        socket.off("pixel", handlePixel);
+        socket.off("url", handleUrl);
+        socket.off("availableCredit", handleAvailableCredit);
+      };
     }
   }, [socket, ctx]);
 
@@ -181,8 +201,12 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        if (tool === null && e.button !== 2) {
-          setOpen(true);
+        if(isSnackbarOpen && tool === null && e.button !== 2) {
+          dispatch(setSnackbarOff());
+          return;
+        }
+        if (!isSnackbarOpen && tool === null && e.button !== 2) {
+          dispatch((setSnackbarOpen()));
         } 
         panzoomInstance.resume();
       };
@@ -228,7 +252,7 @@ const CanvasContainer = () => {
           return;
         }
         if (tool === null || tool === undefined) {
-          setOpen(true);
+          dispatch(setSnackbarOpen());
         }
         panzoomInstance.resume();
       }
@@ -251,11 +275,7 @@ const CanvasContainer = () => {
         wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
-  }, [color, setPixel, tool, panzoomInstance, rgbToHex]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  }, [color, setPixel, tool, panzoomInstance, rgbToHex, isSnackbarOpen]);
 
   return (
     <div className={device === "mobile" ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
@@ -296,7 +316,7 @@ const CanvasContainer = () => {
           {isCanvasLoading ? <div className="w-full h-full absolute flex justify-center items-center">
             <CircularProgress />
           </div> : null}
-          {urlData ? <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} /> : null}
+          { isSnackbarOpen ? <BrowserSnackBar urlData={urlData} /> : null }
         </div>
       )}
     </div>

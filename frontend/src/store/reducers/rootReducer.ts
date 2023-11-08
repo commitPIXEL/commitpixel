@@ -5,6 +5,7 @@ import toolReducer from "../slices/toolSlice";
 import deviceReducer from "../slices/deviceSlice";
 import userReducer from "../slices/userSlice";
 import urlInputReducer from "../slices/urlInputSlice";
+import snackbarReducer from "../slices/snackbarSlice";
 
 const rootReducer = combineReducers({
   color: colorReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   device: deviceReducer,
   user: userReducer,
   urlInput: urlInputReducer,
+  snackbar: snackbarReducer,
 });
 
 export default rootReducer;
