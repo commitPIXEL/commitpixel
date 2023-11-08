@@ -2,6 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { pick } from "@/store/slices/colorSlice";
+import { setTool } from "@/store/slices/toolSlice";
 import dynamic from "next/dynamic";
 
 interface StoreState {
@@ -21,6 +22,7 @@ interface Icolor {
 interface Iprops {
     color?: Icolor;
     pick: (color: Icolor) => void;
+    setTool: (tool: string) => void;
 };
 
 const SketchPicker = dynamic(() => import("react-color").then((mod) => mod.SketchPicker), { ssr: false});
@@ -37,6 +39,7 @@ class Picker extends React.Component<Iprops> {
             rgb: color.rgb
         };
         this.props.pick( colorData );
+        this.props.setTool("painting");
     };
 
     componentDidUpdate(prevProps: Iprops): void {
@@ -57,4 +60,4 @@ class Picker extends React.Component<Iprops> {
 // Redux state를 컴포넌트의 props로 매핑
 const mapStateToProps = (state: StoreState): Icolor => state.color;
 
-export default connect(mapStateToProps, { pick })(Picker);
+export default connect(mapStateToProps, { pick, setTool })(Picker);
