@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.mapper;
 
+import com.ssafy.realrealfinal.userms.api.user.dto.UserInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
@@ -29,4 +30,6 @@ public interface UserMapper {
     AdditionalCreditReq toAdditionalCreditReq(Integer providerId, Integer additionalCredit);
 
     RefreshedInfoRes toRefreshedInfoRes(CreditRes creditRes, String githubNickname);
+
+    UserInfoDto toUserInfoDto(User user);
 }

@@ -1,9 +1,11 @@
 package com.ssafy.realrealfinal.userms.api.user.service;
 
+import com.ssafy.realrealfinal.userms.api.user.dto.UserInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.response.CreditRes;
 import com.ssafy.realrealfinal.userms.api.user.response.RefreshedInfoRes;
 import com.ssafy.realrealfinal.userms.api.user.response.UserInfoRes;
+import java.util.List;
 
 public interface UserService {
 
@@ -20,4 +22,6 @@ public interface UserService {
     String updateUrl(String accessToken, String url);
 
     String getNickname(Integer providerId);
+
+    List<UserInfoDto> getUserInfoListByNickname(List<String> nicknameList);
 }
