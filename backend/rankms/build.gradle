@@ -57,6 +57,9 @@ dependencies {
 
     //mongodb
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+//    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+//    implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.11.0'
+
 }
 
 dependencyManagement {

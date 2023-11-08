@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rank")
 @RestController
 public class RankController {
+
     private final RankService rankService;
 
     @GetMapping("/test")
-    public String findById(){
-        System.out.println("test");
-        rankService.test();
+    public String findById() {
+        return "true";
+    }
+
+    @GetMapping("/flourish/qkqhqkqh")
+    public String toJson() {
         return rankService.getOrderedDataAsJson();
     }
 
