@@ -14,6 +14,7 @@ import { IUserInfo, IUserPixel } from "../../interfaces/browser";
 const Browser = () => {
   const dispatch = useDispatch();
   const customFetch = useFetchWithAuth();
+  const user = useSelector((state: RootState) => state.user);
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
   );
@@ -35,7 +36,7 @@ const Browser = () => {
       const resPixel = await customFetch("/user/refreshinfo");
       const pixelData: IUserPixel = await resPixel.json();
 
-      if(pixelData.githubNickname as null) {
+      if(pixelData.githubNickname === null) {
         window.alert("마지막 갱신 이후 15분이 지나지 않았습니다!")
       }
       dispatch(updateUserPixel(pixelData));
@@ -44,7 +45,7 @@ const Browser = () => {
     }
   };
   useEffect(() => {
-    if (accessToken.length) {
+    if (accessToken && user.githubNickname) {
       fetchAsync();
     }
   }, [accessToken]);
@@ -65,7 +66,7 @@ const Browser = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     }
-  }, []);
+  }, [isUrlInput]);
 
   return (
     <main className="w-screen h-screen bg-bgColor">
