@@ -20,7 +20,7 @@ const BoardBtn = () => {
           건의하기
         </Button>
 
-        <BoardInput open={open} />
+        <BoardInput open={open} setOpen={setOpen} />
       </>
     );
 }

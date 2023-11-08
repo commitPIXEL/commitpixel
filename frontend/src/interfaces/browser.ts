@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface IUserInfo {
   githubNickname: string;
   profileImage: string;
@@ -22,5 +24,5 @@ export interface IResSolvedAC {
 
 export interface IBoardInputProps {
   open: boolean;
-  type?: number;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
