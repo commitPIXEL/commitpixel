@@ -45,7 +45,7 @@ const Browser = () => {
     }
   };
   useEffect(() => {
-    if (accessToken.length > 100) {
+    if (accessToken && !user.githubNickname) {
       fetchAsync();
     }
   }, [accessToken]);
