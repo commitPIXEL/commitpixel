@@ -1,18 +1,22 @@
 package com.ssafy.realrealfinal.pixelms.api.pixel.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.realrealfinal.pixelms.api.pixel.request.AdditionalCreditReq;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
+import com.ssafy.realrealfinal.pixelms.common.exception.pixel.JsonifyException;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
 import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.TreeMap;
 import javax.imageio.ImageIO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -30,7 +34,7 @@ public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
     private final IdNameUtil idNameUtil;
-    private final KafkaTemplate<String, Map<String, String>> kafkaTemplate;
+    private final KafkaTemplate<String, String> rankKafkaTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
     @Value("${canvas.scale}")
@@ -77,14 +81,16 @@ public class PixelServiceImpl implements PixelService {
                     (String) prevPixelRankInfo.get(1)));
         }
 
-        Map<String, String> pixelUpdateInfo = new TreeMap<>();
-        pixelUpdateInfo.put("prevUrl", prevUrl);
-        pixelUpdateInfo.put("prevGithubNickname", prevGithubNickname);
-        pixelUpdateInfo.put("currUrl", url);
-        pixelUpdateInfo.put("currGithubNickname", githubNickname);
-        kafkaTemplate.send("pixel-update-topic", pixelUpdateInfo);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonMessage = objectMapper.writeValueAsString(
+                    Map.of("prevUrl", prevUrl, "prevGithubNickname", prevGithubNickname, "currUrl", url, "currGithubNickname", githubNickname));
+            rankKafkaTemplate.send("pixel-update-topic", jsonMessage);
+            log.info("updatePixelAndSendRank end");
+        } catch (JsonProcessingException e) {
+            throw new JsonifyException();
+        }
 
-        log.info("updatePixelAndSendRank end");
     }
 
     /**
@@ -113,7 +119,7 @@ public class PixelServiceImpl implements PixelService {
 
     /**
      * userms에서 15분 안에 또 호출했을 때 기존 값 보내주는 메서드
-     * 
+     *
      * @param providerId
      * @return
      */
