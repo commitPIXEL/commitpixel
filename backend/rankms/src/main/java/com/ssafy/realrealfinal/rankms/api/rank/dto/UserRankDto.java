@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class UserRankDto {
     private String githubNickname;
-    private Integer pixelnum;
+    private Integer pixelNum;
 }
