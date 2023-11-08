@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 import RefreshBtn from "@/components/refreshBtn";
+import { updateUrl } from "@/store/slices/userSlice";
 
 const UserInfoAccordion = () => {
   const dispatch = useDispatch();
@@ -42,8 +43,9 @@ const UserInfoAccordion = () => {
         body: JSON.stringify({ url: url }),
       });
 
-      const data: { newUrl: string } = await resFromUser.json(); 
-      setUrl(data.newUrl);
+      const resUrl: string = await resFromUser.text(); 
+      setUrl(resUrl);
+      dispatch(updateUrl({url: resUrl}));
       window.alert("홍보 url이 변경되었습니다!");
     } catch (err) {
         setUrl("변경 예정");
