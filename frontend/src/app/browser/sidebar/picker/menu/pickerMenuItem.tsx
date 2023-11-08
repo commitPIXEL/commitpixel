@@ -1,4 +1,5 @@
 import { RootState } from "@/store";
+import { setSnackbarOff } from "@/store/slices/snackbarSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +13,7 @@ const MenuItem = ({icon, toolName}: {
   const tool = useSelector((state:RootState) => state.tool.tool);
   const isUsing = tool === toolName ? " bg-mainColor " : "";
   const handleToolClick = () => {
+    dispatch(setSnackbarOff());
     if(tool === toolName) {
       dispatch(setTool(null));
     } else {
