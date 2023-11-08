@@ -20,3 +20,7 @@ export interface IResSolvedAC {
   availablePixel: number;
 }
 
+export interface IBoardInputProps {
+  open: boolean;
+  type?: number;
+}
