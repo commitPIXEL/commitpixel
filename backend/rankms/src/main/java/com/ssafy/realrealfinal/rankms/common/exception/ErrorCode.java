@@ -11,7 +11,8 @@ public enum ErrorCode {
     UNEXPECTED_ERROR("커스텀 에러 메시지", HttpStatus.BAD_REQUEST),
 
     JSON_FAILED("FAILED TO CONVERT JSON TO VAR", HttpStatus.CONFLICT),
-    REDIS_NOT_FOUND("랭크 레디스에서 찾지 못했습니다ㅠ", HttpStatus.NOT_FOUND);
+    REDIS_NOT_FOUND("랭크 레디스에서 찾지 못했습니다ㅠ", HttpStatus.NOT_FOUND),
+    MAPPING_FAILED("FAILED WHILE MAPPING DTO/ENTITY/DOCUMENT (BACKEND)", HttpStatus.CONFLICT);
 
 
     private final String message;

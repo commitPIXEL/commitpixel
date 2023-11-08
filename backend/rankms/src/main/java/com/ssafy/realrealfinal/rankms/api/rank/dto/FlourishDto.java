@@ -11,17 +11,17 @@ public class FlourishDto {
     private Integer providerId;
     private String url;
     private String githubNickname;
-    private String githubImage;
+    private String profileImage;
     private String date;
     private Integer value;
 
     @Builder
     public FlourishDto(Integer providerId, String url, String githubNickname,
-        String githubImage, String date, Integer value) {
+        String profileImage, String date, Integer value) {
         this.providerId = providerId;
         this.url = url;
         this.githubNickname = githubNickname;
-        this.githubImage = githubImage;
+        this.profileImage = profileImage;
         this.date = date;
         this.value = value;
     }
