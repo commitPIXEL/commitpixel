@@ -8,4 +8,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByProviderId(Integer providerId);
 
     User findBySolvedAcId(String solvedAcId);
+
+    User findByGithubNickname(String nickname);
 }

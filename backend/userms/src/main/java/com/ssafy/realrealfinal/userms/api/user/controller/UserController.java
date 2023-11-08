@@ -1,5 +1,6 @@
 package com.ssafy.realrealfinal.userms.api.user.controller;
 
+import com.ssafy.realrealfinal.userms.api.user.dto.UserInfoDto;
 import com.ssafy.realrealfinal.userms.api.user.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.userms.api.user.request.BoardReq;
 import com.ssafy.realrealfinal.userms.api.user.request.UrlReq;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -125,7 +127,7 @@ public class UserController {
 
     /**
      * rank에서 feign으로 닉네임 요청
-     * 
+     *
      * @param providerId 깃허브 providerID
      * @return 닉네임
      */
@@ -135,5 +137,19 @@ public class UserController {
         String nickname = userService.getNickname(providerId);
         log.info("getNickname end: " + providerId);
         return nickname;
+    }
+
+    /**
+     * flourish mongodb 저장용 데이터 요청
+     *
+     * @param nicknameList 정보 요청할 유저 닉네임 리스트
+     * @return 유저 정보 리스트
+     */
+    @PostMapping("/info-by-nickname")
+    public List<UserInfoDto> getUserInfoByNickname(@RequestBody List<String> nicknameList) {
+        log.info("getUserInfoByNickname start " + nicknameList);
+        List<UserInfoDto> userInfoDtoList = userService.getUserInfoListByNickname(nicknameList);
+        log.info("getUserInfoByNickname end: SUCCESS");
+        return userInfoDtoList;
     }
 }
