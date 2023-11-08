@@ -23,6 +23,7 @@ const CanvasContainer = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [urlData, setUrlData] = useState<any>(null);
   const [open, setOpen] = useState(false);
+  const [isCanvasLoading, setIsCanvasLoading] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
   const device = useSelector((state: RootState) => state.device.device);
@@ -77,6 +78,8 @@ const CanvasContainer = () => {
   }, [socket, ctx]);
 
   useEffect(() => {
+    if(!ctx) return;
+    setIsCanvasLoading(true);
     const img = new Image(width, height);
     fetch("https://dev.commitpixel.com/api/pixel/image/64")
       .then((res) => res.text())
@@ -85,6 +88,7 @@ const CanvasContainer = () => {
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
+          setIsCanvasLoading(false);
         };
       })
       .catch((err) => {
@@ -185,7 +189,6 @@ const CanvasContainer = () => {
 
       const onFingerDown = (e: PointerEvent) => {
         if(e.type === "mouse" || !user) return;
-        // e.preventDefault();
         e.stopPropagation();
         if(device !== "mobile" || !e.target) {
           return;
@@ -290,6 +293,9 @@ const CanvasContainer = () => {
               </div>
             </div>
           </div>
+          {isCanvasLoading ? <div className="w-full h-full absolute flex justify-center items-center">
+            <CircularProgress />
+          </div> : null}
           <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
         </div>
       )}
