@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/rank")
@@ -33,4 +34,15 @@ public class RankController {
         log.info("getRank end: " + rankRes);
         return ResponseEntity.ok().body(rankRes);
     }
+
+    /**
+     * flourish에 넣기 위해 mongodb에서 읽어서 맞는 json 형태로 리턴해주는 개발자용 api
+     *
+     * @return json String
+     */
+    @GetMapping("/flourish/qkqhqkqh")
+    public String toJson() {
+        return rankService.getOrderedDataAsJson();
+    }
+
 }
