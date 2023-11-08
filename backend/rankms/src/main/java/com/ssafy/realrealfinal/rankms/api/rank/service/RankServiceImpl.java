@@ -17,10 +17,9 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import com.ssafy.realrealfinal.rankms.common.util.MongoDBUtil;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,9 +29,11 @@ public class RankServiceImpl implements RankService {
     private final AuthFeignClient authFeignClient;
     private final UserFeignClient userFeignClient;
     private final RedisUtil redisUtil;
-    private final KafkaTemplate<String, String> kafkaTemplate;
     private final String GITHUBNICKNAME = "githubNickname";
     private final String URL = "url";
+
+    private final MongoDBUtil mongoDBUtil;
+
 
     /**
      * PixelMs에서 픽셀이 하나 찍힐때마다 Ranking의 변동을 위해 kafka로 받는 메서드
@@ -78,8 +79,8 @@ public class RankServiceImpl implements RankService {
     /**
      * Redis 에 저장된 랭킹들을 가공하여 전달하는 메서드
      *
-     * @param accessToken
-     * @return
+     * @param accessToken jwt token from front
+     * @return RankRes 랭킹 정보들
      */
     @Override
     public RankRes getRankFromRedis(String accessToken) {
@@ -120,4 +121,31 @@ public class RankServiceImpl implements RankService {
         log.info("getRankFromRedis end: " + rankRes);
         return rankRes;
     }
+
+
+    /**
+     * flourish에 넣기 위해 mongodb에서 읽어서 맞는 json 형태로 리턴해주는 개발자용 api
+     *
+     * @return flourish 용 json string
+     */
+    @Override
+    public String getOrderedDataAsJson() {
+        log.info("getOrderedDataAsJson start");
+        List<Map<String, Object>> orderedJsonList = mongoDBUtil.getOrderedData();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String jsonString = objectMapper.writeValueAsString(orderedJsonList);
+            log.info("getOrderedDataAsJson end: SUCCESS");
+            return jsonString;
+        } catch (Exception e) {
+            log.warn("getOrderedDataAsJson mid: FAILED");
+            return e.getMessage();
+        }
+    }
+
+    //TODO: 닉네임 바뀔 때 Redis 닉네임 변경해주는 메서드 필요
+
+
 }
+
