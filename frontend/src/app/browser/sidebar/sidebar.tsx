@@ -1,9 +1,10 @@
 import LoginBtn from "@/components/loginBtn";
-import BoardBtn from "@/components/boardBtn"
+import BoardBtn from "@/components/boardBtn";
 import PickerAccordion from "./accordion/pickerAccordion";
 import UserInfoAccordion from "./accordion/userInfoAccordion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import KakaoShare from "@/components/kakaoShare";
 
 const Sidebar = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -15,6 +16,7 @@ const Sidebar = () => {
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
       {/* <RankAccordion title="Pixel 랭킹" type="pixel" /> */}
       <BoardBtn />
+      <KakaoShare />
     </div>
   ) : (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
@@ -25,6 +27,7 @@ const Sidebar = () => {
       {/* <BoardBtn /> */}
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
       {/* <RankAccordion title="Pixel 랭킹" type="pixel" /> */}
+      <KakaoShare />
     </div>
   );
 };
