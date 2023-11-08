@@ -290,7 +290,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 새로고침 때 solvedAc 새로 푼 문제수만 가져오기
      *
-     * @param providerId
+     * @param providerId 깃허브 provider id
      * @return 새로 푼 문제수 (차이)
      */
     public Integer solvedAcNewSolvedProblem(Integer providerId) {
