@@ -55,9 +55,8 @@ const UserInfoAccordion = () => {
       }
       setUrl(resUrl);
     } catch (err) {
-        setUrl("변경 예정");
         console.error("Error:", err);
-        window.alert("인가된 url이 아닙니다!");
+        window.alert("알 수 없는 에러...");
     } finally {
       setLoading(false);
     }
@@ -130,7 +129,7 @@ const UserInfoAccordion = () => {
         )}
         <Loading open={loading} />
       </AccordionDetails>
-      <BoardInput open={open} type={1} />
+      <BoardInput open={open} setOpen={setOpen} />
     </Accordion>
   );
 };

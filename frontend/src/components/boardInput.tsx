@@ -6,12 +6,11 @@ import { useEffect, useState } from "react";
 import { IBoardInputProps } from "@/interfaces/browser";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
-const BoardInput = (props: IBoardInputProps) => {
+const BoardInput = ({open, setOpen}: IBoardInputProps) => {
 
     const customFetch = useFetchWithAuth();
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(props.open);
-    const [type, setType] = useState(props.type? props.type: 0);
+    const [type, setType] = useState(0);
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
 
