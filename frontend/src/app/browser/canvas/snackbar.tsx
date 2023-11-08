@@ -34,4 +34,7 @@ const BrowserSnackBar = memo(({ urlData }: {
   );
 });
 
+
+BrowserSnackBar.displayName = 'BrowserSnackBar';
+
 export { BrowserSnackBar };
