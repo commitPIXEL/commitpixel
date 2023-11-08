@@ -1,6 +1,6 @@
-package com.ssafy.realrealfinal.pixelms.common.model;
+package com.ssafy.realrealfinal.rankms.common.model;
 
-import com.ssafy.realrealfinal.pixelms.common.exception.ErrorCode;
+import com.ssafy.realrealfinal.rankms.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
