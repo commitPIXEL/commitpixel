@@ -49,6 +49,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    //OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+
     // kafka
     implementation 'org.springframework.kafka:spring-kafka'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
