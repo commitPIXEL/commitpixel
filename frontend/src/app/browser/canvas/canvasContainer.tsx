@@ -52,11 +52,12 @@ const CanvasContainer = () => {
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
         if (response === false) {
+          console.log("크레딧 부족!");
           alert("크레딧이 부족합니다!");
-          return;
+        } else {
+          ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
+          ctx.fillRect(x, y, 1, 1);
         }
-        ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
-        ctx.fillRect(x, y, 1, 1);
       });
     }
   }, [ctx, socket]);
