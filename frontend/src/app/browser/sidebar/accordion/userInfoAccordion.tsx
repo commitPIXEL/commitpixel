@@ -92,9 +92,9 @@ const UserInfoAccordion = () => {
       />
       <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
-          <div className="flex ">
-          <div className="text-lg text-textGray">Pixel</div>
-          <RefreshBtn />
+          <div className="flex items-center gap-1">
+            <div className="text-lg text-textGray h-full">Pixel</div>
+            <RefreshBtn />
           </div>
           <div className="flex justify-between text-textBlack">
             <div>{user.availablePixel}</div>
