@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { height, width } from "../config";
+import { apiUrl, height, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
@@ -106,7 +106,7 @@ const CanvasContainer = () => {
     if(!ctx) return;
     setIsCanvasLoading(true);
     const img = new Image(width, height);
-    fetch("https://dev.commitpixel.com/api/pixel/image/64")
+    fetch(`${apiUrl}/pixel/image/64`)
       .then((res) => res.text())
       .then((data) => {
         img.src = "data:image/png;base64," + data;

@@ -1,11 +1,9 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { apiUrl } from '@/app/browser/config';
 
 const useFetchWithAuth = () => {
   const authorization = useSelector((state: RootState) => state.authorization.authorization);
-  // const baseURL = 'http://localhost:8082'; // 로컬용
-  const baseURL = 'https://dev.commitpixel.com/api'; // 개발용
-  // const baseURL = 'https://commitpixel.com/api'; // 배포용
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const headers = {
@@ -14,7 +12,7 @@ const useFetchWithAuth = () => {
       ...(authorization !== "" ? { accesstoken: authorization } : {}),
     };
 
-    const reqURL = baseURL + url;
+    const reqURL = apiUrl + url;
 
     const response = await fetch(reqURL, {...options, headers});
     if(!response.ok) {
