@@ -82,9 +82,9 @@ export default function RootLayout({
     <html lang="ko">
       <Head>
         <meta property="og:title" content="COMMIT PIXEL" />
-        <meta property="og:description" content="commit Pixel by SSAFY 9기 자율 프로젝트 진짜_진짜_최종_팀" />
+        <meta property="og:description" content="픽셀 찍고 나만의 URL을 홍보하세요." />
         <meta property="og:image" content="https://dev.commitpixel.com/static/images/pixelFox.png" />
-        <meta property="og:url" content="https://dev.commitpixel.com" />
+        <meta property="og:url" content="https://dev.commitpixel.com/" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <body className={inter.className}>
