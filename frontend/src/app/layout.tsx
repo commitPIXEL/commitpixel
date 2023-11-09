@@ -3,6 +3,8 @@ import "./globals.css";
 import "../../public/static/fonts/style.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Head from "next/head";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -78,14 +80,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <head>
-        <script
+      <Head>
+        <meta property="og:title" content="COMMIT PIXEL" />
+        <meta property="og:description" content="commit Pixel by SSAFY 9기 자율 프로젝트 진짜_진짜_최종_팀" />
+        <meta property="og:image" content="https://dev.commitpixel.com/static/images/pixelFox.png" />
+        <meta property="og:url" content="https://dev.commitpixel.com" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <body className={inter.className}>
+        <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
           integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH"
           crossOrigin="anonymous"
-        ></script>
-      </head>
-      <body className={inter.className}>
+        ></Script>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
