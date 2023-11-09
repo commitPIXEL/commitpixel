@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface IUserInfo {
   githubNickname: string;
   profileImage: string;
@@ -6,7 +8,7 @@ export interface IUserInfo {
 }
 
 export interface IUserPixel {
-  githubNickname: string;
+  githubNickname: string | null;
   totalCredit: number;
   availablePixel: number;
 }
@@ -20,3 +22,7 @@ export interface IResSolvedAC {
   availablePixel: number;
 }
 
+export interface IBoardInputProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}

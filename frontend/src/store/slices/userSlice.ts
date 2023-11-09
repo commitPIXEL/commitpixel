@@ -30,7 +30,7 @@ const userSlice = createSlice({
     updateUserPixel: (
       state,
       action: PayloadAction<{
-        githubNickname: string;
+        githubNickname: string | null;
         totalCredit: number;
         availablePixel: number;
       }>
@@ -41,9 +41,7 @@ const userSlice = createSlice({
     connectSolvedAC: (state, action: PayloadAction<{totalCredit: number; availablePixel: number;}>) => {
       state.totalCredit = action.payload.totalCredit;
       state.availablePixel = action.payload.availablePixel;
-    },
-    pickPixel: (state, action: PayloadAction<{ availablePixel: number }>) => {
-      state.availablePixel = action.payload.availablePixel;
+      state.isSolvedACAuth = true;
     },
     resetUser: (state) => {
       state.githubNickname = "";
@@ -53,9 +51,15 @@ const userSlice = createSlice({
       state.url = "";
       state.isSolvedACAuth = false;
     },
+    updateUrl: (state, action: PayloadAction<{url: string}>) => {
+      state.url = action.payload.url;
+    },
+    setAvailablePixel: (state, action) => {
+      state.availablePixel = action.payload;
+    },
   },
 });
 
-export const { getUserInfo, updateUserPixel, pickPixel, resetUser, connectSolvedAC } =
+export const { getUserInfo, updateUserPixel, resetUser, connectSolvedAC, setAvailablePixel, updateUrl } =
   userSlice.actions;
 export default userSlice.reducer;

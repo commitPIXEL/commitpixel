@@ -2,13 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { height, width } from "../config";
+import { apiUrl, height, width } from "../config";
 import Panzoom from "panzoom";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { rgbToHex } from "../utils";
 import { BrowserSnackBar } from "./snackbar";
 import { CircularProgress } from '@mui/material';
+import { setAvailablePixel } from "@/store/slices/userSlice";
+import { setSnackbarOff, setSnackbarOpen } from "@/store/slices/snackbarSlice";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -21,17 +23,27 @@ const CanvasContainer = () => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [urlData, setUrlData] = useState<any>(null);
-  const [open, setOpen] = useState(false);
+  const [isCanvasLoading, setIsCanvasLoading] = useState(false);
   const color = useSelector((state:RootState) => state.color.color);
   const tool = useSelector((state:RootState) => state.tool.tool);
   const device = useSelector((state: RootState) => state.device.device);
   const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
   const canvasContainer = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.user);
+  const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
 
+  const handleIsPixelSuccess = useCallback((response: boolean, r: number, g: number, b: number, x: number, y: number) => {
+    if(!ctx) {
+      return;
+    }
+    if (response) {
+      ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }, [ctx]);
 
   // 픽셀 그리기
   const setPixel = useCallback((
@@ -47,42 +59,63 @@ const CanvasContainer = () => {
   ) => {
     if(ctx && socket) {
       ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
+      ctx.fillRect(x, y, 1, 1);
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
-        // CONSOLE: 테스트용 console
-        console.log(response);
-        if (response === false) {
-          alert("크레딧이 부족합니다!");
-          return;
-        }
-        ctx.fillRect(x, y, 1, 1);
+        handleIsPixelSuccess(response, color.r, color.g, color.b, x, y);
       });
+      return socket.off("isPixelSuccess", handleIsPixelSuccess);
     }
   }, [ctx, socket]);
+
+  const handlePixel = useCallback((pixel: any) => {
+    if(!ctx) return;
+    const [x, y, r, g, b] = pixel;
+    ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
+    ctx.fillRect(x, y, 1, 1);
+  }, [ctx]);
+
+  const handleUrl = useCallback((urlData: any) => {
+    setUrlData(urlData);
+  }, []);
+
+  const handleAvailableCredit = useCallback((availablePixel: number) => {
+    dispatch(setAvailablePixel(availablePixel));
+  }, [dispatch]);
 
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
       socket.on("pixel", (pixel) => {
-        const [x, y, r, g, b] = pixel;
-        ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
-        ctx.fillRect(x, y, 1, 1);
+        handlePixel(pixel);
       });
       socket.on("url", (urlData) => {
-        setUrlData(urlData);
+        handleUrl(urlData);
       });
+      socket.on("availableCredit", (availablePixel) => {
+        handleAvailableCredit(availablePixel);
+      });
+
+      return () => {
+        socket.off("pixel", handlePixel);
+        socket.off("url", handleUrl);
+        socket.off("availableCredit", handleAvailableCredit);
+      };
     }
   }, [socket, ctx]);
 
   useEffect(() => {
+    if(!ctx) return;
+    setIsCanvasLoading(true);
     const img = new Image(width, height);
-    fetch("https://dev.commitpixel.com/api/pixel/image/64")
+    fetch(`${apiUrl}/pixel/image/64`)
       .then((res) => res.text())
       .then((data) => {
         img.src = "data:image/png;base64," + data;
         img.crossOrigin = "Anonymouse";
         img.onload = () => {
           ctx?.drawImage(img, 0, 0);
+          setIsCanvasLoading(false);
         };
       })
       .catch((err) => {
@@ -149,9 +182,14 @@ const CanvasContainer = () => {
         }
         const [x, y] = [e.offsetX - 1, e.offsetY - 1];
         if(tool === null || tool === undefined) {
-          socket?.emit("url", [x, y]);
-          return;
-        } 
+          if(!isSnackbarOpen) {
+            socket?.emit("url", [x, y]);
+            dispatch(setSnackbarOpen());
+            return;
+          } else {
+            dispatch(setSnackbarOff());
+          }
+        }
         let r, g, b;
         if(tool == "painting") {
           panzoomInstance?.pause();
@@ -175,15 +213,18 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        if (tool === null && e.button !== 2) {
-          setOpen(true);
-        } 
+        // if(isSnackbarOpen && tool === null && e.button !== 2) {
+        //   dispatch(setSnackbarOff());
+        //   return;
+        // }
+        // if (!isSnackbarOpen && tool === null && e.button !== 2) {
+        //   dispatch((setSnackbarOpen()));
+        // } 
         panzoomInstance.resume();
       };
 
       const onFingerDown = (e: PointerEvent) => {
         if(e.type === "mouse" || !user) return;
-        // e.preventDefault();
         e.stopPropagation();
         if(device !== "mobile" || !e.target) {
           return;
@@ -223,7 +264,7 @@ const CanvasContainer = () => {
           return;
         }
         if (tool === null || tool === undefined) {
-          setOpen(true);
+          dispatch(setSnackbarOpen());
         }
         panzoomInstance.resume();
       }
@@ -246,11 +287,7 @@ const CanvasContainer = () => {
         wrapper.removeEventListener("mouseup", onMouseUp);
       };
     }
-  }, [color, setPixel, tool, panzoomInstance, rgbToHex]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  }, [color, setPixel, tool, panzoomInstance, rgbToHex, isSnackbarOpen]);
 
   return (
     <div className={device === "mobile" ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
@@ -274,7 +311,7 @@ const CanvasContainer = () => {
           { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
           <div
             className="overflow-hidden w-full h-full">
-            <div className="w-max" ref={ref}>
+            <div className="w-max cursor-pointer" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas
                   id="canvas"
@@ -288,7 +325,10 @@ const CanvasContainer = () => {
               </div>
             </div>
           </div>
-          <BrowserSnackBar open={open} handleClose={handleClose} urlData={urlData} />
+          {isCanvasLoading ? <div className="w-full h-full absolute flex justify-center items-center">
+            <CircularProgress />
+          </div> : null}
+          { isSnackbarOpen ? <BrowserSnackBar urlData={urlData} /> : null }
         </div>
       )}
     </div>

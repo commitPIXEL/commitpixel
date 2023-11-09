@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/slices/authorizationSlice";
+import { apiUrl } from "@/app/browser/config";
 
 export default function LoginHandler() {
   const dispatch = useDispatch();
@@ -12,12 +13,9 @@ export default function LoginHandler() {
     const code = new URL(window.location.href).searchParams.get("code");
 
     if (code) {
-      // axios.get(`http://localhost:8080/auth/login/github?code=${code}`) // 로컬용
       axios
-        .get(`https://dev.commitpixel.com/api/auth/login/github?code=${code}`) // 배포용
+        .get(`${apiUrl}/auth/login/github?code=${code}`)
         .then((res) => {
-          console.log(res);
-          console.log(res.headers);
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
             dispatch(login(accesstoken));
