@@ -10,25 +10,26 @@ const BrowserSnackBar = memo(({ urlData }: {
     url: string,
   },
 }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
-  if(!urlData?.url && !urlData?.githubNickname) {
-    dispatch(setSnackbarOff());
-    return;
-  }
+  // if(!urlData?.url && !urlData?.githubNickname) {
+  //   console.log("snackbar is shut");
+  //   dispatch(setSnackbarOff());
+  //   return;
+  // }
 
   return (
       <Snackbar open={isSnackbarOpen}>
         <div className="bg-mainColor rounded p-4 max-w-[1000px] h-fit break-words">
-          <div className="cursor-pointer text-lg mb-4 text-bgColor">{urlData?.githubNickname}</div>
-          <div
+          { !urlData?.githubNickname ? <div>No Pixel Data</div> : <div className="cursor-pointer text-lg mb-4 text-bgColor">{urlData?.githubNickname}</div>}
+          {!urlData?.url ? null : <div
             className="cursor-pointer text-sm"
             onClick={() => {
               window.open(urlData.url, "_blank");
             }}
           >
             {urlData?.url}
-          </div>
+          </div>}
         </div>
       </Snackbar>
   );
