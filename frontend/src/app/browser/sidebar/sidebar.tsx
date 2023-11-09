@@ -15,8 +15,8 @@ const Sidebar = () => {
       <PickerAccordion />
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
       {/* <RankAccordion title="Pixel 랭킹" type="pixel" /> */}
-      <BoardBtn />
       <KakaoShare />
+      <BoardBtn />
     </div>
   ) : (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
@@ -24,10 +24,10 @@ const Sidebar = () => {
       {/* <UserInfoAccordion /> */}
       {/* <PickerAccordion /> */}
       <LoginBtn />
-      {/* <BoardBtn /> */}
+      <KakaoShare />
       {/* <RankAccordion title="URL 랭킹" type="url" /> */}
       {/* <RankAccordion title="Pixel 랭킹" type="pixel" /> */}
-      <KakaoShare />
+      {/* <BoardBtn /> */}
     </div>
   );
 };

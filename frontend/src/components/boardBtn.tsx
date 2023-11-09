@@ -15,7 +15,7 @@ const BoardBtn = () => {
         <Button
           onClick={handleOpen}
           variant="contained"
-          className="!mt-6 rounded-lg bg-black text-white p-2 hover:bg-gray-800"
+          className="!mt-1 rounded-lg bg-black text-white p-3 hover:bg-gray-800"
         >
           건의하기
         </Button>
