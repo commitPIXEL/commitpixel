@@ -21,7 +21,7 @@ const RefreshBtn = () => {
         const pixelData: IUserPixel = await resPixel.json();
 
         if(pixelData.githubNickname === null) {
-          window.alert("마지막 갱신 이후 15분이 지나지 않았습니다!")
+          window.alert("로그인 혹은 마지막 갱신 이후 15분이 지나지 않았습니다.")
         }
         dispatch(updateUserPixel(pixelData));
       } catch (err) {
