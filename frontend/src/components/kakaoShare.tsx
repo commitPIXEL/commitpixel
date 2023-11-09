@@ -1,5 +1,9 @@
 "use client";
 
+declare const window: Window & typeof globalThis & {
+  Kakao: any;
+};
+
 const KakaoShare = ({color}: {
   color?: string,
 }) => {
