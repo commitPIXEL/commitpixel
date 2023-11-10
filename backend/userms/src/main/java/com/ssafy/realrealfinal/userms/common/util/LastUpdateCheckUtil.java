@@ -28,6 +28,7 @@ public class LastUpdateCheckUtil {
             // 로그 기록 또는 필요한 처리를 할 수 있습니다.
             log.info("getLastUpdateTime mid: 최초 가입자로 redis에 값을 저장합니다" + e);
             updateTime(providerId);
+            lastUpdateTime = redisUtil.getTimeData(String.valueOf(providerId));
         }
         return lastUpdateTime;
     }
