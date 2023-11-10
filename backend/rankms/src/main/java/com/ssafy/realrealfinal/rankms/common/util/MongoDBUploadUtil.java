@@ -29,7 +29,7 @@ public class MongoDBUploadUtil {
      * 정각과 30분마다 mongodb에 저장.
      *
      */
-    @Scheduled(cron = "0 0,30 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void mongoDBUpload() {
 
         //날짜 포맷 만들기.
