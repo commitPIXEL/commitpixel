@@ -38,6 +38,8 @@
     "ws": "^8.14.2"
   },
   "devDependencies": {
+    "@formkit/auto-animate": "^0.8.1",
+    "@tanstack/react-query": "^4.35.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-color": "^3.0.7",
