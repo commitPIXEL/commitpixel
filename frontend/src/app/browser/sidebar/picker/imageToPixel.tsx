@@ -13,12 +13,27 @@ const ImageToPixel = () => {
     let formData = new FormData();
     formData.append('image', e?.target.files[0]);
   
-    axios.post(apiUrl + "/image/convert", {
-      image: image
+    axios.post(apiUrl + "/image/convert?type=1", {
+      image: formData
+    }, {
+      responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
     }).then((res) => {
-
+      console.log(res);
+      const blob = new Blob([res.data], {type: "image/jpeg"});
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "pixeled_image.jpeg");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     }).catch((err) => {
       console.error(err);
+      alert("이미지 픽셀화 실패!");
     });
   }, []);
 
