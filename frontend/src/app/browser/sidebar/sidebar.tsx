@@ -34,7 +34,7 @@ const Sidebar = () => {
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
       <UserInfoAccordion />
       <PickerAccordion />
-      <div className=" mt-8 w-full min-h-[40px] flex justify-between items-center">
+      <div className="mb-6 w-full min-h-[40px] flex justify-between items-center">
         <ImageToPixel />
         <TimelapseModal />
       </div>
@@ -47,15 +47,15 @@ const Sidebar = () => {
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
       {/* TODO: dev 테스트 용 */}
       {/* <UserInfoAccordion /> */}
+      <LoginBtn />
       {/* <PickerAccordion /> */}
-      <div className=" mt-8 w-full min-h-[40px] flex justify-between items-center">
+      <div className="mb-6 mt-6 w-full min-h-[40px] flex justify-between items-center">
         <ImageToPixel />
         <TimelapseModal />
       </div>
-      <LoginBtn />
-      <KakaoShare />
       <RankAccordion title="URL 랭킹" type="url" data={urlRank} isLoading={isLoading} />
       <RankAccordion title="Pixel 랭킹" type="pixel" data={userRank} isLoading={isLoading} />
+      <KakaoShare />
       {/* <BoardBtn /> */}
     </div>
   );
