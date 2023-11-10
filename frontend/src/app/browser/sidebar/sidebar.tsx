@@ -15,13 +15,18 @@ import TimelapseModal from "./timelapse";
 
 const Sidebar = () => {
   const user = useSelector((state: RootState) => state.user);
+  const accesstoken = useSelector((state: RootState) => state.authorization.authorization);
   const [userRank, setUserRank] = useState<any>(null);
   const [urlRank, setUrlRank] = useState<any>(null);
   const [myRank, setMyRank] = useState<any>(null);
   const { isLoading, error } = useQuery(
     ["ranking-list"],
     async () => {
-      const response = await axios.get(apiUrl + "/rank");
+      const response = await axios.get(apiUrl + "/rank", {
+        headers: {
+          accesstoken: accesstoken
+        }
+      });
       setUrlRank(response?.data?.urlRankList);
       setUserRank(response?.data?.userRankList);
       if(response?.data?.myRank !== null && response?.data?.pixelNum) {
