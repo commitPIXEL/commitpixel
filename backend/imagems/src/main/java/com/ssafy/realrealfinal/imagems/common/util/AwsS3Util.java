@@ -1,8 +1,6 @@
 package com.ssafy.realrealfinal.imagems.common.util;
 
 import com.ssafy.realrealfinal.imagems.common.exception.image.S3Exception;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +26,6 @@ public class AwsS3Util {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${canvas.scale}")
-    private Integer SCALE;
 
     /**
      * Amazon S3에서 주어진 버킷과 파일 이름에 대한 URL 가져오기
@@ -60,21 +56,11 @@ public class AwsS3Util {
             try (InputStream inputStream = connection.getInputStream()) {
                 return ImageIO.read(inputStream);
             }
-        } catch (IOException e) { //s3 가져오기 실패하면 하얀 이미지 리턴
-            log.warn("readImageFromS3 mid: failed to fatch image from s3");
-            BufferedImage image = new BufferedImage(SCALE, SCALE, BufferedImage.TYPE_INT_RGB);
-
-            Graphics2D graphics = image.createGraphics();
-
-            // 흰색으로 전체 이미지를 채웁니다.
-            graphics.setColor(Color.WHITE);
-            graphics.fillRect(0, 0, SCALE, SCALE);
-
-            // 리소스를 해제합니다.
-            graphics.dispose();
-
-            return image;
+        } catch (IOException e) {
+            log.warn("readImageFromS3 mid: failed to fetch image from S3 - " + fileName, e);
+            return null; // 이제 예외 발생 시 null을 반환합니다.
         }
+
     }
 
     /**
