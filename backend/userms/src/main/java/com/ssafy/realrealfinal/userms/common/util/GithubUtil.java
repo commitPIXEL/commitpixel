@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,13 +33,22 @@ public class GithubUtil {
     @Value("${github.user-info-uri}")
     private String userInfoUri;
 
-    private final WebClient githubWebClient = WebClient
-        .builder()
-        .baseUrl("https://api.github.com/users")
-        .defaultHeader("Accept", "application/vnd.github.v3+json")
-        .build();
+    private WebClient githubWebClient;
 
-    // TODO: 깃허브 userInfo 얻어오고 닉네임 리턴하는 코드, 리턴 타입을 Integer가 아니라 닉네임도 포함한 새로운 dto로!
+    @PostConstruct
+    public void init() {
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+            .codecs(clientDefaultCodecsConfigurer -> {
+                clientDefaultCodecsConfigurer.defaultCodecs().maxInMemorySize(1024 * 1024); // 1MB
+            })
+            .build();
+
+        this.githubWebClient = WebClient.builder()
+            .baseUrl("https://api.github.com/users")
+            .defaultHeader("Accept", "application/vnd.github.v3+json")
+            .exchangeStrategies(strategies)
+            .build();
+    }
 
     /**
      * 깃허브 엑세스 토큰으로 깃허브의 유저 정보 요청하기 api 호출하기
