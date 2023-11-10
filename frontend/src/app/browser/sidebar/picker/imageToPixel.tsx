@@ -26,7 +26,8 @@ const ImageToPixel = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "pixeled_image.jpeg");
+      const date = new Date();
+      link.setAttribute("download", `pixeled_image_${date.toISOString().slice(0, 10)}.jpeg`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
