@@ -5,8 +5,11 @@ import com.ssafy.realrealfinal.imagems.common.exception.image.GifConvertExceptio
 import com.ssafy.realrealfinal.imagems.common.exception.image.ImageConvertException;
 import com.ssafy.realrealfinal.imagems.common.util.AwsS3Util;
 import com.ssafy.realrealfinal.imagems.common.util.GifImageUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +64,7 @@ public class ImageServiceImpl implements ImageService {
 
     /**
      * type이 1이면 64픽셀, 2면 32픽셀로 변환
-     * 
+     *
      * @param type 1,2
      * @return 픽셀 값
      */
@@ -87,7 +90,7 @@ public class ImageServiceImpl implements ImageService {
         String startFolder = twentyFourHoursAgo.format(formatter);
         String endFolder = now.format(formatter);
         //startFolder에서는 이 시간부터, endFolder에서는 이 시간까지 file 가져오기.
-        double startTime = getRoundedHoursAgo(now, 24);
+        LocalDateTime startTime = getRoundedHoursAgo(now, 24);
 
         String[] filePaths = generateFilePaths(startFolder, endFolder, startTime);
 
@@ -156,19 +159,21 @@ public class ImageServiceImpl implements ImageService {
      * @param hoursAgo 기준 시간으로부터 이전 시간
      * @return 반올림된 시간
      */
-    public static double getRoundedHoursAgo(LocalDateTime dateTime, int hoursAgo) {
+    public static LocalDateTime getRoundedHoursAgo(LocalDateTime dateTime, int hoursAgo) {
         LocalDateTime pastDateTime = dateTime.minusHours(hoursAgo);
 
         int minutes = pastDateTime.getMinute();
-        double roundedMinutes = (double) (minutes / 10) * 10; // 10분 단위로 반올림
-        double roundedHours = pastDateTime.getHour() + (roundedMinutes / 60);
+        int roundedMinutes = (minutes / 10) * 10; // 10분 단위로 반올림
+        LocalDateTime roundedDateTime = pastDateTime.withMinute(roundedMinutes).withSecond(0)
+            .withNano(0);
 
         // 새벽 1시부터 8시까지는 제외
-        if (roundedHours >= 1 && roundedHours < 8) {
-            roundedHours = 8.0;
+        if (roundedDateTime.getHour() >= 1 && roundedDateTime.getHour() < 8) {
+            roundedDateTime = roundedDateTime.withHour(8).withMinute(0);
         }
 
-        return roundedHours;
+        return roundedDateTime;
+
     }
 
     /**
@@ -179,40 +184,29 @@ public class ImageServiceImpl implements ImageService {
      * @param startTime   시작 시간
      * @return 생성된 파일 경로의 배열
      */
-    public static String[] generateFilePaths(String startFolder, String endFolder, double startTime) {
-        // 새벽 1시부터 8시까지는 7시간 * 6개 = 42개의 인덱스를 제외
-        String[] arr = new String[17 * 6];
-        int i = 0;
-        double time;
+    public static String[] generateFilePaths(String startFolder, String endFolder, LocalDateTime startTime) {
+        List<String> filePaths = new ArrayList<>();
+        LocalDateTime time = startTime;
 
-        // startFolder에서 시작 시간부터 24시까지 (새벽 1시부터 8시까지 제외)
-        for (time = startTime; time < 24; time += 0.1667) {
-            if (!(time >= 1 && time < 8)) {
-                arr[i++] = createFilePath(startFolder, time);
+        while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
+            if (!(time.getHour() >= 1 && time.getHour() < 8)) {
+                filePaths.add(createFilePath(time.getHour() < 24 ? startFolder : endFolder, time));
             }
+            time = time.plusMinutes(10);
         }
 
-        // endFolder에서 0시부터 시작 시간까지 (새벽 1시부터 8시까지 제외)
-        for (time = 0; time <= startTime; time += 0.1667) {
-            if (!(time >= 1 && time < 8)) {
-                arr[i++] = createFilePath(endFolder, time);
-            }
-        }
-
-        return arr;
+        return filePaths.toArray(new String[0]);
     }
 
     /**
      * 폴더와 시간을 기반으로 파일 경로 생성
      *
      * @param folder 경로를 생성할 폴더의 이름
-     * @param time   경로에 포함할 시간
+     * @param dateTime   경로에 포함할 시간
      * @return 생성된 파일 경로 문자열
      */
-    private static String createFilePath(String folder, double time) {
-        int hourPart = (int)time;
-        int minutePart = (int)((time - hourPart) * 60);
-        return String.format("%s/%02d.%02d.png", folder, hourPart, minutePart);
+    private static String createFilePath(String folder, LocalDateTime dateTime) {
+        return String.format("%s/%02d.%02d.png", folder, dateTime.getHour(), dateTime.getMinute());
     }
 
 }
