@@ -3,7 +3,6 @@ import "./globals.css";
 import "../../public/static/fonts/style.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Head from "next/head";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -71,6 +70,21 @@ export const metadata: Metadata = {
     "삼성청년SW아카데미",
   ],
   referrer: "origin",
+  openGraph: {
+    title: 'COMMIT PIXEL',
+    description: '픽셀 찍고 나만의 URL을 홍보하세요.',
+    url: 'https://dev.commitpixel.com',
+    siteName: 'Next.js',
+    images: [
+      {
+        url: 'https://dev.commitpixel.com/static/images/pixelFox.png',
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: 'ko_KR',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -80,19 +94,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <Head>
-        <meta property="og:title" content="COMMIT PIXEL" />
-        <meta property="og:description" content="픽셀 찍고 나만의 URL을 홍보하세요." />
-        <meta property="og:image" content="https://dev.commitpixel.com/static/images/pixelFox.png" />
-        <meta property="og:url" content="https://dev.commitpixel.com/" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <body className={inter.className}>
+      <head>
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
           integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH"
           crossOrigin="anonymous"
         ></Script>
+      </head>
+      <body className={inter.className}>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
