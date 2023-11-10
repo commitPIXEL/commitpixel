@@ -26,7 +26,7 @@ public class S3UploadUtil {
      * 이미지는 "yyyy-MM-dd" 폴더에 저장.
      * 이미지 파일의 현재 시간 (예: 12:45 -> 12.5, 00:01 -> 0.0) 이름으로 파일 저장.
      */
-    @Scheduled(cron = "0 0,30 * * * ?")
+    @Scheduled(cron = "0 0/10 8-23,0 * * ?")
     public void S3Upload() {
         log.info("S3Upload start");
         // byte[] 형태로 이미지 받아오기
@@ -46,19 +46,12 @@ public class S3UploadUtil {
         LocalDateTime now = LocalDateTime.now();
         // 저장할 폴더.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        int minutes = now.getMinute();
+        double hours = now.getHour();
+        double minutes = now.getMinute() / 10;
         // 이미지 이름
-        String fileName;
-
-        if (minutes < 30) {
-            // 정각일 때 .0을 붙여서 저장
-            fileName = String.format("%.1f", (double) now.getHour());
-        } else {
-            fileName = String.format("%.1f", now.getHour() + 0.5);
-        }
+        String fileName = String.format("%.1f", hours + (minutes / 6));
         String folderName = now.format(formatter);
         awsS3Util.uploadImage(image, folderName, fileName);
         log.info("S3Upload end: SUCCESS");
-
     }
 }
