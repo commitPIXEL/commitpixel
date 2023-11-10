@@ -14,7 +14,7 @@ const ImageToPixel = () => {
     formData.append('image', e?.target.files[0]);
   
     axios.post(apiUrl + "/image/convert?type=1", {
-      file: formData
+      "file": formData
     }, {
       responseType: "arraybuffer",
       headers: {
