@@ -75,7 +75,6 @@ public class RedisUtil {
         for (ZSetOperations.TypedTuple<String> typedTuple : resultSet) {
             sortedMap.put(typedTuple.getValue(), typedTuple.getScore().intValue());
         }
-
         return sortedMap;
     }
 
