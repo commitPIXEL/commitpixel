@@ -2,6 +2,7 @@ const RankItem = ({ rankInfo, isUrl, rank }: {
   rankInfo: {
     url: string,
     pixelNum: number,
+    githubNickname: string,
   },
   isUrl?: boolean,
   rank: number
@@ -20,7 +21,7 @@ const RankItem = ({ rankInfo, isUrl, rank }: {
     <div className="cursor-default text-textBlack w-full min-h-[40px] grid grid-cols-10 gap-4 place-content-center place-items-center">
       <div className={`place-self-start col-span-1 text-lg ${rankStyle}`}>{rank}</div>
       <div className={`w-full h-full flex items-center col-span-5 line-clamp-1 ${isUrl ? urlStyle : ""}`}>
-        { isUrl ? <a href={rankInfo.url} target="_blank">{rankInfo.url}</a> : rankInfo.url}
+        { isUrl ? <a href={rankInfo.url} target="_blank">{rankInfo.url}</a> : rankInfo.githubNickname}
       </div>
       <div className="place-self-end col-span-4 line-clamp-1 flex items-center">
         <div>{rankInfo.pixelNum}</div>
