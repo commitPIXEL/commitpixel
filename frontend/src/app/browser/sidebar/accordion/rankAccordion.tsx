@@ -13,11 +13,27 @@ const RankAccordion = ({title, type, data, isLoading}: {
   return (
     <Accordion defaultExpanded={true} className="!rounded mb-6">
       <AccordionTitle title={title} />
-      <AccordionDetails className="min-h-0 flex flex-col justify-center items-center pt-4 rounded-b" ref={animationParent} >
-        {isLoading ? <CircularProgress /> : <div className="w-full max-h-[200px] flex flex-col no-scrollbar overflow-y-auto">
-          {type === "url" ? data?.map((item, index) => <RankItem key={index} rankInfo={item} rank={index + 1} isUrl={true} />) : 
-          data?.map((item, index) => <RankItem key={index} rankInfo={item} rank={index + 1} />)}
-        </div>}
+      <AccordionDetails className="min-h-0 flex flex-col justify-center items-center pt-4 rounded-b">
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <div className="w-full max-h-[200px] no-scrollbar overflow-y-auto">
+            <div ref={animationParent} className="w-full h-full flex flex-col">
+              {type === "url"
+                ? data?.map((item, index) => (
+                    <RankItem
+                      key={index}
+                      rankInfo={item}
+                      rank={index + 1}
+                      isUrl={true}
+                    />
+                  ))
+                : data?.map((item, index) => (
+                    <RankItem key={index} rankInfo={item} rank={index + 1} />
+                  ))}
+            </div>
+          </div>
+        )}
       </AccordionDetails>
     </Accordion>
   );

@@ -1,3 +1,5 @@
+"use client"
+
 const RankItem = ({ rankInfo, isUrl, rank }: {
   rankInfo: {
     url: string,
