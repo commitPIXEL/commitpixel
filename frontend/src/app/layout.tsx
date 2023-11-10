@@ -24,6 +24,12 @@ export const metadata: Metadata = {
     { name: "김인범" },
     { name: "이예린" },
   ],
+  manifest: `${process.env.NEXT_PUBLIC_SITE_URL}manifest/manifest.json`,
+  icons: {
+    icon: `${process.env.NEXT_PUBLIC_SITE_URL}static/images/pixelFox.png`,
+    apple: `${process.env.NEXT_PUBLIC_SITE_URL}static/images/pixelFox.png`,
+  },
+  themeColor: '#FFBC00',
   generator: "Next.js",
   keywords: [
     "commit Pixel",
@@ -71,19 +77,25 @@ export const metadata: Metadata = {
   ],
   referrer: "origin",
   openGraph: {
-    title: 'COMMIT PIXEL',
-    description: '픽셀 찍고 나만의 URL을 홍보하세요.',
-    url: 'https://dev.commitpixel.com',
-    siteName: 'Next.js',
+    title: "COMMIT PIXEL",
+    description: "픽셀 찍고 나만의 URL을 홍보하세요.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}`,
+    siteName: "commit Pixel",
     images: [
       {
-        url: 'https://dev.commitpixel.com/static/images/pixelFox.png',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
         width: 800,
         height: 600,
       },
     ],
-    locale: 'ko_KR',
-    type: 'website',
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "COMMIT PIXEL",
+    description: "픽셀 찍고 나만의 URL을 홍보하세요.",
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`],
   },
 };
 
