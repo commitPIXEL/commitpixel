@@ -24,7 +24,7 @@ const KakaoShare = ({color}: {
   return (
     <>
       <button
-        className={`flex justify-around items-center space-x-4 font-bold text-bgColor ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 p-3`}
+        className={`flex justify-around items-center mb-6 space-x-4 font-bold text-bgColor ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 p-3`}
         onClick={handleKakaoShare}
       >
         <img

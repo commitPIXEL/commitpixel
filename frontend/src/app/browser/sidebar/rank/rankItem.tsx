@@ -1,5 +1,7 @@
 "use client"
 
+import { Tooltip } from "@mui/material";
+
 const RankItem = ({ rankInfo, isUrl, rank }: {
   rankInfo: {
     url: string,
@@ -23,7 +25,11 @@ const RankItem = ({ rankInfo, isUrl, rank }: {
     <div className="cursor-default text-textBlack w-full min-h-[40px] grid grid-cols-10 gap-4 place-content-center place-items-center">
       <div className={`place-self-start col-span-1 text-lg ${rankStyle}`}>{rank}</div>
       <div className={`w-full h-full flex items-center col-span-5 line-clamp-1 ${isUrl ? urlStyle : ""}`}>
-        { isUrl ? <a href={rankInfo.url} target="_blank">{rankInfo.url}</a> : rankInfo.githubNickname}
+        { isUrl ? 
+        <Tooltip title={rankInfo.url}>
+          <a href={rankInfo.url} target="_blank">{rankInfo.url}</a>
+        </Tooltip>
+        : rankInfo.githubNickname}
       </div>
       <div className="place-self-end col-span-4 line-clamp-1 flex items-center">
         <div>{rankInfo.pixelNum}</div>
