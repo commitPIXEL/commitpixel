@@ -206,7 +206,7 @@ public class ImageServiceImpl implements ImageService {
      * @return 생성된 파일 경로 문자열
      */
     private static String createFilePath(String folder, LocalDateTime dateTime) {
-        return String.format("%s/%02d.%02d.png", folder, dateTime.getHour(), dateTime.getMinute());
+        return String.format("%s/%02d.%02d", folder, dateTime.getHour(), dateTime.getMinute());
     }
 
 }

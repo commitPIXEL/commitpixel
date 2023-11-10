@@ -48,7 +48,7 @@ public class S3UploadUtil {
 
         // 이미지 이름
         DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("HH.mm");
-        String fileName = now.format(fileFormatter) + ".png";
+        String fileName = now.format(fileFormatter); // ".png" 확장자 제거
 
         awsS3Util.uploadImage(image, folderName, fileName);
         log.info("S3Upload end: SUCCESS");
