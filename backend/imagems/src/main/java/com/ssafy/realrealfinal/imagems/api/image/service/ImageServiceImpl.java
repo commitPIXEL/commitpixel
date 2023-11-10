@@ -28,12 +28,17 @@ public class ImageServiceImpl implements ImageService {
     private final AwsS3Util awsS3Util;
     private static final double INCREMENT = 0.5;
 
+    /**
+     * 이미지 픽셀화 메서드
+     *
+     * @param file
+     * @param type
+     * @return
+     */
     @Override
-    public byte[] convertImage(String accessToken, MultipartFile file, Integer type) {
+    public byte[] convertImage(MultipartFile file, Integer type) {
 
-        log.info("convertImage start: " + accessToken + type);
-
-        // TODO: 로그인 된 사용자인지 accessToken으로 확인
+        log.info("convertImage start: " + type);
 
         int pixelSize = getPixelSize(type);
         try {
@@ -54,15 +59,18 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageConvertException();
         }
     }
+
+    /**
+     * type이 1이면 64픽셀, 2면 32픽셀로 변환
+     * 
+     * @param type
+     * @return
+     */
     private int getPixelSize(Integer type) {
         if (type == 1) {
             return 64;
-        } else if (type == 2) {
-            return 32;
-        } else if (type == 3) {
-            return 16;
         } else {
-            return 100; // 기본 픽셀 크기
+            return 32;
         }
     }
 

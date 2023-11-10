@@ -21,11 +21,9 @@ public class ImageController {
     private final S3UploadUtil s3UploadUtil;
 
     @PostMapping("/convert")
-    public ResponseEntity<byte[]> convertImage(
-        @RequestHeader(name = "accesstoken") String accessToken,
-        @RequestParam(name = "file") MultipartFile file, @RequestParam Integer type) {
+    public ResponseEntity<byte[]> convertImage(@RequestParam(name = "file") MultipartFile file, @RequestParam Integer type) {
         log.info("convertImage start: " + type);
-        byte[] convertedImage = imageService.convertImage(accessToken, file, type);
+        byte[] convertedImage = imageService.convertImage(file, type);
         log.info("convertImage end: 이미지 변환 완료");
         return ResponseEntity
             .ok()
