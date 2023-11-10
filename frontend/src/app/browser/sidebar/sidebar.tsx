@@ -32,7 +32,7 @@ const Sidebar = () => {
       if(response?.data?.myRank !== null && response?.data?.pixelNum) {
         let myRank = {
           rank: response?.data?.myRank,
-          pixelNum: response?.data?.pixels,
+          pixelNum: response?.data?.pixelNum,
         };
         setMyRank(myRank);
       }
