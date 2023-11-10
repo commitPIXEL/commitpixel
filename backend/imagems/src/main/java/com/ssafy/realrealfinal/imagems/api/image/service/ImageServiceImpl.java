@@ -26,14 +26,13 @@ import java.io.IOException;
 public class ImageServiceImpl implements ImageService {
 
     private final AwsS3Util awsS3Util;
-    private static final double INCREMENT = 0.5;
 
     /**
      * 이미지 픽셀화 메서드
      *
-     * @param file
-     * @param type
-     * @return
+     * @param file 픽셀 시도 그림
+     * @param type 1,2 (크기
+     * @return 픽셀 이미지
      */
     @Override
     public byte[] convertImage(MultipartFile file, Integer type) {
@@ -63,8 +62,8 @@ public class ImageServiceImpl implements ImageService {
     /**
      * type이 1이면 64픽셀, 2면 32픽셀로 변환
      * 
-     * @param type
-     * @return
+     * @param type 1,2
+     * @return 픽셀 값
      */
     private int getPixelSize(Integer type) {
         if (type == 1) {
@@ -110,11 +109,18 @@ public class ImageServiceImpl implements ImageService {
 
             //전환해서 BufferedImage[]로 받도록 구현해야함.
             for (String fileName : filePaths) {
-                BufferedImage next = awsS3Util.readImageFromS3(fileName);
-                next = convertToIndexed(next); // 색상 모델을 조절.
-
-                // 해당 이미지를 GIF 시퀀스에 작성.
-                writer.writeToSequence(next);
+                try {
+                    BufferedImage next = awsS3Util.readImageFromS3(fileName);
+                    if (next != null) { // null 체크 추가
+                        next = convertToIndexed(next); // 색상 모델을 조절.
+                        writer.writeToSequence(next); // 해당 이미지를 GIF 시퀀스에 작성.
+                    } else {
+                        log.warn("Skipping a frame due to failed image retrieval: " + fileName);
+                    }
+                } catch (IOException e) {
+                    log.error("Error reading image from S3: " + fileName, e);
+                    // 이미지 읽기 실패 시 로깅하고 넘어감. 필요에 따라 다른 처리를 할 수도 있음.
+                }
             }
 
             // writer와 출력 스트림을 닫아 리소스를 해제.
@@ -144,7 +150,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     /**
-     * 30분 단위로 반올림
+     * 기준 시간으로부터 정해진 시간 이전을 10분 단위로 반올림
      *
      * @param dateTime 기준 LocalDateTime
      * @param hoursAgo 기준 시간으로부터 이전 시간
@@ -154,12 +160,12 @@ public class ImageServiceImpl implements ImageService {
         LocalDateTime pastDateTime = dateTime.minusHours(hoursAgo);
 
         int minutes = pastDateTime.getMinute();
-        double roundedHours;
+        double roundedMinutes = (double) (minutes / 10) * 10; // 10분 단위로 반올림
+        double roundedHours = pastDateTime.getHour() + (roundedMinutes / 60);
 
-        if (minutes < 30) {
-            roundedHours = pastDateTime.getHour();
-        } else {
-            roundedHours = pastDateTime.getHour() + 0.5;
+        // 새벽 1시부터 8시까지는 제외
+        if (roundedHours >= 1 && roundedHours < 8) {
+            roundedHours = 8.0;
         }
 
         return roundedHours;
@@ -173,17 +179,24 @@ public class ImageServiceImpl implements ImageService {
      * @param startTime   시작 시간
      * @return 생성된 파일 경로의 배열
      */
-    public static String[] generateFilePaths(String startFolder, String endFolder,
-        double startTime) {
-        String[] arr = new String[48];
+    public static String[] generateFilePaths(String startFolder, String endFolder, double startTime) {
+        // 새벽 1시부터 8시까지는 7시간 * 6개 = 42개의 인덱스를 제외
+        String[] arr = new String[17 * 6];
         int i = 0;
+        double time;
 
-        for (double time = startTime; time < 24; time += INCREMENT) {
-            arr[i++] = createFilePath(startFolder, time);
+        // startFolder에서 시작 시간부터 24시까지 (새벽 1시부터 8시까지 제외)
+        for (time = startTime; time < 24; time += 0.1667) {
+            if (!(time >= 1 && time < 8)) {
+                arr[i++] = createFilePath(startFolder, time);
+            }
         }
 
-        for (double time = INCREMENT; time <= startTime; time += INCREMENT) {
-            arr[i++] = createFilePath(endFolder, time);
+        // endFolder에서 0시부터 시작 시간까지 (새벽 1시부터 8시까지 제외)
+        for (time = 0; time <= startTime; time += 0.1667) {
+            if (!(time >= 1 && time < 8)) {
+                arr[i++] = createFilePath(endFolder, time);
+            }
         }
 
         return arr;
@@ -197,6 +210,9 @@ public class ImageServiceImpl implements ImageService {
      * @return 생성된 파일 경로 문자열
      */
     private static String createFilePath(String folder, double time) {
-        return String.format("%s/%.1f.png", folder, time);
+        int hourPart = (int)time;
+        int minutePart = (int)((time - hourPart) * 60);
+        return String.format("%s/%02d.%02d.png", folder, hourPart, minutePart);
     }
+
 }
