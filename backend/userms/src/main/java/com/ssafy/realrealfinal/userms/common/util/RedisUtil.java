@@ -21,9 +21,15 @@ public class RedisUtil {
     public Long getTimeData(String key) throws RedisNotFoundException {
         log.info("getTimeData start: " + key);
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-        Long data = Long.valueOf(valueOperations.get(key));
-        log.info("getTimeData end: " + data);
-        return data;
+        if(valueOperations.get(key) == null){
+            setTimeData(key, String.valueOf(System.currentTimeMillis()));
+            log.info("getTimeData end: " + "0");
+            return null;
+        }else{
+            Long data = Long.valueOf(valueOperations.get(key));
+            log.info("getTimeData end: " + data);
+            return data;
+        }
     }
 
     public void setTimeData(String key, String value) {
