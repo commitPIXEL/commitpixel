@@ -2,14 +2,15 @@
 
 import { Tooltip } from "@mui/material";
 
-const RankItem = ({ rankInfo, isUrl, rank }: {
+const RankItem = ({ rankInfo, isUrl, rank, isUserRank }: {
   rankInfo: {
-    url: string,
+    url?: string,
     pixelNum: number,
-    githubNickname: string,
+    githubNickname?: string,
   },
   isUrl?: boolean,
-  rank: number
+  rank: number,
+  isUserRank?: boolean,
 }) => {
   const urlStyle = "cursor-pointer text-xs";
   let rankStyle = "";
@@ -22,7 +23,7 @@ const RankItem = ({ rankInfo, isUrl, rank }: {
   }
 
   return (
-    <div className="cursor-default text-textBlack w-full min-h-[40px] grid grid-cols-10 gap-4 place-content-center place-items-center">
+    <div className={`cursor-default ${isUserRank ? "bg-[#fff39c] p-2 rounded" : ""} text-textBlack w-full min-h-[40px] grid grid-cols-10 gap-4 place-content-center place-items-center`}>
       <div className={`place-self-start col-span-1 text-lg ${rankStyle}`}>{rank}</div>
       <div className={`w-full h-full flex items-center col-span-5 line-clamp-1 ${isUrl ? urlStyle : ""}`}>
         { isUrl ? 
