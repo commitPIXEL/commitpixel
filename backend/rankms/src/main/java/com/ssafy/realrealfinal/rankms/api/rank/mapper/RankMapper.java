@@ -8,6 +8,7 @@ import com.ssafy.realrealfinal.rankms.api.rank.response.RankRes;
 import com.ssafy.realrealfinal.rankms.common.exception.rank.MapperException;
 import java.util.List;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -15,12 +16,19 @@ public interface RankMapper {
 
     RankMapper INSTANCE = Mappers.getMapper(RankMapper.class);
 
-    RankRes toRankRes(Integer myRank, Integer pixelNum, List<UserRankDto> userRankDtoList,
-        List<UrlRankDto> urlRankDtoList) throws MapperException;
+    default RankRes toRankRes(Integer myRank, Integer pixelNum, List<UserRankDto> userRankDtoList,
+        List<UrlRankDto> urlRankDtoList) throws MapperException {
+        return RankRes.builder()
+            .myRank(myRank)
+            .pixelNum(pixelNum)
+            .userRankList(userRankDtoList)
+            .urlRankList(urlRankDtoList)
+            .build();
+    }
 
-    UserRankDto touserRankDto(String nickname, Integer score) throws MapperException;
+    UserRankDto touserRankDto(String githubNickname, Integer pixelNum) throws MapperException;
 
-    UrlRankDto toUrlRankDto(String url, Integer score) throws MapperException;
+    UrlRankDto toUrlRankDto(String url, Integer pixelNum) throws MapperException;
 
     FlourishDto toFLourishDto(Integer providerId, String url, String githubNickname,
         String profileImage, String date, Integer value) throws MapperException;

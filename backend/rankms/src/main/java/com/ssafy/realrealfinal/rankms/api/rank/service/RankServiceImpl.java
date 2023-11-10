@@ -49,6 +49,8 @@ public class RankServiceImpl implements RankService {
             // Kafka 로 받은 Pixel 정보 Json 역직렬화
             JsonNode jsonNode = (new ObjectMapper()).readTree(pixelUpdateInfo);
 
+            log.info("consumeRankingEvent mid: " + jsonNode);
+
             // 이전 픽셀 정보는 Null 임을 확인해야 하기 때문에 먼저 JsonNode 형태로 사용
             JsonNode prevGithubNickname = jsonNode.get("prevGithubNickname");
             JsonNode prevUrl = jsonNode.get("prevUrl");
@@ -56,6 +58,9 @@ public class RankServiceImpl implements RankService {
             // 현재 픽셀 정보는 정상 작동시 Null 일 수가 없으므로 String 으로 사용
             String currGithubNickname = jsonNode.get("currGithubNickname").asText();
             String currUrl = jsonNode.get("currUrl").asText();
+
+            log.info("consumeRankingEvent mid: " + prevGithubNickname + " " + prevUrl + " "
+                + currGithubNickname + " " + currUrl);
 
             // 원래 픽셀이 있다면 관련값 개수 감소
             if (prevGithubNickname != null) {
@@ -100,19 +105,28 @@ public class RankServiceImpl implements RankService {
         }
         // myNickname 랭킹
         Map<String, Integer> userRankMap = redisUtil.getRankList(GITHUBNICKNAME,
-            10); // 일단 redis 에서 Map 으로 가져오고
+            20); // 일단 redis 에서 Map 으로 가져오고
         List<UserRankDto> userRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {
+            if (entry.getKey().equals("Visitor") || entry.getKey().equals("null") || entry.getValue() < 0) {
+                continue; // 오류로 인해 "Visitor"와 "null", 값이 0보다 적은 값은 랭킹에서 제외
+            }
+
             userRankDtoList.add(
                 RankMapper.INSTANCE.touserRankDto(entry.getKey(), entry.getValue()));
         }
+        userRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
         // url 랭킹
-        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 10); // 일단 redis 에서 Map 으로 가져오고
+        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 20); // 일단 redis 에서 Map 으로 가져오고
         List<UrlRankDto> urlRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : urlRankMap.entrySet()) {
+            if (entry.getKey().equals("null") || entry.getValue() < 0) {
+                continue; // 오류로 인해 "null", 값이 0보다 적은 값은 랭킹에서 제외
+            }
             urlRankDtoList.add(RankMapper.INSTANCE.toUrlRankDto(entry.getKey(), entry.getValue()));
         }
+        urlRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
         // response 로 변환
         RankRes rankRes = RankMapper.INSTANCE.toRankRes(myRank, pixelNum, userRankDtoList,
