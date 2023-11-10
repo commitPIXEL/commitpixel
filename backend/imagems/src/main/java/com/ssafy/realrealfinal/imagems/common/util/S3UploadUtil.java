@@ -21,10 +21,8 @@ public class S3UploadUtil {
     private final AwsS3Util awsS3Util;
 
     /**
-     * 이미지를 정각과 30분마다 Amazon S3에 업로드.
-     * 업로드될 이미지는 pixelFeignClient로 pixcelMS에게 현재 캔버스 상태 image로 요청.
-     * 이미지는 "yyyy-MM-dd" 폴더에 저장.
-     * 이미지 파일의 현재 시간 (예: 12:45 -> 12.5, 00:01 -> 0.0) 이름으로 파일 저장.
+     * 이미지를 정각과 30분마다 Amazon S3에 업로드. 업로드될 이미지는 pixelFeignClient로 pixcelMS에게 현재 캔버스 상태 image로 요청.
+     * 이미지는 "yyyy-MM-dd" 폴더에 저장. 이미지 파일의 현재 시간 (예: 12:45 -> 12.5, 00:01 -> 0.0) 이름으로 파일 저장.
      */
     @Scheduled(cron = "0 0/10 8-23,0 * * ?")
     public void S3Upload() {
@@ -45,12 +43,13 @@ public class S3UploadUtil {
 
         LocalDateTime now = LocalDateTime.now();
         // 저장할 폴더.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        double hours = now.getHour();
-        double minutes = now.getMinute() / 10;
+        DateTimeFormatter folderFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String folderName = now.format(folderFormatter);
+
         // 이미지 이름
-        String fileName = String.format("%.1f", hours + (minutes / 6));
-        String folderName = now.format(formatter);
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("HH.mm");
+        String fileName = now.format(fileFormatter); // ".png" 확장자 제거
+
         awsS3Util.uploadImage(image, folderName, fileName);
         log.info("S3Upload end: SUCCESS");
     }
