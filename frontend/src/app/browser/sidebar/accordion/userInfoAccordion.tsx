@@ -92,7 +92,7 @@ const UserInfoAccordion = () => {
         title={user?.githubNickname}
         profileImage={user?.profileImage}
       />
-      <AccordionDetails className="flex flex-col justify-center items-center pt-4 rounded-b">
+      <AccordionDetails className="flex flex-col justify-center items-center rounded-b">
         <div className="w-full flex justify-between items-center mb-4">
           <div className="flex items-center gap-1">
             <div className="text-lg text-textGray h-full">Pixel</div>

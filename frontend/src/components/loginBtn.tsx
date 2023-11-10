@@ -2,9 +2,9 @@
 
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-export default function loginBtn({color}: {
+const LoginBtn = ({color}: {
   color?: string,
-}) {
+}) => {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
   const redirectUrl = process.env.NEXT_PUBLIC_CALLBACK_URL;
 
@@ -17,12 +17,14 @@ export default function loginBtn({color}: {
   return (
     <>
       <button
-        className={`flex justify-around items-center space-x-4 font-bold text-bgColor p-2 ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 mb-6`}
+        className={`flex justify-around items-center space-x-4 font-bold text-bgColor ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 p-3`}
         onClick={oauthLogin}
       >
         <GitHubIcon />
-        <p>Sign up with Github</p>
+        <p className="flex-1">Sign up with Github</p>
       </button>
     </>
   );
 }
+
+export default LoginBtn;
