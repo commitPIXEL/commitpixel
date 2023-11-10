@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../config";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import CircularProgress from "@mui/material/CircularProgress";
