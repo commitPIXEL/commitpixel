@@ -108,7 +108,8 @@ public class RankServiceImpl implements RankService {
             20); // 일단 redis 에서 Map 으로 가져오고
         List<UserRankDto> userRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {
-            if (entry.getKey().equals("Visitor") || entry.getKey().equals("null") || entry.getValue() < 0) {
+            if (entry.getKey().equals("Visitor") || entry.getKey().equals("null")
+                || entry.getValue() < 0) {
                 continue; // 오류로 인해 "Visitor"와 "null", 값이 0보다 적은 값은 랭킹에서 제외
             }
 

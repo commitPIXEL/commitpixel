@@ -8,7 +8,6 @@ import com.ssafy.realrealfinal.rankms.api.rank.response.RankRes;
 import com.ssafy.realrealfinal.rankms.common.exception.rank.MapperException;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
