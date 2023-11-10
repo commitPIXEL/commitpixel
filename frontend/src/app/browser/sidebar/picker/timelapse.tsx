@@ -29,7 +29,7 @@ const Timelapse = () => {
   };
 
   return (
-    <button onClick={handleTimelapseClick} className="drop-shadow-md w-[45%] bg-mainColor rounded min-h-[40px] flex justify-center items-center" type="button">{isLoading ? <CircularProgress className="p-2" /> : "타입랩스"}</button>
+    <button onClick={handleTimelapseClick} className="drop-shadow-md w-[45%] bg-mainColor rounded min-h-[40px] flex justify-center items-center" type="button">{isLoading ? <CircularProgress className="p-2" /> : "타임랩스"}</button>
   );
 };
 
