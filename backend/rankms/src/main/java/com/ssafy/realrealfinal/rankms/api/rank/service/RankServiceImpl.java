@@ -57,6 +57,9 @@ public class RankServiceImpl implements RankService {
             String currGithubNickname = jsonNode.get("currGithubNickname").asText();
             String currUrl = jsonNode.get("currUrl").asText();
 
+            log.info("consumeRankingEvent mid: " + prevGithubNickname + " " + prevUrl + "->"
+                + currGithubNickname + " " + currUrl);
+
             // 원래 픽셀이 있다면 관련값 개수 감소
             if (prevGithubNickname != null) {
                 redisUtil.decreaseScore(GITHUBNICKNAME, prevGithubNickname.asText());
@@ -90,7 +93,7 @@ public class RankServiceImpl implements RankService {
         Integer pixelNum = null;
 
         // 토큰으로 사용자 닉네임 가져오기
-        if (accessToken != null) { // 로그인된 사용자일때
+        if (!accessToken.equals("")) { // 로그인된 사용자일때
             Integer providerId = authFeignClient.getProvideIdFromAccessToken(accessToken);
             String myNickname = userFeignClient.getNicknameByProviderId(providerId);
 
@@ -100,19 +103,30 @@ public class RankServiceImpl implements RankService {
         }
         // myNickname 랭킹
         Map<String, Integer> userRankMap = redisUtil.getRankList(GITHUBNICKNAME,
-            10); // 일단 redis 에서 Map 으로 가져오고
+            20); // 일단 redis 에서 Map 으로 가져오고
         List<UserRankDto> userRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {
+            // 오류로 인해 "Visitor"와 "null", 값이 0보다 적은 값은 랭킹에서 제외
+            if (entry.getKey().equals("Visitor") || entry.getKey().equals("null")
+                || entry.getValue() < 0) {
+                continue;
+            }
             userRankDtoList.add(
                 RankMapper.INSTANCE.touserRankDto(entry.getKey(), entry.getValue()));
         }
+        userRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
         // url 랭킹
-        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 10); // 일단 redis 에서 Map 으로 가져오고
+        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 20); // 일단 redis 에서 Map 으로 가져오고
         List<UrlRankDto> urlRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : urlRankMap.entrySet()) {
+            // 오류로 인해 "null", 값이 0보다 적은 값은 랭킹에서 제외
+            if (entry.getKey().equals("null") || entry.getValue() < 0) {
+                continue;
+            }
             urlRankDtoList.add(RankMapper.INSTANCE.toUrlRankDto(entry.getKey(), entry.getValue()));
         }
+        urlRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
         // response 로 변환
         RankRes rankRes = RankMapper.INSTANCE.toRankRes(myRank, pixelNum, userRankDtoList,
