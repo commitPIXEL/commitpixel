@@ -1,0 +1,32 @@
+{
+    "theme_color": "#f69435",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "https://dev.commitpixel.com",
+    "start_url": "/",
+    "name": "commit Pixel",
+    "short_name": "commit Pixel",
+    "description": "픽셀 찍고 나만의 URL을 홍보하세요.",
+    "icons": [
+        {
+            "src": "/manifest/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/manifest/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/manifest/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/manifest/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
