@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
@@ -91,12 +92,14 @@ public class ImageServiceImpl implements ImageService {
         String endFolder = now.format(formatter);
         //startFolder에서는 이 시간부터, endFolder에서는 이 시간까지 file 가져오기.
         LocalDateTime startTime = getRoundedHoursAgo(now, 24);
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("HH.mm");
+        String startTimeFormatted = startTime.format(fileFormatter);
+        String fullPath = startFolder + "/" + startTimeFormatted + ".png";
 
         String[] filePaths = generateFilePaths(startFolder, endFolder, startTime);
 
         // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
         try {
-            String fullPath = startFolder + "/" + startTime + ".png";
             BufferedImage first = awsS3Util.readImageFromS3(fullPath);
             first = convertToIndexed(first); // 색상 모델을 조절.
 
@@ -117,12 +120,9 @@ public class ImageServiceImpl implements ImageService {
                     if (next != null) { // null 체크 추가
                         next = convertToIndexed(next); // 색상 모델을 조절.
                         writer.writeToSequence(next); // 해당 이미지를 GIF 시퀀스에 작성.
-                    } else {
-                        log.warn("Skipping a frame due to failed image retrieval: " + fileName);
                     }
                 } catch (IOException e) {
-                    log.error("Error reading image from S3: " + fileName, e);
-                    // 이미지 읽기 실패 시 로깅하고 넘어감. 필요에 따라 다른 처리를 할 수도 있음.
+                    log.error("Error reading image from S3: " + fileName);
                 }
             }
 
@@ -190,7 +190,8 @@ public class ImageServiceImpl implements ImageService {
 
         while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
             if (!(time.getHour() >= 1 && time.getHour() < 8)) {
-                filePaths.add(createFilePath(time.getHour() < 24 ? startFolder : endFolder, time));
+                String filePath = createFilePath(time.getHour() < 24 ? startFolder : endFolder, time);
+                filePaths.add(filePath + ".png");  // ".png" 확장자 추가
             }
             time = time.plusMinutes(10);
         }
