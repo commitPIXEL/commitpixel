@@ -110,8 +110,9 @@ public class UserServiceImpl implements UserService {
 
         }
         // github 커밋 수 가져오기(마지막 업데이트 시점으로부터 지금까지의 변동 사항만)
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, githubNickname,
+        Integer commitNum = githubUtil.getCommit(githubNickname,
             lastUpdateStatus, lastUpdateTime);
+
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
         Integer additionalCredit = commitNum + solvedNum;
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
             githubNickname);
+
         // 마지막 크레딧 업데이트 시간 갱신
         lastUpdateCheckUtil.updateTime(providerId);
         log.info("refreshInfo end: " + refreshedInfoRes);
