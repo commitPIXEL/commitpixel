@@ -54,6 +54,28 @@ const PatchNote = ({ isMobile }: {
             </ul>
           </div>
         </div>
+        <div>
+          <div className="text-mainColor text-xl">ver 1.1.0</div>
+          <div className="mt-2 flex flex-col">
+            <div className="text-mainColor mb-2">- 현재 캔버스에서 가장 많은 픽셀을 차지한 사용자 랭킹</div>
+            <div className="text-mainColor mb-2">- 현재 캔버스에서 가장 많이 홍보된 URL 랭킹</div>
+            <div className="text-mainColor mb-2">- 원하는 이미지를 64픽셀로 바꿔서 참고해보세요, 이미지 픽셀화 기능</div>
+            <div className="text-mainColor mb-2">- 오늘 하루 픽셀의 변화를 볼 수 있는 타임랩스</div>
+            <div className="text-mainColor mb-2">- 카카오 공유하기 기능</div>
+          </div>
+        </div>
+        <div>
+          <div className="text-mainColor text-xl">ver 2.0.0</div>
+          <div className="mt-2 flex flex-col">
+            <div className="text-mainColor mb-2">- 오늘 하루 픽셀 변화를 볼 수 있던 타임랩스를 전체 기간 픽셀 변화를 볼 수 있는 타임랩스로 업그레이드</div>
+            <div className="text-mainColor mb-2">- 이제는 편하게 이미지 보면서 픽셀 찍기! 이미지 픽셀화 기능 이미지 트레이싱 툴로 업그레이드</div>
+            <div className="text-mainColor mb-2"> 버그 수정</div>
+            <ul className="ml-4 mb-2">
+              <li className="text-xs">No Pixel Data 문제 수정</li>
+              <li className="text-xs">랭킹에서 21위까지 보여주는 문제 수정</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
