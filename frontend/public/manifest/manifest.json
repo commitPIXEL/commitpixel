@@ -2,7 +2,7 @@
     "theme_color": "#f69435",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "https://dev.commitpixel.com",
+    "scope": "",
     "start_url": "/",
     "name": "commit Pixel",
     "short_name": "commit Pixel",
