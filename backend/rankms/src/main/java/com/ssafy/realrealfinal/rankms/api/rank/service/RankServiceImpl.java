@@ -101,9 +101,10 @@ public class RankServiceImpl implements RankService {
             myRank = redisUtil.getRank(GITHUBNICKNAME, myNickname);
             pixelNum = redisUtil.getMemberScore(GITHUBNICKNAME, myNickname);
         }
-        // myNickname 랭킹
+
+        // myNickname 랭킹, 넉넉하게 25개 가져오고 20개만 전달
         Map<String, Integer> userRankMap = redisUtil.getRankList(GITHUBNICKNAME,
-            20); // 일단 redis 에서 Map 으로 가져오고
+            24); // 일단 redis 에서 Map 으로 가져오고
         List<UserRankDto> userRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {
             // 오류로 인해 "Visitor"와 "null", 값이 0보다 적은 값은 랭킹에서 제외
@@ -113,11 +114,16 @@ public class RankServiceImpl implements RankService {
             }
             userRankDtoList.add(
                 RankMapper.INSTANCE.touserRankDto(entry.getKey(), entry.getValue()));
+
+            // 20개만 담아 보내기
+            if (userRankDtoList.size() == 20) {
+                break;
+            }
         }
         userRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
-        // url 랭킹
-        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 20); // 일단 redis 에서 Map 으로 가져오고
+        // url 랭킹, 넉넉하게 25개 가져오고 20개만 전달
+        Map<String, Integer> urlRankMap = redisUtil.getRankList(URL, 24); // 일단 redis 에서 Map 으로 가져오고
         List<UrlRankDto> urlRankDtoList = new ArrayList<>(); // List 변환
         for (Map.Entry<String, Integer> entry : urlRankMap.entrySet()) {
             // 오류로 인해 "null", 값이 0보다 적은 값은 랭킹에서 제외
@@ -125,6 +131,11 @@ public class RankServiceImpl implements RankService {
                 continue;
             }
             urlRankDtoList.add(RankMapper.INSTANCE.toUrlRankDto(entry.getKey(), entry.getValue()));
+
+            // 20개만 담아 보내기
+            if (urlRankDtoList.size() == 20) {
+                break;
+            }
         }
         urlRankDtoList.sort((o1, o2) -> o2.getPixelNum().compareTo(o1.getPixelNum()));
 
