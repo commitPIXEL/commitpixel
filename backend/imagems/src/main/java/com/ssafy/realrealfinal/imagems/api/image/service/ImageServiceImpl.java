@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
@@ -138,6 +137,77 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public byte[] getAllGif() {
+        log.info("getAllGif start");
+        String fullPath = "2023-11-09/12.0.png";
+
+        String[] filePaths = {
+            "2023-11-09/12.0.png",
+            "2023-11-09/12.5.png",
+            "2023-11-09/13.0.png",
+            "2023-11-09/13.5.png",
+            "2023-11-09/14.0.png",
+            "2023-11-09/14.5.png",
+            "2023-11-09/15.0.png",
+            "2023-11-09/15.5.png",
+            "2023-11-09/17.0.png",
+            "2023-11-10/9.0.png",
+            "2023-11-10/10.5.png",
+            "2023-11-10/12.0.png",
+            "2023-11-10/14.0.png",
+            "2023-11-10/14.5.png",
+            "2023-11-10/15.0.png",
+            "2023-11-10/15.5.png",
+            "2023-11-10/16.5.png",
+            "2023-11-10/18.0.png",
+            "2023-11-13/8.0.png",
+            "2023-11-13/9.0.png",
+            "2023-11-13/9.5.png",
+            "2023-11-13/10.0.png",
+            "2023-11-13/11.0.png",
+            "2023-11-13/11.5.png",
+            "2023-11-13/12.5.png",
+        };
+
+        // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
+        try {
+            BufferedImage first = awsS3Util.readImageFromS3(fullPath);
+            first = convertToIndexed(first); // 색상 모델을 조절.
+
+            // ByteArrayOutputStream을 생성. 이미지 데이터를 메모리에 저장.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageOutputStream output = new MemoryCacheImageOutputStream(baos);
+
+            // GifImageUtil 객체를 생성. 이 객체는 GIF 이미지 시퀀스를 작성하는 데 사용됨.
+            GifImageUtil writer = new GifImageUtil(output, first.getType(), 250, true);
+
+            // 첫 번째 이미지를 GIF 시퀀스에 작성.
+            writer.writeToSequence(first);
+
+            //전환해서 BufferedImage[]로 받도록 구현해야함.
+            for (String fileName : filePaths) {
+
+                BufferedImage next = awsS3Util.readImageFromS3(fileName);
+                if (next != null) { // null 체크 추가
+                    next = convertToIndexed(next); // 색상 모델을 조절.
+                    writer.writeToSequence(next); // 해당 이미지를 GIF 시퀀스에 작성.
+                }
+
+            }
+
+            // writer와 출력 스트림을 닫아 리소스를 해제.
+            writer.close();
+            output.close();
+
+            byte[] gifBytes = baos.toByteArray(); // ByteArrayOutputStream에서 바이트 배열을 얻음.
+            log.info("getAllGif end: SUCCESS");
+            return gifBytes;
+        } catch (Exception e) {
+            throw new GifConvertException();
+        }
+    }
+
 
     /**
      * BufferedImage를 INDEXED 이미지로 변환
@@ -184,13 +254,15 @@ public class ImageServiceImpl implements ImageService {
      * @param startTime   시작 시간
      * @return 생성된 파일 경로의 배열
      */
-    public static String[] generateFilePaths(String startFolder, String endFolder, LocalDateTime startTime) {
+    public static String[] generateFilePaths(String startFolder, String endFolder,
+        LocalDateTime startTime) {
         List<String> filePaths = new ArrayList<>();
         LocalDateTime time = startTime;
 
         while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
             if (!(time.getHour() >= 1 && time.getHour() < 8)) {
-                String filePath = createFilePath(time.getHour() < 24 ? startFolder : endFolder, time);
+                String filePath = createFilePath(time.getHour() < 24 ? startFolder : endFolder,
+                    time);
                 filePaths.add(filePath + ".png");  // ".png" 확장자 추가
             }
             time = time.plusMinutes(10);
@@ -202,8 +274,8 @@ public class ImageServiceImpl implements ImageService {
     /**
      * 폴더와 시간을 기반으로 파일 경로 생성
      *
-     * @param folder 경로를 생성할 폴더의 이름
-     * @param dateTime   경로에 포함할 시간
+     * @param folder   경로를 생성할 폴더의 이름
+     * @param dateTime 경로에 포함할 시간
      * @return 생성된 파일 경로 문자열
      */
     private static String createFilePath(String folder, LocalDateTime dateTime) {

@@ -8,4 +8,5 @@ public interface ImageService {
 
     byte[] getGif();
 
+    byte[] getAllGif();
 }
