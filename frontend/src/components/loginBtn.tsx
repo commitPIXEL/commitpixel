@@ -9,7 +9,7 @@ const LoginBtn = ({color}: {
   const redirectUrl = process.env.NEXT_PUBLIC_CALLBACK_URL;
 
   const oauthLogin = () => {
-    const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=repo%20read:user`;
+    const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}`;
 
     window.location.href = githubURL;
   };
