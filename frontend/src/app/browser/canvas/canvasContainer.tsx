@@ -60,11 +60,15 @@ const CanvasContainer = () => {
       ctx.fillRect(x, y, 1, 1);
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
-        if(response) {
+        console.log(response);
+        if(response !== false) {
+          console.log("response가 true입니다.");
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
         }
       });
-      return socket.off("isPixelSuccess", handleIsPixelSuccess);
+      return () => {
+        socket.off("isPixelSuccess", handleIsPixelSuccess);
+      } 
     }
   }, [ctx, socket]);
 
