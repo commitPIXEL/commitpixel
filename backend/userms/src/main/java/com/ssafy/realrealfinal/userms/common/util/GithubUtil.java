@@ -90,13 +90,12 @@ public class GithubUtil {
 
 
     /**
-     * @param githubAccessToken 깃허브 토큰
      * @param githubNickname    깃허브 닉네임
      * @param lastUpdateStatus  마지막 업데이트 상태
      * @param lastUpdateTime    마지막 업데이트 일시
      * @return 커밋 수
      */
-    public Integer getCommit(String githubAccessToken, String githubNickname,
+    public Integer getCommit(String githubNickname,
                              Integer lastUpdateStatus,
                              Long lastUpdateTime) {
 
@@ -110,7 +109,6 @@ public class GithubUtil {
                 .path("/{githubNickname}/events")
                 .queryParam("per_page", 100)
                 .build(githubNickname))
-            .header("Authorization", "Bearer " + githubAccessToken)
             .retrieve()
             .bodyToMono(JsonNode.class);
 
