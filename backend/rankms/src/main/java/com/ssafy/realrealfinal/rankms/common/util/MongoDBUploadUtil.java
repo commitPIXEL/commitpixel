@@ -26,8 +26,7 @@ public class MongoDBUploadUtil {
 
 
     /**
-     * 정각과 30분마다 mongodb에 저장.
-     *
+     * 정각부터 10분마다 mongodb에 저장.
      */
     @Scheduled(cron = "0 0/10 * * * ?")
     public void mongoDBUpload() {
@@ -41,7 +40,7 @@ public class MongoDBUploadUtil {
         FlourishDto startData = RankMapper.INSTANCE.toFLourishDto(0, "", "", "", time, 0);
         flourishDtoList.add(startData);
         Map<String, Integer> userRankMap = redisUtil.getRankList(GITHUBNICKNAME,
-            10);
+            -1);
         List<String> nicknameList = new ArrayList<>();
         List<Integer> pixelValueList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {

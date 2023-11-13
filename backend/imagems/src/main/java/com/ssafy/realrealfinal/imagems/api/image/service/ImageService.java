@@ -4,8 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
 
-    byte[] convertImage(String accessToken, MultipartFile file, Integer type);
+    byte[] convertImage(MultipartFile file, Integer type);
 
     byte[] getGif();
 
+    byte[] getAllGif();
 }
