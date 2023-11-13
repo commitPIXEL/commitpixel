@@ -143,7 +143,7 @@ public class RankServiceImpl implements RankService {
         RankRes rankRes = RankMapper.INSTANCE.toRankRes(myRank, pixelNum, userRankDtoList,
             urlRankDtoList);
 
-        log.info("getRankFromRedis end: " + rankRes);
+        log.info("getRankFromRedis end");
         return rankRes;
     }
 
