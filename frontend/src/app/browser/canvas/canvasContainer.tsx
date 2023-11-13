@@ -56,13 +56,9 @@ const CanvasContainer = () => {
     userId: string
   ) => {
     if(ctx && socket) {
-      ctx.fillStyle = `rgba(${color.r},${color.g}, ${color.b}, 255)`;
-      ctx.fillRect(x, y, 1, 1);
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
-        console.log(response);
-        if(response !== false) {
-          console.log("response가 true입니다.");
+        if(response) {
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
         }
       });
