@@ -61,11 +61,11 @@ public class ImageController {
             .body(gifBytes);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        log.info("test start");
-        s3UploadUtil.S3Upload();
-        log.info("test end");
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/test")
+//    public ResponseEntity<?> test() {
+//        log.info("test start");
+//        s3UploadUtil.S3Upload();
+//        log.info("test end");
+//        return ResponseEntity.ok().build();
+//    }
 }
