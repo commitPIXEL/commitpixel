@@ -28,7 +28,7 @@ public class RedisUtil {
     private final StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 순위를 가져오는 메서드 우리는 nickname 기준으로 자신의 순위를 가져옴
+     * 순위를 가져오는 메서드. 우리는 nickname 기준으로 자신의 순위를 가져옴
      *
      * @param key    "githubNickname" 문자열
      * @param member githubNickname 값
@@ -45,7 +45,7 @@ public class RedisUtil {
     }
 
     /**
-     * score를 가져오는 메서드 우리는 nickname 기준으로 자신의 차지 픽셀개수를 가져옴
+     * score를 가져오는 메서드. 우리는 nickname 기준으로 자신의 차지 픽셀개수를 가져옴
      *
      * @param key    "githubNickname"
      * @param member githubNickname 값
@@ -61,7 +61,7 @@ public class RedisUtil {
     }
 
     /**
-     * 상위 [range]개의 member와 score를 정렬된 상태인 Map으로 반환하는 함수
+     * 상위 [range]+1개의 member와 score를 정렬된 상태인 Map으로 반환하는 함수
      *
      * @param key   "githubNickname", "url"
      * @param range return할 데이터 개수, 상위 N개
