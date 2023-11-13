@@ -35,7 +35,7 @@ const SolvedacBtn = () => {
   };
 
   const handleSubmit = async () => {
-    if (id === "" || id.trim().length === 0) {
+    if (id.trim().length === 0) {
         window.alert("ID를 입력해주세요!");
         return;
     }
