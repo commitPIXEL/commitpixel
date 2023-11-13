@@ -28,7 +28,6 @@ public class ImageController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.IMAGE_JPEG)
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=pixelated-image.jpg")
             .body(convertedImage);
     }
 
