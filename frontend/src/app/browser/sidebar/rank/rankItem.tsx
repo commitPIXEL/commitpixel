@@ -14,6 +14,16 @@ const RankItem = ({ rankInfo, isUrl, rank, isUserRank }: {
 }) => {
   const urlStyle = "cursor-pointer text-xs";
   let rankStyle = "";
+  let rankUrl = rankInfo.url;
+
+  if(rankUrl?.includes("https://")) {
+    rankUrl = rankUrl.substring(rankUrl?.indexOf("https://") + "https://".length);
+  }
+
+  if(rankUrl?.includes("http://")) {
+    rankUrl = rankUrl.substring(rankUrl?.indexOf("http://") + "http://".length);
+  }
+
   if(rank === 1) {
     rankStyle = "text-[#FFCA10]";
   } else if(rank === 2) {
@@ -28,7 +38,7 @@ const RankItem = ({ rankInfo, isUrl, rank, isUserRank }: {
       <div className={`w-full h-full flex items-center col-span-5 line-clamp-1 ${isUrl ? urlStyle : ""}`}>
         { isUrl ? 
         <Tooltip title={rankInfo.url}>
-          <a href={rankInfo.url} target="_blank">{rankInfo.url}</a>
+          <a href={rankInfo.url} target="_blank">{ rankUrl }</a>
         </Tooltip>
         : rankInfo.githubNickname}
       </div>
