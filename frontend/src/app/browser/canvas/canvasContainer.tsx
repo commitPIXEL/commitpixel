@@ -62,6 +62,7 @@ const CanvasContainer = () => {
       ctx.fillRect(x, y, 1, 1);
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
+        console.log(response);
         handleIsPixelSuccess(response, color.r, color.g, color.b, x, y);
       });
       return socket.off("isPixelSuccess", handleIsPixelSuccess);
