@@ -135,7 +135,7 @@ public class UserController {
     public String getNickname(@RequestParam Integer providerId) {
         log.info("getNickname start: " + providerId);
         String nickname = userService.getNickname(providerId);
-        log.info("getNickname end: " + providerId);
+        log.info("getNickname end: " + nickname);
         return nickname;
     }
 
