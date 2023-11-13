@@ -26,16 +26,16 @@ const useSocket = () => {
       
       socket.on("disconnect", (error) => {
         setSocket(undefined);
-        alert("Socket disconnected: " + error);
+        alert("소켓 연결 해제: " + error);
       });
       
       socket.on("connect_error", (error) => {
         setSocket(undefined);
-        alert("Error connecting to socket");
+        alert("소켓 연결 에러");
       });
       return socket;
     } else {
-      alert("socketUrl is empty");
+      alert("소켓 URL이 올바르지 않음");
     }
   }
     
