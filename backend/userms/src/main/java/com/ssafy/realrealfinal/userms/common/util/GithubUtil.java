@@ -152,14 +152,7 @@ public class GithubUtil {
             .count()
             // 최근 90일 이내 아무런 이벤트가 없다면 0 리턴
             .defaultIfEmpty(0L)
-            .map(count -> {
-                int countAsInt = count.intValue(); // Long을 Integer로 변환
-                if (lastUpdateStatus == 0) { // 최초 사용자라면 500을 추가
-                    return countAsInt + 500;
-                } else {
-                    return countAsInt;
-                }
-            })
+            .map(Long::intValue)
             .block();
     }
 }
