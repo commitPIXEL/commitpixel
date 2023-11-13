@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @ToString
-@Document(collection = "${spring.data.mongodb.collection}")
+@Document(collection = "flourish")
 public class Flourish {
 
     @Id
