@@ -35,14 +35,12 @@ const CanvasContainer = () => {
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
 
-  const handleIsPixelSuccess = useCallback((response: boolean, r: number, g: number, b: number, x: number, y: number) => {
+  const handleIsPixelSuccess = useCallback((r: number, g: number, b: number, x: number, y: number) => {
     if(!ctx) {
       return;
     }
-    if (response) {
-      ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
-      ctx.fillRect(x, y, 1, 1);
-    }
+    ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
+    ctx.fillRect(x, y, 1, 1);
   }, [ctx]);
 
   // 픽셀 그리기
@@ -62,8 +60,9 @@ const CanvasContainer = () => {
       ctx.fillRect(x, y, 1, 1);
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
-        console.log(response);
-        handleIsPixelSuccess(response, color.r, color.g, color.b, x, y);
+        if(response) {
+          handleIsPixelSuccess(color.r, color.g, color.b, x, y);
+        }
       });
       return socket.off("isPixelSuccess", handleIsPixelSuccess);
     }
