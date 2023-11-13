@@ -9,7 +9,7 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.dto.SocketClientInfo;
 import com.ssafy.realrealfinal.pixelms.api.pixel.feignClient.AuthFeignClient;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.service.PixelService;
-import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
+import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketHandler {
 
     private final PixelService pixelService;
-    private final IdNameUtil idNameUtil;
+    private final RedisUtil redisUtil;
     private final AuthFeignClient authFeignClient;
     private final SocketIOServer server;
     private final int SCALE = 512;
@@ -74,8 +74,8 @@ public class WebSocketHandler {
             providerId = authFeignClient.withQueryString(accessToken);
         }
         CLIENTS.put(client.getSessionId(), new SocketClientInfo(providerId, client));
-        // id-name 맵 업데이트
-        idNameUtil.updateMap(providerId, githubNickname);
+        // id-name redis 업데이트
+        redisUtil.setData(providerId + ":name", githubNickname);
     }
 
     /**
