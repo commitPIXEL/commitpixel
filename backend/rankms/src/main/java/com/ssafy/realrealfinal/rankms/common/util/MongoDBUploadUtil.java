@@ -40,7 +40,7 @@ public class MongoDBUploadUtil {
         FlourishDto startData = RankMapper.INSTANCE.toFLourishDto(0, "", "", "", time, 0);
         flourishDtoList.add(startData);
         Map<String, Integer> userRankMap = redisUtil.getRankList(GITHUBNICKNAME,
-            10);
+            -1);
         List<String> nicknameList = new ArrayList<>();
         List<Integer> pixelValueList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : userRankMap.entrySet()) {
