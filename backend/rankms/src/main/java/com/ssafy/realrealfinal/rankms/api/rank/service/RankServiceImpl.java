@@ -93,7 +93,7 @@ public class RankServiceImpl implements RankService {
         Integer pixelNum = null;
 
         // 토큰으로 사용자 닉네임 가져오기
-        if (!accessToken.equals("")) { // 로그인된 사용자일때
+        if (!"".equals(accessToken)) { // 로그인된 사용자일때
             Integer providerId = authFeignClient.getProvideIdFromAccessToken(accessToken);
             String myNickname = userFeignClient.getNicknameByProviderId(providerId);
 
