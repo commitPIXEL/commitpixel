@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
-            providerId, solvedCount);
+            providerId, solvedCount * 10);
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         log.info("authSolvedAc end: " + creditRes);
         return creditRes;
