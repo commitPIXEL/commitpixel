@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,12 +18,25 @@ public class RedisUtil {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    public Integer getData(String key, String type) throws RedisNotFoundException {
-        log.info("getData start: " + key + " " + type);
-        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
-        Integer data = Integer.parseInt(hashOperations.get(key, type));
-        log.info("getData end: " + data);
-        return data;
+    public Long getTimeData(String key) throws RedisNotFoundException {
+        log.info("getTimeData start: " + key);
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        if(valueOperations.get(key) == null){
+            setTimeData(key, String.valueOf(System.currentTimeMillis()));
+            log.info("getTimeData end: " + "0");
+            return null;
+        }else{
+            Long data = Long.valueOf(valueOperations.get(key));
+            log.info("getTimeData end: " + data);
+            return data;
+        }
+    }
+
+    public void setTimeData(String key, String value) {
+        log.info("setTimeData start: " + key + " " + value);
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set(key, value);
+        log.info("setTimeData end: success");
     }
 
 
