@@ -115,7 +115,14 @@ public class UserServiceImpl implements UserService {
 
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
-        Integer additionalCredit = commitNum + solvedNum;
+
+        // *10 해서 주기
+        Integer additionalCredit = (commitNum + solvedNum) * 10;
+
+        // 최초 가입자는 +500
+        if (lastUpdateStatus == 0) {
+            additionalCredit += 500;
+        }
 
         // pixelms와 feign으로 통신 후 프론트로 {totalCredit, availablePixel, githubNickname} 보내기
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
