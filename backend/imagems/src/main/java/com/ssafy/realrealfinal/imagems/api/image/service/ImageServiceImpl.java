@@ -5,8 +5,11 @@ import com.ssafy.realrealfinal.imagems.common.exception.image.GifConvertExceptio
 import com.ssafy.realrealfinal.imagems.common.exception.image.ImageConvertException;
 import com.ssafy.realrealfinal.imagems.common.util.AwsS3Util;
 import com.ssafy.realrealfinal.imagems.common.util.GifImageUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +29,18 @@ import java.io.IOException;
 public class ImageServiceImpl implements ImageService {
 
     private final AwsS3Util awsS3Util;
-    private static final double INCREMENT = 0.5;
 
+    /**
+     * 이미지 픽셀화 메서드
+     *
+     * @param file 픽셀 시도 그림
+     * @param type 1,2 (크기
+     * @return 픽셀 이미지
+     */
     @Override
-    public byte[] convertImage(String accessToken, MultipartFile file, Integer type) {
+    public byte[] convertImage(MultipartFile file, Integer type) {
 
-        log.info("convertImage start: " + accessToken + type);
-
-        // TODO: 로그인 된 사용자인지 accessToken으로 확인
+        log.info("convertImage start: " + type);
 
         int pixelSize = getPixelSize(type);
         try {
@@ -54,15 +61,18 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageConvertException();
         }
     }
+
+    /**
+     * type이 1이면 64픽셀, 2면 32픽셀로 변환
+     *
+     * @param type 1,2
+     * @return 픽셀 값
+     */
     private int getPixelSize(Integer type) {
         if (type == 1) {
             return 64;
-        } else if (type == 2) {
-            return 32;
-        } else if (type == 3) {
-            return 16;
         } else {
-            return 100; // 기본 픽셀 크기
+            return 32;
         }
     }
 
@@ -80,13 +90,15 @@ public class ImageServiceImpl implements ImageService {
         String startFolder = twentyFourHoursAgo.format(formatter);
         String endFolder = now.format(formatter);
         //startFolder에서는 이 시간부터, endFolder에서는 이 시간까지 file 가져오기.
-        double startTime = getRoundedHoursAgo(now, 24);
+        LocalDateTime startTime = getRoundedHoursAgo(now, 24);
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("HH.mm");
+        String startTimeFormatted = startTime.format(fileFormatter);
+        String fullPath = startFolder + "/" + startTimeFormatted + ".png";
 
         String[] filePaths = generateFilePaths(startFolder, endFolder, startTime);
 
         // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
         try {
-            String fullPath = startFolder + "/" + startTime + ".png";
             BufferedImage first = awsS3Util.readImageFromS3(fullPath);
             first = convertToIndexed(first); // 색상 모델을 조절.
 
@@ -102,11 +114,15 @@ public class ImageServiceImpl implements ImageService {
 
             //전환해서 BufferedImage[]로 받도록 구현해야함.
             for (String fileName : filePaths) {
-                BufferedImage next = awsS3Util.readImageFromS3(fileName);
-                next = convertToIndexed(next); // 색상 모델을 조절.
-
-                // 해당 이미지를 GIF 시퀀스에 작성.
-                writer.writeToSequence(next);
+                try {
+                    BufferedImage next = awsS3Util.readImageFromS3(fileName);
+                    if (next != null) { // null 체크 추가
+                        next = convertToIndexed(next); // 색상 모델을 조절.
+                        writer.writeToSequence(next); // 해당 이미지를 GIF 시퀀스에 작성.
+                    }
+                } catch (IOException e) {
+                    log.error("Error reading image from S3: " + fileName);
+                }
             }
 
             // writer와 출력 스트림을 닫아 리소스를 해제.
@@ -115,6 +131,77 @@ public class ImageServiceImpl implements ImageService {
 
             byte[] gifBytes = baos.toByteArray(); // ByteArrayOutputStream에서 바이트 배열을 얻음.
             log.info("getGIF end: SUCCESS");
+            return gifBytes;
+        } catch (Exception e) {
+            throw new GifConvertException();
+        }
+    }
+
+    @Override
+    public byte[] getAllGif() {
+        log.info("getAllGif start");
+        String fullPath = "2023-11-09/12.0.png";
+
+        String[] filePaths = {
+            "2023-11-09/12.0.png",
+            "2023-11-09/12.5.png",
+            "2023-11-09/13.0.png",
+            "2023-11-09/13.5.png",
+            "2023-11-09/14.0.png",
+            "2023-11-09/14.5.png",
+            "2023-11-09/15.0.png",
+            "2023-11-09/15.5.png",
+            "2023-11-09/17.0.png",
+            "2023-11-10/9.0.png",
+            "2023-11-10/10.5.png",
+            "2023-11-10/12.0.png",
+            "2023-11-10/14.0.png",
+            "2023-11-10/14.5.png",
+            "2023-11-10/15.0.png",
+            "2023-11-10/15.5.png",
+            "2023-11-10/16.5.png",
+            "2023-11-10/18.0.png",
+            "2023-11-13/8.0.png",
+            "2023-11-13/9.0.png",
+            "2023-11-13/9.5.png",
+            "2023-11-13/10.0.png",
+            "2023-11-13/11.0.png",
+            "2023-11-13/11.5.png",
+            "2023-11-13/12.5.png",
+        };
+
+        // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
+        try {
+            BufferedImage first = awsS3Util.readImageFromS3(fullPath);
+            first = convertToIndexed(first); // 색상 모델을 조절.
+
+            // ByteArrayOutputStream을 생성. 이미지 데이터를 메모리에 저장.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageOutputStream output = new MemoryCacheImageOutputStream(baos);
+
+            // GifImageUtil 객체를 생성. 이 객체는 GIF 이미지 시퀀스를 작성하는 데 사용됨.
+            GifImageUtil writer = new GifImageUtil(output, first.getType(), 250, true);
+
+            // 첫 번째 이미지를 GIF 시퀀스에 작성.
+            writer.writeToSequence(first);
+
+            //전환해서 BufferedImage[]로 받도록 구현해야함.
+            for (String fileName : filePaths) {
+
+                BufferedImage next = awsS3Util.readImageFromS3(fileName);
+                if (next != null) { // null 체크 추가
+                    next = convertToIndexed(next); // 색상 모델을 조절.
+                    writer.writeToSequence(next); // 해당 이미지를 GIF 시퀀스에 작성.
+                }
+
+            }
+
+            // writer와 출력 스트림을 닫아 리소스를 해제.
+            writer.close();
+            output.close();
+
+            byte[] gifBytes = baos.toByteArray(); // ByteArrayOutputStream에서 바이트 배열을 얻음.
+            log.info("getAllGif end: SUCCESS");
             return gifBytes;
         } catch (Exception e) {
             throw new GifConvertException();
@@ -136,25 +223,27 @@ public class ImageServiceImpl implements ImageService {
     }
 
     /**
-     * 30분 단위로 반올림
+     * 기준 시간으로부터 정해진 시간 이전을 10분 단위로 반올림
      *
      * @param dateTime 기준 LocalDateTime
      * @param hoursAgo 기준 시간으로부터 이전 시간
      * @return 반올림된 시간
      */
-    public static double getRoundedHoursAgo(LocalDateTime dateTime, int hoursAgo) {
+    public static LocalDateTime getRoundedHoursAgo(LocalDateTime dateTime, int hoursAgo) {
         LocalDateTime pastDateTime = dateTime.minusHours(hoursAgo);
 
         int minutes = pastDateTime.getMinute();
-        double roundedHours;
+        int roundedMinutes = (minutes / 10) * 10; // 10분 단위로 반올림
+        LocalDateTime roundedDateTime = pastDateTime.withMinute(roundedMinutes).withSecond(0)
+            .withNano(0);
 
-        if (minutes < 30) {
-            roundedHours = pastDateTime.getHour();
-        } else {
-            roundedHours = pastDateTime.getHour() + 0.5;
+        // 새벽 1시부터 8시까지는 제외
+        if (roundedDateTime.getHour() >= 1 && roundedDateTime.getHour() < 8) {
+            roundedDateTime = roundedDateTime.withHour(8).withMinute(0);
         }
 
-        return roundedHours;
+        return roundedDateTime;
+
     }
 
     /**
@@ -166,29 +255,31 @@ public class ImageServiceImpl implements ImageService {
      * @return 생성된 파일 경로의 배열
      */
     public static String[] generateFilePaths(String startFolder, String endFolder,
-        double startTime) {
-        String[] arr = new String[48];
-        int i = 0;
+        LocalDateTime startTime) {
+        List<String> filePaths = new ArrayList<>();
+        LocalDateTime time = startTime;
 
-        for (double time = startTime; time < 24; time += INCREMENT) {
-            arr[i++] = createFilePath(startFolder, time);
+        while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
+            if (!(time.getHour() >= 1 && time.getHour() < 8)) {
+                String filePath = createFilePath(time.getHour() < 24 ? startFolder : endFolder,
+                    time);
+                filePaths.add(filePath + ".png");  // ".png" 확장자 추가
+            }
+            time = time.plusMinutes(10);
         }
 
-        for (double time = INCREMENT; time <= startTime; time += INCREMENT) {
-            arr[i++] = createFilePath(endFolder, time);
-        }
-
-        return arr;
+        return filePaths.toArray(new String[0]);
     }
 
     /**
      * 폴더와 시간을 기반으로 파일 경로 생성
      *
-     * @param folder 경로를 생성할 폴더의 이름
-     * @param time   경로에 포함할 시간
+     * @param folder   경로를 생성할 폴더의 이름
+     * @param dateTime 경로에 포함할 시간
      * @return 생성된 파일 경로 문자열
      */
-    private static String createFilePath(String folder, double time) {
-        return String.format("%s/%.1f.png", folder, time);
+    private static String createFilePath(String folder, LocalDateTime dateTime) {
+        return String.format("%s/%02d.%02d", folder, dateTime.getHour(), dateTime.getMinute());
     }
+
 }
