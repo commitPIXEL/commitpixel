@@ -61,6 +61,30 @@ const CanvasContainer = () => {
     dispatch(setAvailablePixel(availablePixel));
   }, [dispatch]);
 
+  const resetCanvas = () => {
+    const div = ref.current;
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (div && container) {
+      const panzoom = Panzoom(div, {
+        zoomDoubleClickSpeed: 1,
+        initialZoom: initialZoom,
+      });
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
+      panzoom.moveTo(centerX, centerY);
+
+      panzoom.setMaxZoom(50);
+      panzoom.setMinZoom(0.5);
+
+      setPanzoomInstance(panzoom);
+
+      return () => {
+        panzoom.dispose();
+      };
+    }
+  };
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
@@ -102,29 +126,8 @@ const CanvasContainer = () => {
   }, [ctx]);
 
   useEffect(() => {
-    const div = ref.current;
-    const initialZoom = device === "mobile" ? 0.5 : 1;
-    const container = canvasContainer.current;
-    if (div && container) {
-      const panzoom = Panzoom(div, {
-        zoomDoubleClickSpeed: 1,
-        initialZoom: initialZoom,
-      });
-      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
-      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
-      panzoom.moveTo(centerX, centerY);
-
-      panzoom.setMaxZoom(50);
-      panzoom.setMinZoom(0.5);
-
-      setPanzoomInstance(panzoom);
-
-      return () => {
-        panzoom.dispose();
-      };
-    }
+    resetCanvas();
   }, [socket]);
-
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -277,7 +280,11 @@ const CanvasContainer = () => {
       )}
       {socket && (
         <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
-          { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
+          { device === "mobile" ? null : 
+          <div className="text-mainColor w-full text-center flex justify-center items-center">
+            <div className="mr-8">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
+            <div onClick={() => resetCanvas()} className="cursor-pointer">캔버스 원위치</div>
+          </div>}
           <div
             className="overflow-hidden w-full h-full">
             <div className="w-max cursor-pointer" ref={ref}>
