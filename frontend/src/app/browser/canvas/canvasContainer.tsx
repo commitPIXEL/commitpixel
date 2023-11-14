@@ -207,13 +207,6 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        if(isSnackbarOpen && tool === null && e.button !== 2) {
-          dispatch(setSnackbarOff());
-          return;
-        }
-        if (!isSnackbarOpen && tool === null && e.button !== 2) {
-          dispatch((setSnackbarOpen()));
-        }
         panzoomInstance.resume();
       };
 
