@@ -35,6 +35,7 @@ public class WebSocketHandler {
     private final String PIXEL = "pixel";
     private final String IS_PIXEL_SUCCESS = "isPixelSuccess";
     private final String TOO_FREQUENT = "tooFrequent";
+    private final String IS_NOT_USER = "isNotUser";
     private final String AVAILABLE_CREDIT = "availableCredit";
     private final String URL = "url";
 
@@ -63,6 +64,14 @@ public class WebSocketHandler {
     @OnConnect
     public void onConnect(SocketIOClient client) {
         log.info("New client connected: {}", client.getSessionId().toString());
+
+        String userAgent = client.getHandshakeData().getHttpHeaders().get("User-Agent");
+        if (userAgent == null && !userAgent.contains("Mozilla/5.0")) {
+            // 비브라우저 클라이언트에서 온 요청으로 간주
+            client.sendEvent(IS_NOT_USER);
+            client.disconnect();
+        }
+
 
         String accessToken = client.getHandshakeData().getSingleUrlParam("Authorization");
         // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
