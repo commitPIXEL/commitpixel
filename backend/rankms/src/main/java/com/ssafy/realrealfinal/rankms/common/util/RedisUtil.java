@@ -2,13 +2,11 @@ package com.ssafy.realrealfinal.rankms.common.util;
 
 
 import com.ssafy.realrealfinal.rankms.common.exception.rank.RedisNotFoundException;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
@@ -71,8 +69,10 @@ public class RedisUtil {
         ZSetOperations<String, String> zSetOperations = stringRedisTemplate.opsForZSet();
         Set<TypedTuple<String>> resultSet = zSetOperations.reverseRangeWithScores(key, 0L,
             range.longValue());
-        Map<String, Integer> sortedMap = new TreeMap<>(Collections.reverseOrder());
-        for (ZSetOperations.TypedTuple<String> typedTuple : resultSet) {
+
+        // Set 형태인 redis 결과물을 Map으로 변환 후 반환
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (TypedTuple<String> typedTuple : resultSet) {
             sortedMap.put(typedTuple.getValue(), typedTuple.getScore().intValue());
         }
         return sortedMap;
