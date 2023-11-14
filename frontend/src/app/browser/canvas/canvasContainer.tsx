@@ -60,6 +60,8 @@ const CanvasContainer = () => {
       socket.on("isPixelSuccess", (response) => {
         if(response) {
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
+        } else {
+          alert("크레딧이 부족합니다!");
         }
         socket.off("isPixelSuccess");
       });
