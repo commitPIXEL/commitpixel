@@ -55,7 +55,8 @@ public class AuthServiceImpl implements AuthService {
             String jwtAccessToken = jwtUtil.createAccessToken(providerId);
             saveTokens(oauthUserRes.getId().toString(), jwtRefreshToken,
                 jsonToken.getAccessToken());
-            TokenRes tokenRes = AuthMapper.INSTANCE.toTokenRes(jwtAccessToken, jwtRefreshToken,oauthUserRes.getLogin());
+            TokenRes tokenRes = AuthMapper.INSTANCE.toTokenRes(jwtAccessToken, jwtRefreshToken,
+                oauthUserRes.getLogin());
             log.info("login end: " + tokenRes);
             return tokenRes;
         } else {
