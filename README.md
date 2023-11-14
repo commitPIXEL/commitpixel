@@ -298,7 +298,7 @@ be/userms/feature/기능명
 
 ## ✔ ER 다이어그램
 
-![erd](https://lh3.google.com/u/0/d/13Is2YSI9s_SEFKFVtKivWxtR95hbKo73=w2000-h7200-iv1)
+![erd](https://lh3.google.com/u/0/d/1jgyYOiVFsOvc0vEXL-zz4f2SlCr2AsZV=w1920-h922-iv1)
 
 
 <br/>
