@@ -23,6 +23,11 @@ const useSocket = () => {
       socket.on("connect", () => {
         setSocket(socket);
       });
+
+      socket.on("isNotUser", () => {
+        setSocket(undefined);
+        alert("올바른 사용자 접속이 아닙니다!");
+      });
       
       socket.on("disconnect", (error) => {
         setSocket(undefined);

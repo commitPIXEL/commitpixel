@@ -61,6 +61,43 @@ const CanvasContainer = () => {
     dispatch(setAvailablePixel(availablePixel));
   }, [dispatch]);
 
+  const initCanvas = () => {
+    const div = ref.current;
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (div && container) {
+      const panzoom = Panzoom(div, {
+        zoomDoubleClickSpeed: 1,
+        initialZoom: initialZoom,
+      });
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
+      panzoom.moveTo(centerX, centerY);
+
+      panzoom.setMaxZoom(50);
+      panzoom.setMinZoom(0.5);
+
+      setPanzoomInstance(panzoom);
+
+      return () => {
+        panzoom.dispose();
+      };
+    }
+  };
+
+  const resetCanvas = () => {
+    panzoomInstance.pause();
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (container) {
+      panzoomInstance.zoomAbs(0, 0, initialZoom);
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2);
+      panzoomInstance.moveTo(centerX, centerY);
+    }
+    panzoomInstance.resume();
+  };
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
@@ -102,29 +139,8 @@ const CanvasContainer = () => {
   }, [ctx]);
 
   useEffect(() => {
-    const div = ref.current;
-    const initialZoom = device === "mobile" ? 0.5 : 1;
-    const container = canvasContainer.current;
-    if (div && container) {
-      const panzoom = Panzoom(div, {
-        zoomDoubleClickSpeed: 1,
-        initialZoom: initialZoom,
-      });
-      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
-      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2)
-      panzoom.moveTo(centerX, centerY);
-
-      panzoom.setMaxZoom(50);
-      panzoom.setMinZoom(0.5);
-
-      setPanzoomInstance(panzoom);
-
-      return () => {
-        panzoom.dispose();
-      };
-    }
+    initCanvas();
   }, [socket]);
-
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -193,9 +209,9 @@ const CanvasContainer = () => {
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        if(e.type === "mouse" || !user) return;
+        if(e.pointerType === "mouse" || !user) return;
         e.stopPropagation();
-        if(device !== "mobile" || !e.target) {
+        if(!e.target) {
           return;
         }
 
@@ -229,14 +245,11 @@ const CanvasContainer = () => {
 
       const onFingerUp = (e: PointerEvent) => {
         if(e.type === "mouse") return;
-        if(device !== "mobile") {
-          return;
-        }
         if (tool === null || tool === undefined) {
           dispatch(setSnackbarOpen());
         }
         panzoomInstance.resume();
-      }
+      };
 
       wrapper.addEventListener("pointerdown", onFingerDown);
       wrapper.addEventListener("pointerup", onFingerUp);
@@ -272,12 +285,15 @@ const CanvasContainer = () => {
           >
             Reconnect
           </button>
-
         </div>
       )}
       {socket && (
         <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
-          { device === "mobile" ? null : <div className="text-mainColor w-full text-center">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>}
+          { device === "mobile" ? null : 
+          <div className="text-mainColor w-full text-center flex justify-center items-center">
+            <div className="mr-8">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
+            <div onClick={() => resetCanvas()} className={`cursor-${!tool ? "pointer" : tool}`}>캔버스 원위치</div>
+          </div>}
           <div
             className="overflow-hidden w-full h-full">
             <div className="w-max cursor-pointer" ref={ref}>
