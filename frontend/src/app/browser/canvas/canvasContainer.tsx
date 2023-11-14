@@ -61,7 +61,7 @@ const CanvasContainer = () => {
     dispatch(setAvailablePixel(availablePixel));
   }, [dispatch]);
 
-  const resetCanvas = () => {
+  const initCanvas = () => {
     const div = ref.current;
     const initialZoom = device === "mobile" ? 0.5 : 1;
     const container = canvasContainer.current;
@@ -83,6 +83,18 @@ const CanvasContainer = () => {
         panzoom.dispose();
       };
     }
+  };
+
+  const resetCanvas = () => {
+    panzoomInstance.pause();
+    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const container = canvasContainer.current;
+    if (container) {
+      const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
+      const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2);
+      panzoomInstance.moveTo(centerX, centerY);
+    }
+    panzoomInstance.resume();
   };
 
   // 웹소켓으로 pixel 받기
@@ -126,7 +138,7 @@ const CanvasContainer = () => {
   }, [ctx]);
 
   useEffect(() => {
-    resetCanvas();
+    initCanvas();
   }, [socket]);
 
   useEffect(() => {
