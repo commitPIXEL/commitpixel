@@ -64,8 +64,8 @@ const CanvasContainer = () => {
           console.log(response);
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
         }
+        socket.off("isPixelSuccess");
       });
-      socket.off("isPixelSuccess");
     }
   }, [ctx, socket]);
 
