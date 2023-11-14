@@ -11,6 +11,8 @@ import { BrowserSnackBar } from "./snackbar";
 import { CircularProgress } from '@mui/material';
 import { setAvailablePixel } from "@/store/slices/userSlice";
 import { setSnackbarOff, setSnackbarOpen } from "@/store/slices/snackbarSlice";
+import rgbtoHex from "@/app/utils/rbgUtils";
+import { setPixel } from "@/app/utils/paintUtils";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
@@ -35,37 +37,13 @@ const CanvasContainer = () => {
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
 
-  const handleIsPixelSuccess = useCallback((r: number, g: number, b: number, x: number, y: number) => {
-    if(!ctx) {
-      return;
-    }
-    ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
-    ctx.fillRect(x, y, 1, 1);
-  }, [ctx]);
-
-  // 픽셀 그리기
-  const setPixel = useCallback((
-    x: number,
-    y: number,
-    color: {
-      r: number,
-      g: number,
-      b: number,
-    },
-    url: string,
-    userId: string
-  ) => {
-    if(ctx && socket) {
-      socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
-      socket.on("isPixelSuccess", (response) => {
-        if(response) {
-          handleIsPixelSuccess(color.r, color.g, color.b, x, y);
-        } else {
-          alert("크레딧이 부족합니다!");
-        }
-        socket.off("isPixelSuccess");
-      });
-    }
+  const memoizedSetPixel = useCallback((x: number, y: number, color: {
+    r: number,
+    g: number,
+    b: number,
+  }, url: string, userId: string) => {
+    if(!ctx) return;
+    setPixel(ctx, socket, x, y, color, url, userId);  
   }, [ctx, socket]);
 
   const handlePixel = useCallback((pixel: any) => {
@@ -155,15 +133,6 @@ const CanvasContainer = () => {
       const ctx = canvas.getContext("2d");
       setCtx(ctx);
 
-      const toHex = (rgbData: number) => {
-        let hex = rgbData.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-      };
-    
-      const rgbtoHex = (r: number, g: number, b: number) => {
-        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-      };
-
       const setFinger = (e: PointerEvent) => {
         if(e.type === "mouse") return;
         const [x, y] = [parseInt(String(e.offsetX)), parseInt(String(e.offsetY))];
@@ -197,7 +166,7 @@ const CanvasContainer = () => {
             r = color.rgb.r;
             g = color.rgb.g;
             b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, user.githubNickname, user.url);
+            memoizedSetPixel(x, y, { r, g, b }, user.githubNickname, user.url);
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
@@ -243,7 +212,7 @@ const CanvasContainer = () => {
             r = color.rgb.r;
             g = color.rgb.g;
             b = color.rgb.b;
-            setPixel(x, y, { r, g, b }, user.githubNickname, user.url);
+            memoizedSetPixel(x, y, { r, g, b }, user.githubNickname, user.url);
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
