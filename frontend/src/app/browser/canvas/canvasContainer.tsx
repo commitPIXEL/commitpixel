@@ -62,9 +62,7 @@ const CanvasContainer = () => {
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
         }
       });
-      return () => {
-        socket.off("isPixelSuccess", handleIsPixelSuccess);
-      } 
+      socket.off("isPixelSuccess");
     }
   }, [ctx, socket]);
 
