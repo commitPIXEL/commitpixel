@@ -56,15 +56,15 @@ const CanvasContainer = () => {
     userId: string
   ) => {
     if(ctx && socket) {
+      console.log("setPixel 실행");
       socket?.emit("pixel", [x, y, color.r, color.g, color.b, userId, url]);
       socket.on("isPixelSuccess", (response) => {
         if(response) {
           handleIsPixelSuccess(color.r, color.g, color.b, x, y);
         }
+        console.log("isPixelSuccess 실행");
       });
-      return () => {
-        socket.off("isPixelSuccess", handleIsPixelSuccess);
-      } 
+      socket.off("isPixelSuccess");
     }
   }, [ctx, socket]);
 
