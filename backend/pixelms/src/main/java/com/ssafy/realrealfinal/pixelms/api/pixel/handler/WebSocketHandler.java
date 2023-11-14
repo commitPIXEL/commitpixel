@@ -65,7 +65,7 @@ public class WebSocketHandler {
         log.info("New client connected: {}", client.getSessionId().toString());
 
         String userAgent = client.getHandshakeData().getHttpHeaders().get("User-Agent");
-        if (userAgent == null && !userAgent.contains("Mozilla/5.0")) {
+        if (userAgent == null || !userAgent.contains("Mozilla/5.0")) {
             // 비브라우저 클라이언트에서 온 요청으로 간주
             client.sendEvent(IS_NOT_USER);
             client.disconnect();
