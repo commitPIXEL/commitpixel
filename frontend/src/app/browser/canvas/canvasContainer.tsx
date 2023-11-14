@@ -1,66 +1,70 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
-import useSocket from "@/hooks/useSocket";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { apiUrl, height, width } from "../config";
+import { useDispatch, useSelector } from "react-redux";
 import Panzoom from "panzoom";
+import useSocket from "@/hooks/useSocket";
+import { CircularProgress } from '@mui/material';
+import { apiUrl, height, width } from "../config";
+import { RootState } from "@/store";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
-import { rgbToHex } from "../utils";
-import { BrowserSnackBar } from "./snackbar";
-import { CircularProgress } from '@mui/material';
 import { setAvailablePixel } from "@/store/slices/userSlice";
 import { setSnackbarOff, setSnackbarOpen } from "@/store/slices/snackbarSlice";
-import rgbtoHex from "@/app/utils/rbgUtils";
+import { BrowserSnackBar } from "./snackbar";
+import rgbToHex from "@/app/utils/rbgUtils";
 import { setPixel } from "@/app/utils/paintUtils";
+import { ImyPaintPixel, IothersPaintPixel, IurlInfo } from "@/interfaces/pixel";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
   const { socket, setSocket, connectToSocket } = useSocket();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null); 
-  const ref = useRef<HTMLDivElement | null>(null);
-  const canvasWrapper = useRef<HTMLDivElement>(null);
-
-  const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [urlData, setUrlData] = useState<any>(null);
-  const [isCanvasLoading, setIsCanvasLoading] = useState(false);
-  const color = useSelector((state:RootState) => state.color.color);
-  const tool = useSelector((state:RootState) => state.tool.tool);
-  const device = useSelector((state: RootState) => state.device.device);
-  const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
-  const canvasContainer = useRef<HTMLDivElement>(null);
-  const user = useSelector((state: RootState) => state.user);
-  const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
 
   const pcClass = " h-full col-span-3";
   const mobileClass = " h-full justify-center";
+  const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
 
-  const memoizedSetPixel = useCallback((x: number, y: number, color: {
-    r: number,
-    g: number,
-    b: number,
-  }, url: string, userId: string) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const canvasWrapper = useRef<HTMLDivElement>(null);
+  const canvasContainer = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null); 
+
+  const [urlData, setUrlData] = useState<any>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isCanvasLoading, setIsCanvasLoading] = useState(false);
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
+  const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
+
+  const user = useSelector((state: RootState) => state.user);
+  const tool = useSelector((state:RootState) => state.tool.tool);
+  const color = useSelector((state:RootState) => state.color.color);
+  const device = useSelector((state: RootState) => state.device.device);
+  const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
+
+  // 픽셀 칠하기 함수 재활용
+  const memoizedSetPixel = useCallback((pixel: ImyPaintPixel & {user: IurlInfo}) => {
+    const { x, y, color, user } = pixel;
     if(!ctx) return;
-    setPixel(ctx, socket, x, y, color, url, userId);  
+    setPixel(ctx, socket, x, y, color, user.url, user.userId);  
   }, [ctx, socket]);
 
-  const handlePixel = useCallback((pixel: any) => {
+  // 웹소켓으로 다른 사람이 색칠한 픽셀 칠하는 함수 재활용
+  const handlePixel = useCallback((pixel: IothersPaintPixel) => {
     if(!ctx) return;
     const [x, y, r, g, b] = pixel;
     ctx.fillStyle = `rgba(${r},${g}, ${b}, 255)`;
     ctx.fillRect(x, y, 1, 1);
   }, [ctx]);
 
-  const handleUrl = useCallback((urlData: any) => {
+  // 웹소켓으로 픽셀 정보 받기 함수 재활용
+  const handleUrl = useCallback((urlData: IurlInfo) => {
     setUrlData(urlData);
   }, []);
 
+  // 웹소켓으로 사용자 크레딧 수 변화 받기 함수 재활용
   const handleAvailableCredit = useCallback((availablePixel: number) => {
     dispatch(setAvailablePixel(availablePixel));
   }, [dispatch]);
 
+  // 캔버스 컴포넌트 초기화
   const initCanvas = () => {
     const div = ref.current;
     const initialZoom = device === "mobile" ? 0.5 : 1;
@@ -85,6 +89,7 @@ const CanvasContainer = () => {
     }
   };
 
+  // 캔버스 위치 초기화: 캔버스를 삭제=>재생성으로 리렌더링 하는 대신 위치만 초기화하기 위해 initCanvas와 분리
   const resetCanvas = () => {
     panzoomInstance.pause();
     const initialZoom = device === "mobile" ? 0.5 : 1;
@@ -119,6 +124,7 @@ const CanvasContainer = () => {
     }
   }, [socket, ctx]);
 
+  // 캔버스 컴포넌트가 생성되면 현재 캔버스 이미지 가져오기
   useEffect(() => {
     if(!ctx) return;
     setIsCanvasLoading(true);
@@ -138,10 +144,12 @@ const CanvasContainer = () => {
       });
   }, [ctx]);
 
+  // 소켓이 연결되면 캔버스 초기화
   useEffect(() => {
     initCanvas();
   }, [socket]);
 
+  // 캔버스 상호작용 함수
   useEffect(() => {
     const canvas = canvasRef.current;
     const wrapper = canvasWrapper.current;
@@ -175,18 +183,19 @@ const CanvasContainer = () => {
             dispatch(setSnackbarOff());
           }
         }
-        let r, g, b;
         if(tool == "painting") {
           panzoomInstance?.pause();
           audio.play();
-            r = color.rgb.r;
-            g = color.rgb.g;
-            b = color.rgb.b;
-            memoizedSetPixel(x, y, { r, g, b }, user.githubNickname, user.url);
+            memoizedSetPixel({
+              x: x,
+              y: y,
+              color: color.rgb, 
+              user: { userId: user.githubNickname, url: user.url }
+            });
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-          const hex = rgbtoHex(r, g, b);
+          const hex = rgbToHex(r, g, b);
           dispatch(
             pick({
               hex: hex,
@@ -198,22 +207,19 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        // if(isSnackbarOpen && tool === null && e.button !== 2) {
-        //   dispatch(setSnackbarOff());
-        //   return;
-        // }
-        // if (!isSnackbarOpen && tool === null && e.button !== 2) {
-        //   dispatch((setSnackbarOpen()));
-        // } 
+        if(isSnackbarOpen && tool === null && e.button !== 2) {
+          dispatch(setSnackbarOff());
+          return;
+        }
+        if (!isSnackbarOpen && tool === null && e.button !== 2) {
+          dispatch((setSnackbarOpen()));
+        }
         panzoomInstance.resume();
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        if(e.pointerType === "mouse" || !user) return;
+        if(e.pointerType === "mouse" || !user || !e.target) return;
         e.stopPropagation();
-        if(!e.target) {
-          return;
-        }
 
         const x = (Math.round(e.offsetX) - 1);
         const y = (Math.round(e.offsetY) - 1);
@@ -221,18 +227,19 @@ const CanvasContainer = () => {
           socket?.emit("url", [x, y]);
           return;
         } 
-        let r, g, b;
         if(tool == "painting") {
           panzoomInstance?.pause();
           audio.play();
-            r = color.rgb.r;
-            g = color.rgb.g;
-            b = color.rgb.b;
-            memoizedSetPixel(x, y, { r, g, b }, user.githubNickname, user.url);
+            memoizedSetPixel({
+              x: x,
+              y: y,
+              color: color.rgb, 
+              user: { userId: user.githubNickname, url: user.url }
+            });
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
           const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-          const hex = rgbtoHex(r, g, b);
+          const hex = rgbToHex(r, g, b);
           dispatch(
             pick({
               hex: hex,
@@ -244,7 +251,7 @@ const CanvasContainer = () => {
       };
 
       const onFingerUp = (e: PointerEvent) => {
-        if(e.type === "mouse") return;
+        if(e.pointerType === "mouse" || device !== "mobile") return;
         if (tool === null || tool === undefined) {
           dispatch(setSnackbarOpen());
         }
