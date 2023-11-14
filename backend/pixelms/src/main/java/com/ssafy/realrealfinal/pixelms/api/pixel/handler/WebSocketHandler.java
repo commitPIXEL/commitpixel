@@ -70,6 +70,7 @@ public class WebSocketHandler {
             // 비브라우저 클라이언트에서 온 요청으로 간주
             client.sendEvent(IS_NOT_USER);
             client.disconnect();
+            return;
         }
 
 
