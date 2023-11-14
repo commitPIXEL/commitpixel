@@ -1,3 +1,5 @@
+"use client";
+
 import { useDispatch, useSelector } from "react-redux";
 import CanvasContainer from "../browser/canvas/canvasContainer";
 import Menu from "../browser/sidebar/picker/menu/pickerMenu";
