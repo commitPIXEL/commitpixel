@@ -45,8 +45,8 @@ public class AuthController {
             .build();
         response.setHeader("Set-Cookie", refreshTokenCookie.toString());
         response.addHeader("accesstoken", tokenRes.getJwtAccessToken());
-        System.out.println("githubLogin end: " + tokenRes);
-        return ResponseEntity.ok().build();
+        log.info("githubLogin end: " + tokenRes);
+        return ResponseEntity.ok().body(tokenRes.getNickname());
     }
 
     /**
@@ -102,7 +102,7 @@ public class AuthController {
     /**
      * providerId로 깃허브 accesstoken 얻기
      *
-     * @param providerId 깃허브 providerId 
+     * @param providerId 깃허브 providerId
      * @return 깃허브 accesstoken
      */
     @GetMapping("/token/github")
