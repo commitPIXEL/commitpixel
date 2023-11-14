@@ -90,7 +90,7 @@ const CanvasContainer = () => {
     const initialZoom = device === "mobile" ? 0.5 : 1;
     const container = canvasContainer.current;
     if (container) {
-      panzoomInstance.initialZoom = initialZoom;
+      panzoomInstance.zoomAbs(0, 0, initialZoom);
       const centerX = (container.offsetWidth / 2) - ((width * initialZoom) / 2);
       const centerY = (container.offsetHeight / 2) - ((height * initialZoom) / 2);
       panzoomInstance.moveTo(centerX, centerY);
