@@ -42,7 +42,7 @@ const Browser = () => {
     }
   };
   useEffect(() => {
-    if (accessToken && !user.githubNickname) {
+    if (accessToken && !user.profileImage) {
       fetchAsync();
     }
   }, [accessToken]);
