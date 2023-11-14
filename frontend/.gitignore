@@ -39,3 +39,7 @@ package-lock.json
 .env
 .env.development
 .env.production
+
+# pwa
+sw.js
+workbox-7c2a5a06.js
