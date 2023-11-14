@@ -11,17 +11,17 @@
 ## [🚩 목차]
 
 1. [서비스 소개](#commit-기반-url-홍보-사이트)
-2. [목차](#🚩-목차)
-2. [STACKS](#📚-stacks)
-3. [UCC영상](#🎬-ucc영상)
-4. [문서](#📃문서)
-5. [팀원 역할](#👨-팀원-역할)
-7. [주요 기능](#📑-주요-기능)
-8. [Git 컨벤션](#✔git-컨벤션)
-9. [Code 컨벤션](#✔code-컨벤션)
-10. [프로젝트 구조](#✔프로젝트-구조)
-11. [주요 기능 미리보기](#💻-주요-기능-미리보기)
-12. [산출물](#📑-산출물)
+2. [목차](#-목차)
+2. [STACKS](#-stacks)
+3. [UCC영상](#-ucc영상)
+4. [문서](#-문서)
+5. [팀원 역할](#-팀원-역할)
+7. [주요 기능](#-주요-기능)
+8. [Git 컨벤션](#-git-컨벤션)
+9. [Code 컨벤션](#-code-컨벤션)
+10. [프로젝트 구조](#-프로젝트-구조)
+11. [주요 기능 미리보기](#-주요-기능-미리보기)
+12. [산출물](#-산출물)
 
 ---
 
@@ -79,7 +79,7 @@
 
 <br/>
 
-### [📃문서]
+### [📃 문서]
 
 > [1️⃣ 기획 문서](https://www.notion.so/realrealfinal/7e3c170d14ae43c380244b55083f0ecf?pvs=4)<br/>
 > [2️⃣ 기능 명세서](https://www.notion.so/realrealfinal/477dde150f444b49b61818a020e4959e?pvs=4)<br/>
@@ -172,7 +172,7 @@
 <br/>
 
 
-## ✔Git 컨벤션
+## ✔ Git 컨벤션
 
 ```bash
 fe/feature/기능명
@@ -188,7 +188,7 @@ be/userms/feature/기능명
 <br/>
 
 
-## ✔Code 컨벤션
+## ✔ Code 컨벤션
 
 [ Front-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/FE-Convention-f02a40ecac62456d9c21af06a29aaea7?pvs=4)<br/>
 [ Back-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/BE-Convention-6ed36c69f77847f68cac762d62cdc551?pvs=4)
@@ -197,7 +197,7 @@ be/userms/feature/기능명
 <br/>
 
 
-## ✔프로젝트 구조
+## ✔ 프로젝트 구조
 
 ![프로젝트구조](https://lh3.google.com/u/0/d/1s4qt_fzLrmHP-NS4TaRS8w4flYxxxsWi=w2000-h2736-iv1)
 
