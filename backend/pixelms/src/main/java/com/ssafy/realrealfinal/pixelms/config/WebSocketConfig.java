@@ -15,7 +15,7 @@ public class WebSocketConfig {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
         config.setHostname("0.0.0.0");
         config.setPort(3001);
-        config.setOrigin("*");
+        config.setOrigin("https://commitpixel.com, https://dev.commitpixel.com, http://localhost");
         // 타임아웃 설정
         config.setPingTimeout(600000);  // 600초
         config.setPingInterval(25000); // 25초
