@@ -171,6 +171,7 @@ public class WebSocketHandler {
     @OnDisconnect
     public void onDisconnectEvent(SocketIOClient client) {
         log.info("Client disconnected: {}", client.getSessionId().toString());
+        lastRequestTimeMap.remove(client.getSessionId());
         CLIENTS.remove(client.getSessionId());
     }
 }
