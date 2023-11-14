@@ -31,7 +31,6 @@ public class WebSocketHandler {
     private final SocketIOServer server;
     private final int SCALE = 512;
     private final long MIN_INTERVAL = 75; // 0.075초
-    private final String CREDIT = "credit";
     private final String PIXEL = "pixel";
     private final String IS_PIXEL_SUCCESS = "isPixelSuccess";
     private final String TOO_FREQUENT = "tooFrequent";
