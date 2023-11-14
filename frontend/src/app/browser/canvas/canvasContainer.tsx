@@ -288,7 +288,6 @@ const CanvasContainer = () => {
           >
             Reconnect
           </button>
-
         </div>
       )}
       {socket && (
@@ -296,7 +295,7 @@ const CanvasContainer = () => {
           { device === "mobile" ? null : 
           <div className="text-mainColor w-full text-center flex justify-center items-center">
             <div className="mr-8">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
-            <div onClick={() => resetCanvas()} className="cursor-pointer">캔버스 원위치</div>
+            <div onClick={() => resetCanvas()} className={`cursor-${!tool ? "pointer" : tool}`}>캔버스 원위치</div>
           </div>}
           <div
             className="overflow-hidden w-full h-full">
