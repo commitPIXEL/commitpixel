@@ -19,7 +19,7 @@ export default function LoginHandler() {
         .then((res) => {
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
-            const nickname: string = res.data.nickname;
+            const nickname: string = res.data;
             dispatch(login(accesstoken));
             dispatch(getUserNickname(nickname));
           }
