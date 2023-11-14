@@ -36,9 +36,6 @@ const Browser = () => {
       const resPixel = await customFetch("/user/refreshinfo");
       const pixelData: IUserPixel = await resPixel.json();
 
-      if(pixelData.githubNickname === null) {
-        window.alert("마지막 갱신 이후 15분이 지나지 않았습니다!")
-      }
       dispatch(updateUserPixel(pixelData));
     } catch (err) {
       console.error("Error:", err);
