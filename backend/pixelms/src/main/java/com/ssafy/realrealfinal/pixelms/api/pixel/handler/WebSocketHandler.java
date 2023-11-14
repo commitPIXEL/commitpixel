@@ -30,14 +30,17 @@ public class WebSocketHandler {
     private final AuthFeignClient authFeignClient;
     private final SocketIOServer server;
     private final int SCALE = 512;
+    private final long MIN_INTERVAL = 75; // 0.075초
     private final String CREDIT = "credit";
     private final String PIXEL = "pixel";
     private final String IS_PIXEL_SUCCESS = "isPixelSuccess";
+    private final String TOO_FREQUENT = "tooFrequent";
     private final String AVAILABLE_CREDIT = "availableCredit";
     private final String URL = "url";
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
     private static final ConcurrentHashMap<UUID, SocketClientInfo> CLIENTS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Long> lastRequestTimeMap = new ConcurrentHashMap<>();
 
     /**
      * 스프링 애플리케이션 컨텍스트가 초기화되거나 새로 고쳐질 때 서버를 시작
@@ -100,6 +103,19 @@ public class WebSocketHandler {
             return;
         }
 
+        UUID sessionId = client.getSessionId();
+        long currentTime = System.currentTimeMillis();
+
+        // 마지막 요청 시간 확인
+        Long lastRequestTime = lastRequestTimeMap.get(sessionId);
+
+        // 이전 요청이 있었고, 현재 요청이 최소 간격보다 짧은 경우
+        if (lastRequestTime != null && (currentTime - lastRequestTime) < MIN_INTERVAL) {
+            // 요청 거부
+            client.sendEvent(TOO_FREQUENT);
+            return;
+        }
+
         // 사용 가능 픽셀이 0개일 때
         if(pixelService.getAvailableCredit(providerId) == 0) {
             // 픽셀 정보 업데이트 실패!
@@ -123,9 +139,12 @@ public class WebSocketHandler {
                 clientSession.sendEvent(PIXEL, pixelInfo);
             }
         }
+
+        // 마지막 요청 시간 업데이트
+        lastRequestTimeMap.put(sessionId, currentTime);
+
         // 픽셀 정보 성공적으로 업데이트됨
         client.sendEvent(IS_PIXEL_SUCCESS, true);
-
     }
 
     /**
