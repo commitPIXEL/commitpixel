@@ -3,25 +3,25 @@
 ### commit 기반 URL 홍보 사이트
 
 > 서비스명: commit Pixel<br/>
-> 팀명: 진짜*진짜*최종\_팀<br/>
+> 팀명: 진짜_진짜_최종_팀<br/>
 > 개발 기간: 2023.10.10 ~ 2023.11.17 (약 6주)
 
 <br/>
 
-## :scroll:목차
+## [🚩 목차]
 
 1. [서비스 소개](#commit-기반-url-홍보-사이트)
-2. [STACKS](#stacks)
-3. [UCC영상](#ucc영상)
-4. [문서](#문서)
-5. [팀원 역할](#팀원-역할)
-6. [문서](#문서)
-7. [주요 기능](#주요-기능)
-8. [Git 컨벤션](#git-컨벤션)
-9. [Code 컨벤션](#code-구조)
-10. [프로젝트 구조](#프로젝트-미리보기)
-11. [주요 기능 미리보기](#주요-기능-미리보기)
-12. [산출물](#산출물)
+2. [목차](#🚩-목차)
+2. [STACKS](#📚-stacks)
+3. [UCC영상](#🎬-ucc영상)
+4. [문서](#📃문서)
+5. [팀원 역할](#👨-팀원-역할)
+7. [주요 기능](#📑-주요-기능)
+8. [Git 컨벤션](#✔git-컨벤션)
+9. [Code 컨벤션](#✔code-컨벤션)
+10. [프로젝트 구조](#✔프로젝트-구조)
+11. [주요 기능 미리보기](#💻-주요-기능-미리보기)
+12. [산출물](#📑-산출물)
 
 ---
 
@@ -38,32 +38,35 @@
   <img src="https://img.shields.io/badge/React Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
   <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white">
   <br/>
+
   <img src="https://img.shields.io/badge/Tailwind Css-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> 
   <img src="https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white"> 
   <img src="https://img.shields.io/badge/Font Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=black">
   <br/>
+
   <img src="https://img.shields.io/badge/PWA-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white"> 
   <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> 
   <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black">
   <img src="https://img.shields.io/badge/.ENV-ECD53F?style=for-the-badge&logo=dotenv&logoColor=black">
   <br/>
   <br/>
-  
-  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> 
-  <img src="https://img.shields.io/badge/MySql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"> 
-  <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
-  <br>
 
-  <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> 
+  
+  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/MySql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
+  <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
+  <br/>
+
   <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"> 
   <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
-  <br>
+  <img src="https://img.shields.io/badge/apache Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white">
+  <br/>
   
-  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/fontawesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white">
-  <br>
+  <img src="https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+  <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white">
+  <br/>
 </div>
 
 
@@ -117,7 +120,7 @@
   >
   > c. 사용방법과 단축키에 대한 설명을 GIF와 짧은 텍스트로 이해하기 쉽게 제공한다.
 
-- **공유 칸바스 기능**
+- **공유 캔버스 기능**
 
   > a. 브러시를 사용하여 픽셀을 색칠하고 URL을 홍보할 수 있다.
   >
@@ -125,7 +128,7 @@
   >
   > c. 도구 해제 상태에서 픽셀을 클릭하여 홍보URL를 확인할 수 있다.
   >
-  > d. '우클릭'으로 칸바스 이동할 수 있다.
+  > d. '우클릭'으로 캔버스를 이동시킬 수 있다.
 
 - **사용자 정보 기능**
 
@@ -147,13 +150,13 @@
 
 - **타입랩스 보기 기능**
 
-  > a. 하루 동안 칸바스의 변화를 타입랩스로 보여준다.
+  > a. 하루 동안 캔버스의 변화를 타입랩스로 보여준다.
   >
-  > b. 구체적으로 08시-01시 칸바스의 변화를 10분 간격으로 보여준다.
+  > b. 구체적으로 08시-01시 캔버스의 변화를 10분 간격으로 보여준다.
 
 - **랭킹 기능**
 
-  > a. URL랭킹: 칸바스에 있는 홍보 URL의 수에 대한 랭킹을 제공한다.
+  > a. URL랭킹: 캔버스에 있는 홍보 URL의 수에 대한 랭킹을 제공한다.
   >
   > b. Pixel랭킹: 사용자가 픽셀 색칠한 수에 대한 랭킹을 제공한다.
   >
@@ -217,7 +220,7 @@ be/userms/feature/기능명
 
 ![비로그인 메인 페이지](https://lh3.google.com/u/0/d/1esPzPrCPm9MB15idDwzT1EviQCc9s7It=w960-h930-iv1)
 
-- 비로그인 메인 화면에서는 칸바스, 소셜 로그인, 이미지 픽셀화, 타입랩스, 랭킹, 카카오 공유가 사이드바에 나옵니다.
+- 비로그인 메인 화면에서는 캔버스, 소셜 로그인, 이미지 픽셀화, 타입랩스, 랭킹, 카카오 공유가 사이드바에 나옵니다.
 
 ### 3. 로그인 메인 화면
 
@@ -225,11 +228,11 @@ be/userms/feature/기능명
 
 - 로그인 메인 화면에서는 사이드바에서 로그인 버튼이 사라지고 사용자 정보와, 건의하기가 나타납니다.
 
-### 4. 칸바스
+### 4. 캔버스
 
-![칸바스](https://lh3.google.com/u/0/d/1hcVq-2IH_-LsUm5h0oRmRr2G1B8azvLz=w960-h930-iv1)
+![캔버스](https://lh3.google.com/u/0/d/1hcVq-2IH_-LsUm5h0oRmRr2G1B8azvLz=w960-h930-iv1)
 
-- 브러시를 사용하여 칸바스에 픽셀을 찍을 수 있습니다. 사용자 정보에서 픽셀을 사용했음을 확인할 수 있습니다.
+- 브러시를 사용하여 캔버스에 픽셀을 찍을 수 있습니다. 사용자 정보에서 픽셀을 사용했음을 확인할 수 있습니다.
 - 스포이드를 사용하여 색을 복사할 수 있습니다.
 - 도구 해제 상태에서 픽셀을 클릭하여 홍보URL 확인 및 이동할 수 있습니다.
 
@@ -251,7 +254,7 @@ be/userms/feature/기능명
 
 ![타입랩스](https://lh3.google.com/u/0/d/1PFQ4704w1AifXU_tNv_2PYAjfBZTVOsc=w960-h930-iv1)
 
-- 칸바스의 타입랩스를 확인할 수 있습니다.
+- 캔버스의 타입랩스를 확인할 수 있습니다.
 
 ### 8. 랭킹
 
@@ -284,7 +287,7 @@ be/userms/feature/기능명
 <br/>
 
 
-# 📑산출물
+# 📑 산출물
 
 > 1. ER 다이어그램
 > 2. 목업
@@ -295,16 +298,15 @@ be/userms/feature/기능명
 
 ## ✔ ER 다이어그램
 
-## ![erd](https://lh3.google.com/u/0/d/13Is2YSI9s_SEFKFVtKivWxtR95hbKo73=w2000-h7200-iv1)
+![erd](https://lh3.google.com/u/0/d/13Is2YSI9s_SEFKFVtKivWxtR95hbKo73=w2000-h7200-iv1)
 
 
 <br/>
 
 
 ### ✔ 목업
-
-![슬라이드1](https://lh3.google.com/u/0/d/10_2iK1SMvIwvQ-ihwImxnkPy96CCsd5S=w2560-h1346-iv1)
-![슬라이드2](https://lh3.google.com/u/0/d/1EeL_Bjq22PEjsdg2A2AS5q3YoHvBir7f=w2560-h1346-iv1)
-![슬라이드3](https://lh3.google.com/u/0/d/1g2oPyzzfx5zPwmQqeo2IilYSo4nMrGQh=w2560-h1346-iv1)
-![슬라이드4](https://lh3.google.com/u/0/d/1yiP_8rCzXxrGsAMfjjBjM_UeTf5mJA8l=w1920-h953-iv1)
-![슬라이드5](https://lh3.google.com/u/0/d/1oxWXtnjtTtDfXNMUgFahxrYuxXB8GSna=w1250-h1250-iv1)
+<img src="https://lh3.google.com/u/0/d/10_2iK1SMvIwvQ-ihwImxnkPy96CCsd5S=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1EeL_Bjq22PEjsdg2A2AS5q3YoHvBir7f=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1g2oPyzzfx5zPwmQqeo2IilYSo4nMrGQh=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1yiP_8rCzXxrGsAMfjjBjM_UeTf5mJA8l=w1920-h953-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1oxWXtnjtTtDfXNMUgFahxrYuxXB8GSna=w1250-h1250-iv1" width="300" height="300">
