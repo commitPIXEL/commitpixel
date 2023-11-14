@@ -3,8 +3,8 @@ const toHex = (rgbData: number) => {
   return hex.length == 1 ? "0" + hex : hex;
 };
 
-const rgbtoHex = (r: number, g: number, b: number) => {
+const rgbToHex = (r: number, g: number, b: number) => {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
 
-export default rgbtoHex;
+export default rgbToHex;
