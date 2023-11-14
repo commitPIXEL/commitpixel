@@ -209,9 +209,9 @@ const CanvasContainer = () => {
       };
 
       const onFingerDown = (e: PointerEvent) => {
-        if(e.type === "mouse" || !user) return;
+        if(e.pointerType === "mouse" || !user) return;
         e.stopPropagation();
-        if(device !== "mobile" || !e.target) {
+        if(!e.target) {
           return;
         }
 
@@ -245,14 +245,11 @@ const CanvasContainer = () => {
 
       const onFingerUp = (e: PointerEvent) => {
         if(e.type === "mouse") return;
-        if(device !== "mobile") {
-          return;
-        }
         if (tool === null || tool === undefined) {
           dispatch(setSnackbarOpen());
         }
         panzoomInstance.resume();
-      }
+      };
 
       wrapper.addEventListener("pointerdown", onFingerDown);
       wrapper.addEventListener("pointerup", onFingerUp);
