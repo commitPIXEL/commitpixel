@@ -103,6 +103,10 @@ const CanvasContainer = () => {
     panzoomInstance.resume();
   };
 
+  useEffect(() => {
+    console.log("socket 변경됨!");
+  }, [socket]);
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
