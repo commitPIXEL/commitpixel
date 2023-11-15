@@ -122,10 +122,9 @@ public class WebSocketHandler {
             return;
         }
 
-        Integer availableCredit = pixelService.getAvailableCredit(providerId);
 
         // 사용 가능 픽셀이 0개일 때
-        if (availableCredit == 0) {
+        if (pixelService.getAvailableCredit(providerId) == 0) {
             // 픽셀 정보 업데이트 실패!
             client.sendEvent(IS_PIXEL_SUCCESS, false);
             return;
@@ -144,6 +143,7 @@ public class WebSocketHandler {
 
         // 현재 클라이언트의 usedPixel redis 값 변경 후 클라이언트에게 반환
         pixelService.updateUsedPixel(providerId);
+        Integer availableCredit = pixelService.getAvailableCredit(providerId);
         client.sendEvent(AVAILABLE_CREDIT, availableCredit);
 
         // 나를 제외한 모든 사용자에게 픽셀 변경 사항을 보내줌
