@@ -57,7 +57,7 @@ const Nav = () => {
             variant="text"
             color="inherit"
             onClick={clickLogout}
-            className="text-xl font-bold ml-8"
+            className="text-xl font-bold ml-16"
           >
             LOGOUT
           </Button>
