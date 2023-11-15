@@ -122,7 +122,6 @@ public class WebSocketHandler {
             return;
         }
 
-
         // 사용 가능 픽셀이 0개일 때
         if (pixelService.getAvailableCredit(providerId) == 0) {
             // 픽셀 정보 업데이트 실패!
