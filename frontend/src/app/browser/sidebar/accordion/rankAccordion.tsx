@@ -24,7 +24,7 @@ const RankAccordion = ({title, type, data, myRank, isLoading}: {
         ) : (
           <div className="w-full max-h-[200px] no-scrollbar overflow-y-auto">
             {type === "pixel" && myRank ? <RankItem key="my" rank={ myRank?.rank } rankInfo={ myRankInfo } isUserRank={true} /> : null}
-            <div ref={animationParent} className="w-full h-full flex flex-col pr-8">
+            <div ref={animationParent} className="w-full h-full flex flex-col pr-2">
               {type === "url"
                 ? data?.map((item, index) => (
                     <RankItem
