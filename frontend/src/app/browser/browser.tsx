@@ -21,10 +21,18 @@ const Browser = () => {
   );
   
   useEffect(() => {
-    if (accessToken && !user.githubNickname) {
-      setUser;
-      console.log("어세스토큰이 있지만 닉네임이 없음 from Browser.tsx");
-    }
+    console.log("어세스토큰 변화");
+    const fetchUser = async () => {
+      if (accessToken && !user.githubNickname) {
+        console.log("어세스토큰이 있지만 닉네임이 없음 from Browser.tsx");
+        try {
+          await useFetchUser();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    };
+    fetchUser();
   }, [accessToken]);
 
   useEffect(() => {
