@@ -24,15 +24,6 @@ const useFetchUser = async () => {
       } catch (err) {
         console.error("Error:", err);
       }
-  
-      try {
-        const resPixel = await customFetch("/user/refreshinfo");
-        const pixelData: IUserPixel = await resPixel.json();
-  
-        dispatch(updateUserPixel(pixelData));
-      } catch (err) {
-        return { success: false, error: err };
-      }
 };
 
 export default useFetchUser;

@@ -20,6 +20,7 @@ const Mobile = () => {
   useEffect(() => {
     if (accessToken && !user.githubNickname) {
       setUser;
+      console.log("어세스토큰이 있지만 닉네임이 없음 from Mobile.tsx");
     }
   }, [accessToken]);
 
