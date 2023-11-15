@@ -59,6 +59,7 @@ const Sidebar = () => {
   ) : (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
       <LoginBtn />
+      <UserInfoAccordion />
       <div className="mb-6 mt-6 w-full min-h-[40px] flex justify-between items-center">
         <ImageToPixel />
         <TimelapseModal />

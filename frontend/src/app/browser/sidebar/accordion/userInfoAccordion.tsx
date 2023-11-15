@@ -38,6 +38,13 @@ const UserInfoAccordion = () => {
   }, [isEdit]);
 
   const urlUpdate = async () => {
+    const lowerUrl = url.toLowerCase();
+    const isHttp = lowerUrl.startsWith("https://") || lowerUrl.startsWith("http://");
+    if(!isHttp) {
+      window.alert("잘못된 형식의 url입니다. 입력 예시를 확인해 주세요.");
+      setUrl(user.url);
+    }
+
     try {
       setLoading(true);
       const resFromUser = await customFetch("/user/url", {
@@ -55,7 +62,7 @@ const UserInfoAccordion = () => {
       }
       setUrl(resUrl);
     } catch (err) {
-        console.error("Error:", err);
+        console.log(err);
         window.alert("알 수 없는 에러...");
     } finally {
       setLoading(false);
@@ -121,6 +128,10 @@ const UserInfoAccordion = () => {
             className="w-full text-xs line-clamp-1"
             disabled={!isEdit}
           />
+          <span className="text-xs text-gray-300 opacity-75 mt-2">
+            입력 예시1: https://commitpixel.com<br/>
+            http도 가능합니다.
+          </span>
         </div>
         {!user.isSolvedACAuth && (
           <div className="w-full mt-4">
