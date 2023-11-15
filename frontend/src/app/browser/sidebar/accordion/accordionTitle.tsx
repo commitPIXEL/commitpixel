@@ -22,6 +22,6 @@ const AccordionTitle = ({title, profileImage}: {
           </div> : <div className="text-lg">{title}</div>}
         </AccordionSummary>
   );
-};// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+};
 
 export default AccordionTitle;
