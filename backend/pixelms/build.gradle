@@ -53,6 +53,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
+    //token bucket 알고리즘
+    implementation group: 'com.github.vladimir-bukhtoyarov', name: 'bucket4j-core', version: '7.6.0'
+
 }
 
 dependencyManagement {
