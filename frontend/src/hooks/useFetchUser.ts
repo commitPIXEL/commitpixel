@@ -9,6 +9,7 @@ import { IUserInfo, IUserPixel } from '@/interfaces/browser';
 const useFetchUser = async () => {
     const dispatch = useDispatch();
     const customFetch = useFetchAuth();
+    console.log("useFetchUser 실행");
 
     try {
         const resUser = await customFetch("/user/");
