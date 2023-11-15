@@ -38,6 +38,13 @@ const UserInfoAccordion = () => {
   }, [isEdit]);
 
   const urlUpdate = async () => {
+    const lowerUrl = url.toLowerCase();
+    const isHttp = lowerUrl.startsWith("https://") || lowerUrl.startsWith("http://");
+    if(!isHttp) {
+      window.alert("잘못된 형식의 url입니다. 입력 예시를 확인해 주세요.");
+      setUrl(user.url);
+    }
+
     try {
       setLoading(true);
       const resFromUser = await customFetch("/user/url", {
@@ -56,7 +63,7 @@ const UserInfoAccordion = () => {
       setUrl(resUrl);
     } catch (err) {
         console.log(err);
-        window.alert("잘못된 형식의 url입니다. 입력 예시를 확인해 주세요.");
+        window.alert("알 수 없는 에러...");
     } finally {
       setLoading(false);
     }
