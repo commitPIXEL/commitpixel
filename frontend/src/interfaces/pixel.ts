@@ -13,5 +13,5 @@ export type IothersPaintPixel = [number, number, number, number, number];
 
 export interface IurlInfo {
   url: string, 
-  userId: string
+  githubNickname: string
 }

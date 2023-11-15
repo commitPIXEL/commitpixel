@@ -36,8 +36,19 @@ body {
 }
 
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  margin-left: 10px;
+  float: left;
+  height: 300px;
+  width: 65px;
+  overflow-y: scroll;
+  margin-bottom: 25px;
+  width: 12px;
 }
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+border-radius: 10px;
+-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+background-color: #4285F4; }
 
 *:focus-visible {
   outline: none;
