@@ -137,7 +137,7 @@ public class WebSocketHandler {
         if (bucket == null || !bucket.tryConsume(1)) {
             // 토큰이 없으면 요청 거부
             client.sendEvent(TOO_FREQUENT);
-            redisUtil.setTemporaryData(providerId + ":ban", "봇 사용의심유저", 5);
+            redisUtil.setTemporaryData(providerId + ":ban", "malicious user", 5);
             client.disconnect();
             return;
         }
