@@ -1,28 +1,15 @@
 "use client";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import CanvasContainer from "../browser/canvas/canvasContainer";
 import Menu from "../browser/sidebar/picker/menu/pickerMenu";
 import MobileNav from "./mobileNav";
 import MobilePicker from "./mobilePicker";
 import { RootState } from "@/store";
 import LoginBtn from "@/components/loginBtn";
-import { useEffect } from "react";
-import useFetchUser from "@/hooks/useFetchUser";
 
 const Mobile = () => {
-  const setUser = useFetchUser();
   const user = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector(
-    (state: RootState) => state.authorization.authorization
-  );
-
-  useEffect(() => {
-    if (accessToken && !user.githubNickname) {
-      setUser;
-    }
-  }, [accessToken]);
-
 
   return(
   <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">

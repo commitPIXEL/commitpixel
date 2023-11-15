@@ -7,33 +7,12 @@ import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
-import useFetchUser from "@/hooks/useFetchUser";
 
 const Browser = () => {
   const dispatch = useDispatch();
-  const setUser = useFetchUser();
-  const user = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector(
-    (state: RootState) => state.authorization.authorization
-  );
   const isUrlInput = useSelector(
     (state: RootState) => state.urlInput.isUrlInput
   );
-  
-  useEffect(() => {
-    console.log("어세스토큰 변화");
-    const fetchUser = async () => {
-      if (accessToken && !user.githubNickname) {
-        console.log("어세스토큰이 있지만 닉네임이 없음 from Browser.tsx");
-        try {
-          await useFetchUser();
-        } catch (error) {
-          console.error(error);
-        }
-      };
-    };
-    fetchUser();
-  }, [accessToken]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
