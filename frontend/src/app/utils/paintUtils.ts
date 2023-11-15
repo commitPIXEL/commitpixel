@@ -6,6 +6,8 @@ const handleIsPixelSuccess = (ctx:CanvasRenderingContext2D, r: number, g: number
   ctx.fillRect(x, y, 1, 1);
 };
 
+let isBotOn = false;
+
 export const setPixel = (
   ctx: CanvasRenderingContext2D,
   socket: Socket,
@@ -14,18 +16,21 @@ export const setPixel = (
   const {x, y, color, user} = pixel;
   if(ctx && socket) {
     socket?.emit("pixel", [x, y, color.r, color.g, color.b, user.githubNickname, user.url]);
-    socket.on("isPixelSuccess", (response: boolean) => {
-      if(response) {
-        handleIsPixelSuccess(ctx, color.r, color.g, color.b, x, y);
-      } else {
-        alert("크레딧이 부족합니다!");
-      }
-      socket.off("isPixelSuccess");
-    });
-    socket.on("tooFrequent", () => {
-      console.log("tooFrequent 실행");
+    if (!isBotOn) {
+      socket.on("isPixelSuccess", (response: boolean) => {
+        isBotOn = true;
+        if(response) {
+          handleIsPixelSuccess(ctx, color.r, color.g, color.b, x, y);
+        } else {
+          alert("크레딧이 부족합니다!");
+        }
+        socket.off("isPixelSuccess");
+        isBotOn = false;
+      });
+    }
+    socket.once("tooFrequent", () => {
       alert("픽셀 찍는 속도가 너무 빠릅니다!");
-      socket.off("tooFrequent");
+      console.log("tooFrequent 실행");
     });
   }
 };
