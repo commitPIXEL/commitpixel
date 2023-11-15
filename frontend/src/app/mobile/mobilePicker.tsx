@@ -43,19 +43,21 @@ class MobilePicker extends React.Component<Iprops> {
 
   render() {
     return (
-      <div className="mt-8 w-[90%] flex flex-col justify-start p-2 bg-slate-200 rounded-lg">
-        <div className="mb-4 pt-4 w-full flex justify-center items-center">
-          <CirclePicker
-            colors={colors}
-            width="100%"
+      <div className="w-full h-fit flex justify-center">
+        <div className="mt-8 w-[80%] flex flex-col p-2 bg-slate-200 rounded-lg">
+          <div className="mb-4 pt-4 w-full flex justify-center items-center">
+            <CirclePicker
+              colors={colors}
+              width="100%"
+              color={this.state.background}
+              onChange={this.handleColorChange}
+            />
+          </div>
+          <SliderPicker
             color={this.state.background}
             onChange={this.handleColorChange}
           />
         </div>
-        <SliderPicker
-          color={this.state.background}
-          onChange={this.handleColorChange}
-        />
       </div>
     );
   }
