@@ -27,15 +27,20 @@ export default function LoginHandler() {
             dispatch(login(accesstoken));
 
             if(accessToken) {
-              setUser;
+              setUser.then((res) => {
+                if(res?.success) {
+                  window.location.href = "/";
+                } else {
+                  console.log(res?.error);
+                  window.location.href = "/";
+                }
+              })
             }
           }
         })
         .catch((err) => {
           console.log(err);
           alert("깃허브 로그인 실패!");
-        })
-        .finally(() => {
           window.location.href = "/";
         });
     }
