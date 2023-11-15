@@ -38,7 +38,7 @@ const BoardInput = ({open, setOpen}: IBoardInputProps) => {
   
       setLoading(true);
       try {
-        const data = await customFetch("/user/board", {
+        await customFetch("/user/board", {
           method: "POST",
           body: JSON.stringify({ type: type, content: content }),
         });
