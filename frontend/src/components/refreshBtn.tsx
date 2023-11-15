@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Tooltip } from "@mui/material";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import { IUserPixel } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
 import { updateUserPixel } from "@/store/slices/userSlice";
@@ -12,7 +12,7 @@ import { useState } from "react";
 const RefreshBtn = () => {
 
     const dispatch = useDispatch();
-    const customFetch = useFetchWithAuth();
+    const customFetch = useFetchAuth();
     const [loading, setLoading] = useState(false);
     const handleRefresh = async () => {
       try {
