@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil} from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useRef, useState } from "react";
 import SolvedacBtn from "@/components/solvedacBtn";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import Loading from "@/components/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -17,7 +17,7 @@ import BoardInput from "@/components/boardInput";
 
 const UserInfoAccordion = () => {
   const dispatch = useDispatch();
-  const customFetch = useFetchWithAuth();
+  const customFetch = useFetchAuth();
   const urlInputRef = useRef<HTMLInputElement | null>(null);
   const user = useSelector(
     (state: RootState) => state.user

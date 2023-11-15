@@ -7,14 +7,11 @@ import MobileNav from "./mobileNav";
 import MobilePicker from "./mobilePicker";
 import { RootState } from "@/store";
 import LoginBtn from "@/components/loginBtn";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import { useEffect } from "react";
-import { getUserInfo, updateUserPixel } from "@/store/slices/userSlice";
-import { IUserInfo, IUserPixel } from "@/interfaces/browser";
+import useFetchUser from "@/hooks/useFetchUser";
 
 const Mobile = () => {
-  const dispatch = useDispatch();
-  const customFetch = useFetchWithAuth();
+  const setUser = useFetchUser();
   const user = useSelector((state: RootState) => state.user);
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
@@ -22,29 +19,9 @@ const Mobile = () => {
 
   useEffect(() => {
     if (accessToken && !user.githubNickname) {
-      fetchAsync();
+      setUser;
     }
   }, [accessToken]);
-
-  const fetchAsync = async () => {
-    try {
-      const resUser = await customFetch("/user/");
-      const userData: IUserInfo = await resUser.json();
-
-      dispatch(getUserInfo(userData));
-    } catch (err) {
-      console.error("Error:", err);
-    }
-
-    try {
-      const resPixel = await customFetch("/user/refreshinfo");
-      const pixelData: IUserPixel = await resPixel.json();
-
-      dispatch(updateUserPixel(pixelData));
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
 
 
   return(
