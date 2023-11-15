@@ -1,4 +1,4 @@
-import Nav from "../browser/nav";
+import Nav from "../browser/nav/nav";
 import PatchNote from "./patchNote";
 import TutorialDesc from "./tutorialDescription";
 import ToolDescription from "./toolDescription";

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateUserPixel } from "@/store/slices/userSlice";
 import { RootState } from "@/store";
 import CanvasContainer from "./canvas/canvasContainer";
-import Nav from "./nav";
+import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
