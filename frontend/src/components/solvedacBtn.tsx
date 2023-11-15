@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import CampaignIcon from '@mui/icons-material/Campaign';
 import InputAdornment from "@mui/material/InputAdornment";
 import Loading from "./loading";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import { IResSolvedAC } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
 import { connectSolvedAC } from "@/store/slices/userSlice";
@@ -14,7 +14,7 @@ import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
 const SolvedacBtn = () => {
   const dispatch = useDispatch();
-  const customFetch = useFetchWithAuth();
+  const customFetch = useFetchAuth();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
   const [open, setOpen] = React.useState(false);

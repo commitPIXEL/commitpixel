@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, InputAdornment, MenuItem, Modal, Select, SelectChangeEvent, TextField } from "@mui/material";
 import Loading from "./loading";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { IBoardInputProps } from "@/interfaces/browser";
@@ -8,7 +8,7 @@ import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
 
 const BoardInput = ({open, setOpen}: IBoardInputProps) => {
 
-    const customFetch = useFetchWithAuth();
+    const customFetch = useFetchAuth();
     const dispatch = useDispatch();
     const [type, setType] = useState(0);
     const [content, setContent] = useState("");

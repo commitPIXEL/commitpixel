@@ -13,12 +13,6 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    getUserNickname: (
-      state,
-      action: PayloadAction<string>
-    ) => {
-      state.githubNickname = action.payload;
-    },
     getUserInfo: (
       state,
       action: PayloadAction<{
@@ -66,6 +60,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { getUserNickname, getUserInfo, updateUserPixel, resetUser, connectSolvedAC, setAvailablePixel, updateUrl } =
+export const { getUserInfo, updateUserPixel, resetUser, connectSolvedAC, setAvailablePixel, updateUrl } =
   userSlice.actions;
 export default userSlice.reducer;
