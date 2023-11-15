@@ -15,17 +15,16 @@ export const setPixel = (
   if(ctx && socket) {
     socket?.emit("pixel", [x, y, color.r, color.g, color.b, user.githubNickname, user.url]);
     socket.on("isPixelSuccess", (response: boolean) => {
+      socket.off("isPixelSuccess");
       if(response) {
         handleIsPixelSuccess(ctx, color.r, color.g, color.b, x, y);
       } else {
         alert("크레딧이 부족합니다!");
       }
-      socket.off("isPixelSuccess");
     });
-    socket.on("tooFrequent", () => {
+    socket.once("tooFrequent", () => {
       console.log("tooFrequent 실행");
       alert("픽셀 찍는 속도가 너무 빠릅니다!");
-      socket.off("tooFrequent");
     });
   }
 };
