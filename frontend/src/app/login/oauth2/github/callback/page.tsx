@@ -25,26 +25,22 @@ export default function LoginHandler() {
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
             dispatch(login(accesstoken));
-
-            if(accessToken) {
-              setUser.then((res) => {
-                if(res?.success) {
-                  window.location.href = "/";
-                } else {
-                  console.log(res?.error);
-                  window.location.href = "/";
-                }
-              })
-            }
           }
         })
         .catch((err) => {
           console.log(err);
-          alert("깃허브 로그인 실패!");
+          alert("토큰 받기 실패!");
           window.location.href = "/";
         });
     }
   }, []);
+
+  useEffect(() => {
+    if(accessToken) {
+      setUser;
+      window.location.href = "/";
+    }
+  }, [accessToken]);
 
   return (
     <>
