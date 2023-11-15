@@ -25,21 +25,27 @@ export default function LoginHandler() {
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
             dispatch(login(accesstoken));
-
-            if(accessToken) {
-              setUser;
-            }
           }
         })
         .catch((err) => {
           console.log(err);
-          alert("깃허브 로그인 실패!");
-        })
-        .finally(() => {
-          window.location.href = "/";
+          alert("토큰 받기 실패!");
         });
     }
   }, []);
+
+  useEffect(() => {
+    if(accessToken) {
+      setUser.then((res) => {
+        if(res.success) {
+          window.location.href = "/";
+        } else {
+          console.log(res.error);
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
 
   return (
     <>
