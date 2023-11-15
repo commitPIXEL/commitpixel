@@ -43,6 +43,7 @@ const UserInfoAccordion = () => {
     if(!isHttp) {
       window.alert("잘못된 형식의 url입니다. 입력 예시를 확인해 주세요.");
       setUrl(user.url);
+      return;
     }
 
     try {
