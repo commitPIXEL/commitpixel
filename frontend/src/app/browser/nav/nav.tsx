@@ -7,6 +7,7 @@ import {resetUser} from "@/store/slices/userSlice"
 import { logout } from "@/store/slices/authorizationSlice";
 import Button from '@mui/material/Button';
 import { useRouter } from "next/navigation";
+import { FlourishBtn, TutorialsBtn } from "./navBtn";
 
 const Nav = () => {
   const dispatch = useDispatch();
@@ -20,14 +21,6 @@ const Nav = () => {
 
   const handleLogoClick = () => {
     router.push("/");
-  };
-
-  const handleTutorialClick = () => {
-    router.push("tutorials");
-  };
-
-  const handleFlourishClick = () => {
-    router.push("https://public.flourish.studio/visualisation/15619978/");
   };
 
   return user.githubNickname ? (
@@ -50,20 +43,8 @@ const Nav = () => {
           <div className="text-xl font-bold">Pixel</div>
         </div>
       </div>
-      <div
-        onClick={handleTutorialClick}
-        className="text-bgColor ml-16 cursor-pointer text-lg flex flex-col justify-center items-center"
-      >
-        <div>Tutorials &</div>
-        <div>Patch Note</div>
-      </div>
-      <div
-        onClick={handleFlourishClick}
-        className="text-bgColor ml-16 cursor-pointer text-lg flex flex-col justify-center items-center"
-      >
-        <div>Flourish</div>
-        <div>랭킹 변화</div>
-      </div>
+      <TutorialsBtn />
+      <FlourishBtn />
       <div>
         <Button
           variant="text"
@@ -76,7 +57,7 @@ const Nav = () => {
       </div>
     </div>
   ) : (
-    <div className="bg-mainColor w-full h-[8%] flex items-center pl-2 pr-10">
+    <div className="bg-mainColor w-full h-[8%] flex justify-between items-center pl-2 pr-10">
       <div className="flex w-[20%] h-full justify-start items-center">
         <div className="relative w-[20%] h-full cursor-pointer" onClick={handleLogoClick}>
           <Image
@@ -95,21 +76,9 @@ const Nav = () => {
           <div className="text-xl font-bold">Pixel</div>
         </div>
       </div>
-      <div className="flex items-center justify-between w-[20%]">
-        <div
-          onClick={handleTutorialClick}
-          className="text-bgColor cursor-pointer text-lg flex flex-col justify-center items-center"
-        >
-          <div>Tutorials &</div>
-          <div>Patch Note</div>
-        </div>
-        <div
-          onClick={handleFlourishClick}
-          className="text-bgColor cursor-pointer text-lg flex flex-col justify-center items-center"
-        >
-          <div>Flourish</div>
-          <div>랭킹 변화</div>
-        </div>
+      <div className="flex items-center justify-end w-[10%]">
+        <TutorialsBtn />
+        <FlourishBtn />
       </div>
     </div>
   );

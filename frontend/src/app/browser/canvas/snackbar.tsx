@@ -1,22 +1,12 @@
+import { IurlInfo } from "@/interfaces/pixel";
 import { RootState } from "@/store";
 import { setSnackbarOff } from "@/store/slices/snackbarSlice";
 import { Snackbar } from "@mui/material";
 import { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const BrowserSnackBar = memo(({ urlData }: {
-  urlData: {
-    githubNickname: string,
-    url: string,
-  },
-}) => {
-  // const dispatch = useDispatch();
+const BrowserSnackBar = memo(({ urlData }: {urlData: IurlInfo}) => {
   const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);
-  // if(!urlData?.url && !urlData?.githubNickname) {
-  //   console.log("snackbar is shut");
-  //   dispatch(setSnackbarOff());
-  //   return;
-  // }
 
   return (
       <Snackbar open={isSnackbarOpen}>

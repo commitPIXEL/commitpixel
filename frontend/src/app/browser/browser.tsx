@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import CanvasContainer from "./canvas/canvasContainer";
-import Nav from "./nav";
+import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
 import useFetchUser from "@/hooks/useFetchUser";
