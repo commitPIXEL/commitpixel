@@ -10,11 +10,9 @@ const snackbarSlice = createSlice({
   reducers: {
     setSnackbarOpen: (state) => {
       state.isOpen = true;
-      // console.log("isOpen: " + state.isOpen);
     },
     setSnackbarOff: (state) => {
       state.isOpen = false;
-      // console.log("isOpen: " + state.isOpen);
     },
   },
 });

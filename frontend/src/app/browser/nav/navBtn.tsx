@@ -1,4 +1,4 @@
-import { faBookAtlas, faBookOpen, faChartBar, faChartColumn, faChartGantt, faInfoCircle, faRankingStar } from "@fortawesome/free-solid-svg-icons";
+import { faChartColumn, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -13,8 +13,6 @@ export const TutorialsBtn = () => {
       onClick={handleTutorialClick}
       className="text-bgColor cursor-pointer text-lg flex flex-col justify-center items-center hover:text-gray-100 ease-in-out"
     >
-      {/* <div>Tutorials &</div>
-      <div>Patch Note</div> */}
       <Tooltip arrow title="튜토리얼과 패치노트 보기">
         <FontAwesomeIcon className="h-[30px]" icon={faInfoCircle} />
       </Tooltip>
@@ -29,11 +27,9 @@ export const FlourishBtn = () => {
   return (
     <div
       onClick={handleFlourishClick}
-      className="text-bgColor ml-8 cursor-pointer text-lg flex flex-col justify-center items-center ease-in-out hover:text-gray-100"
+      className="text-bgColor ml-8 mr-8 cursor-pointer text-lg flex flex-col justify-center items-center ease-in-out hover:text-gray-100"
     >
       <Tooltip arrow title="Flourish로 인터랙티브 사용자 랭킹 변화를 구경하기!">
-        {/* <div>Flourish</div>
-        <div>랭킹 변화</div> */}
         <FontAwesomeIcon className="h-[30px]" icon={faChartColumn} />
       </Tooltip>
     </div>
