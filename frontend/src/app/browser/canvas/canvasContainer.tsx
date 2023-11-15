@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Panzoom from "panzoom";
+import Panzoom, { PanZoom } from "panzoom";
 import useSocket from "@/hooks/useSocket";
 import { CircularProgress } from '@mui/material';
 import { apiUrl, height, width } from "../config";
@@ -27,11 +27,11 @@ const CanvasContainer = () => {
   const canvasContainer = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null); 
 
-  const [urlData, setUrlData] = useState<any>(null);
+  const [urlData, setUrlData] = useState<IurlInfo | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [isCanvasLoading, setIsCanvasLoading] = useState(false);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
-  const [panzoomInstance, setPanzoomInstance] = useState<any | null>(null);
+  const [panzoomInstance, setPanzoomInstance] = useState<PanZoom | null>(null);
 
   const user = useSelector((state: RootState) => state.user);
   const tool = useSelector((state:RootState) => state.tool.tool);
@@ -41,9 +41,8 @@ const CanvasContainer = () => {
 
   // 픽셀 칠하기 함수 재활용
   const memoizedSetPixel = useCallback((pixel: ImyPaintPixel & {user: IurlInfo}) => {
-    const { x, y, color, user } = pixel;
-    if(!ctx) return;
-    setPixel(ctx, socket, x, y, color, user.url, user.userId);  
+    if(!ctx || !socket) return;
+    setPixel(ctx, socket, pixel);  
   }, [ctx, socket]);
 
   // 웹소켓으로 다른 사람이 색칠한 픽셀 칠하는 함수 재활용
@@ -91,6 +90,7 @@ const CanvasContainer = () => {
 
   // 캔버스 위치 초기화: 캔버스를 삭제=>재생성으로 리렌더링 하는 대신 위치만 초기화하기 위해 initCanvas와 분리
   const resetCanvas = () => {
+    if(!panzoomInstance) return;
     panzoomInstance.pause();
     const initialZoom = device === "mobile" ? 0.5 : 1;
     const container = canvasContainer.current;
@@ -190,7 +190,7 @@ const CanvasContainer = () => {
               x: x,
               y: y,
               color: color.rgb, 
-              user: { userId: user.githubNickname, url: user.url }
+              user: { githubNickname: user.githubNickname, url: user.url }
             });
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
@@ -207,7 +207,7 @@ const CanvasContainer = () => {
       };
 
       const onMouseUp = (e: MouseEvent) => {
-        panzoomInstance.resume();
+        panzoomInstance?.resume();
       };
 
       const onFingerDown = (e: PointerEvent) => {
@@ -227,7 +227,7 @@ const CanvasContainer = () => {
               x: x,
               y: y,
               color: color.rgb, 
-              user: { userId: user.githubNickname, url: user.url }
+              user: { githubNickname: user.githubNickname, url: user.url }
             });
         } else if(tool == "copying" && ctx) {
           panzoomInstance?.pause();
@@ -248,7 +248,7 @@ const CanvasContainer = () => {
         if (tool === null || tool === undefined) {
           dispatch(setSnackbarOpen());
         }
-        panzoomInstance.resume();
+        panzoomInstance?.resume();
       };
 
       wrapper.addEventListener("pointerdown", onFingerDown);
@@ -313,7 +313,7 @@ const CanvasContainer = () => {
           {isCanvasLoading ? <div className="w-full h-full absolute flex justify-center items-center">
             <CircularProgress />
           </div> : null}
-          { isSnackbarOpen ? <BrowserSnackBar urlData={urlData} /> : null }
+          { isSnackbarOpen && urlData ? <BrowserSnackBar urlData={urlData} /> : null }
         </div>
       )}
     </div>
