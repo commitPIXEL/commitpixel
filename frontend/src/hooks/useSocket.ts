@@ -3,19 +3,13 @@ import { socketUrl} from "../app/config";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import useFetchUser from "./useFetchUser";
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
   const userNickname = useSelector((state: RootState) => state.user.githubNickname);
   const accessToken = useSelector((state: RootState) => state.authorization.authorization);
-  const setUser = useFetchUser();
 
   const connectToSocket = () => {
-    if(accessToken && !userNickname) {
-      setUser;
-      console.log("어세스토큰이 있지만 닉네임이 없음 from useSocket");
-    }
     if(true && socketUrl) {
       const socket = io(socketUrl, {
         transports: ["websocket"],
