@@ -34,7 +34,7 @@ const RefreshBtn = () => {
     return (
       <>
         <Tooltip title="15분이 지나야 갱신할 수 있습니다">
-          {loading ? <div className="cursor-pointer hover:cursor-not-allowed animate-spin-slow cursor-pointer flex justify-center items-center ml-2 text-[#008000]">
+          {loading ? <div className="hover:cursor-not-allowed animate-spin-slow cursor-pointer flex justify-center items-center ml-2 text-[#008000]">
             <FontAwesomeIcon icon={faArrowsRotate} />
           </div> : <div className="cursor-pointer flex justify-center items-center ml-2 text-[#008000]">
             <FontAwesomeIcon icon={faArrowsRotate} onClick={handleRefresh} />
