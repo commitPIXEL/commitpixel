@@ -30,16 +30,21 @@ export default function LoginHandler() {
         .catch((err) => {
           console.log(err);
           alert("토큰 받기 실패!");
-          window.location.href = "/";
         });
     }
   }, []);
 
   useEffect(() => {
     if(accessToken) {
-      setUser;
-      window.location.href = "/";
+      setUser.then((res) => {
+        if(res.success) {
+          window.location.href = "/";
+        } else {
+          console.log(res.error);
+        }
+      })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   return (
