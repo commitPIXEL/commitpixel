@@ -26,7 +26,10 @@ const Nav = () => {
   return user.githubNickname ? (
     <div className="bg-mainColor w-full h-[8%] flex justify-between items-center pl-2 pr-10">
       <div className="flex w-[50%] h-full items-center">
-        <div className="relative w-[10%] h-full cursor-pointer" onClick={handleLogoClick}>
+        <div
+          className="relative w-[10%] h-full cursor-pointer"
+          onClick={handleLogoClick}
+        >
           <Image
             src="/icon.png"
             fill
@@ -38,28 +41,36 @@ const Nav = () => {
             alt="commit Pixel logo"
           />
         </div>
-        <div className="flex flex-col justify-center cursor-pointer" onClick={handleLogoClick}>
+        <div
+          className="flex flex-col justify-center cursor-pointer"
+          onClick={handleLogoClick}
+        >
           <div className="text-xl font-bold">commit</div>
           <div className="text-xl font-bold">Pixel</div>
         </div>
       </div>
-      <TutorialsBtn />
-      <FlourishBtn />
-      <div>
-        <Button
-          variant="text"
-          color="inherit"
-          onClick={clickLogout}
-          className="text-xl font-bold"
-        >
-          LOGOUT
-        </Button>
+      <div className="w-[20%] flex items-center justify-end">
+        <TutorialsBtn />
+        <FlourishBtn />
+        <div>
+          <Button
+            variant="text"
+            color="inherit"
+            onClick={clickLogout}
+            className="text-xl font-bold ml-8"
+          >
+            LOGOUT
+          </Button>
+        </div>
       </div>
     </div>
   ) : (
     <div className="bg-mainColor w-full h-[8%] flex justify-between items-center pl-2 pr-10">
       <div className="flex w-[20%] h-full justify-start items-center">
-        <div className="relative w-[20%] h-full cursor-pointer" onClick={handleLogoClick}>
+        <div
+          className="relative w-[20%] h-full cursor-pointer"
+          onClick={handleLogoClick}
+        >
           <Image
             src="/icon.png"
             fill
@@ -71,7 +82,10 @@ const Nav = () => {
             alt="commit Pixel logo"
           />
         </div>
-        <div className="flex flex-col justify-center cursor-pointer" onClick={handleLogoClick}>
+        <div
+          className="flex flex-col justify-center cursor-pointer"
+          onClick={handleLogoClick}
+        >
           <div className="text-xl font-bold">commit</div>
           <div className="text-xl font-bold">Pixel</div>
         </div>
