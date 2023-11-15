@@ -1,9 +1,8 @@
 import { IurlInfo } from "@/interfaces/pixel";
 import { RootState } from "@/store";
-import { setSnackbarOff } from "@/store/slices/snackbarSlice";
 import { Snackbar } from "@mui/material";
 import { memo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const BrowserSnackBar = memo(({ urlData }: {urlData: IurlInfo}) => {
   const isSnackbarOpen = useSelector((state: RootState) => state.snackbar.isOpen);

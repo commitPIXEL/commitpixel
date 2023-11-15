@@ -1,4 +1,4 @@
-import { faBookAtlas, faBookOpen, faChartBar, faChartColumn, faChartGantt, faInfoCircle, faRankingStar } from "@fortawesome/free-solid-svg-icons";
+import { faChartColumn, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip } from "@mui/material";
 import { useRouter } from "next/navigation";

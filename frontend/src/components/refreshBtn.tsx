@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import useFetchAuth from "@/hooks/useFetchAuth";
 import { IUserPixel } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
