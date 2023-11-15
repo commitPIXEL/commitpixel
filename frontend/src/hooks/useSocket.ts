@@ -1,35 +1,51 @@
 import { io, Socket } from "socket.io-client";
 import { socketUrl} from "../app/config";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import useFetchUser from "./useFetchUser";
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
+  const userNickname = useSelector((state: RootState) => state.user.githubNickname);
+  const accessToken = useSelector((state: RootState) => state.authorization.authorization);
+  const setUser = useFetchUser();
 
   const connectToSocket = () => {
+    if(accessToken && !userNickname) {
+      setUser;
+    }
     if(true && socketUrl) {
       const socket = io(socketUrl, {
+        transports: ["websocket"],
         reconnection: false,
+        query: {
+          "Authorization": accessToken || "",
+          "githubNickname": userNickname || "Visitor",
+        },
       });
       
       socket.on("connect", () => {
-        console.log("Socket connected", socket);
         setSocket(socket);
+      });
+
+      socket.on("isNotUser", () => {
+        setSocket(undefined);
+        alert("올바른 사용자 접속이 아닙니다!");
       });
       
       socket.on("disconnect", (error) => {
-        console.error("Socket disconnected: ", error);
         setSocket(undefined);
-        alert("Socket disconnected: " + error);
+        alert("소켓 연결 해제: " + error);
       });
       
       socket.on("connect_error", (error) => {
-        console.log("Error connecting to socket:", error);
         setSocket(undefined);
-        alert("Error connecting to socket");
+        alert("소켓 연결 에러");
       });
       return socket;
     } else {
-      console.log("socketUrl is empty");
+      alert("소켓 URL이 올바르지 않음");
     }
   }
     
