@@ -10,7 +10,7 @@ const useSocket = () => {
   const accessToken = useSelector((state: RootState) => state.authorization.authorization);
 
   const connectToSocket = () => {
-    if(true && socketUrl) {
+    if(socketUrl) {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         reconnection: false,
