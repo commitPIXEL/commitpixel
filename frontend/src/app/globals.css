@@ -36,7 +36,7 @@ body {
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  margin-left: 10px;
+  margin-left: 20px;
   float: right;
   height: 300px;
   width: 12px;
