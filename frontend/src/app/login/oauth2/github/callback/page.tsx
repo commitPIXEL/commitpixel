@@ -35,8 +35,8 @@ export default function LoginHandler() {
   }, []);
 
   useEffect(() => {
-    if(accessToken !== "") {
-      setUser.then((res) => {
+    if(accessToken) {
+      const resUser = setUser().then((res) => {
         if(res.success) {
           window.location.href = "/";
         } else {
