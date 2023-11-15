@@ -32,6 +32,7 @@ export default function LoginHandler() {
                   window.location.href = "/";
                 } else {
                   console.log(res?.error);
+                  window.location.href = "/";
                 }
               })
             }
