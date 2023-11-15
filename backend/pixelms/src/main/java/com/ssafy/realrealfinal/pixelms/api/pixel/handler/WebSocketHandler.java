@@ -94,6 +94,9 @@ public class WebSocketHandler {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
         }
+        if (redisUtil.getData(providerId + ":ban") != null) {
+            return;
+        }
         CLIENTS.put(sessionId, new SocketClientInfo(providerId, client));
         // id-name redis 업데이트
         redisUtil.setData(providerId + ":name", githubNickname);
@@ -134,6 +137,8 @@ public class WebSocketHandler {
         if (bucket == null || !bucket.tryConsume(1)) {
             // 토큰이 없으면 요청 거부
             client.sendEvent(TOO_FREQUENT);
+            redisUtil.setTemporaryData(providerId + ":ban", "malicious user", 5);
+            client.disconnect();
             return;
         }
 
