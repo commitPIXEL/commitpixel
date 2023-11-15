@@ -76,9 +76,9 @@ public class WebSocketHandler {
             return;
         }
 
-        // 접속한 클라이언트에 대한 토큰 버킷 생성 테스트용으로 10초에 10번만 요청할 수 있도록 변경
+        // 접속한 클라이언트에 대한 토큰 버킷 생성, 초기 생성시 토큰 600개, 1분 마다 최대 600개까지 다시 리필
         Bucket bucket = Bucket.builder()
-            .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofSeconds(10)))).build();
+            .addLimit(Bandwidth.classic(600, Refill.greedy(600, Duration.ofMinutes(1)))).build();
 
         BUCKETS.put(sessionId, bucket);
 
