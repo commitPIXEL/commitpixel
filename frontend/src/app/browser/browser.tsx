@@ -2,18 +2,16 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo, updateUserPixel } from "@/store/slices/userSlice";
 import { RootState } from "@/store";
 import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
-import { IUserInfo, IUserPixel } from "../../interfaces/browser";
+import useFetchUser from "@/hooks/useFetchUser";
 
 const Browser = () => {
   const dispatch = useDispatch();
-  const customFetch = useFetchWithAuth();
+  const setUser = useFetchUser();
   const user = useSelector((state: RootState) => state.user);
   const accessToken = useSelector(
     (state: RootState) => state.authorization.authorization
@@ -22,28 +20,9 @@ const Browser = () => {
     (state: RootState) => state.urlInput.isUrlInput
   );
   
-  const fetchAsync = async () => {
-    try {
-      const resUser = await customFetch("/user/");
-      const userData: IUserInfo = await resUser.json();
-
-      dispatch(getUserInfo(userData));
-    } catch (err) {
-      console.error("Error:", err);
-    }
-
-    try {
-      const resPixel = await customFetch("/user/refreshinfo");
-      const pixelData: IUserPixel = await resPixel.json();
-
-      dispatch(updateUserPixel(pixelData));
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
   useEffect(() => {
     if (accessToken && !user.githubNickname) {
-      fetchAsync();
+      setUser;
     }
   }, [accessToken]);
 

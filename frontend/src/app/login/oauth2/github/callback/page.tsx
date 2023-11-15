@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/slices/authorizationSlice";
 import { apiUrl } from "@/app/browser/config";
-import { getUserNickname } from "@/store/slices/userSlice";
 
 export default function LoginHandler() {
   const dispatch = useDispatch();
@@ -19,9 +18,7 @@ export default function LoginHandler() {
         .then((res) => {
           if (res.status === 200) {
             const accesstoken: string = res.headers.accesstoken;
-            const nickname: string = res.data.nickname;
             dispatch(login(accesstoken));
-            dispatch(getUserNickname(nickname));
           }
         })
         .catch((err) => {
