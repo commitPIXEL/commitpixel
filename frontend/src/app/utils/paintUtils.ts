@@ -23,6 +23,7 @@ export const setPixel = (
       socket.off("isPixelSuccess");
     });
     socket.on("tooFrequent", () => {
+      console.log("tooFrequent 실행");
       alert("픽셀 찍는 속도가 너무 빠릅니다!");
       socket.off("tooFrequent");
     });
