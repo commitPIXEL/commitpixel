@@ -6,7 +6,6 @@ import { getUserInfo, updateUserPixel } from '@/store/slices/userSlice';
 const useFetchUser = () => {
     const dispatch = useDispatch();
     const customFetch = useFetchAuth();
-    console.log("useFetchUser 실행");
 
     const fetchUser = async () => {
         try {

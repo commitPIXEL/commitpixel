@@ -1,26 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import Panzoom, { PanZoom } from "panzoom";
-import useSocket from "@/hooks/useSocket";
 import { CircularProgress } from '@mui/material';
-import { apiUrl, height, width } from "../config";
+
 import { RootState } from "@/store";
 import { pick } from "@/store/slices/colorSlice";
 import { setTool } from "@/store/slices/toolSlice";
 import { setAvailablePixel } from "@/store/slices/userSlice";
 import { setSnackbarOff, setSnackbarOpen } from "@/store/slices/snackbarSlice";
+
 import { BrowserSnackBar } from "./snackbar";
-import rgbToHex from "@/app/utils/rbgUtils";
-import { setPixel } from "@/app/utils/paintUtils";
+
+import useSocket from "@/hooks/useSocket";
+import { apiUrl, height, width } from "../config";
+
+import rgbToHex from "@/utils/rbgUtils";
+import { setPixel } from "@/utils/paintUtils";
+
 import { ImyPaintPixel, IothersPaintPixel, IurlInfo } from "@/interfaces/pixel";
+import { CANVAS_MOBILE_CLASS, CANVAS_PC_CLASS, MOBILE, PIXEL_PAINT_AUDIO } from "@/constants/constants";
 
 const CanvasContainer = () => {
   const dispatch = useDispatch();
   const { socket, setSocket, connectToSocket } = useSocket();
 
-  const pcClass = " h-full col-span-3";
-  const mobileClass = " h-full justify-center";
-  const audio = new Audio('/sounds/zapsplat_foley_footstep_stamp_wood_panel_19196.mp3');
+  const audio = new Audio(PIXEL_PAINT_AUDIO);
 
   const ref = useRef<HTMLDivElement | null>(null);
   const canvasWrapper = useRef<HTMLDivElement>(null);
@@ -66,7 +71,7 @@ const CanvasContainer = () => {
   // 캔버스 컴포넌트 초기화
   const initCanvas = () => {
     const div = ref.current;
-    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const initialZoom = device === MOBILE ? 0.5 : 1;
     const container = canvasContainer.current;
     if (div && container) {
       const panzoom = Panzoom(div, {
@@ -92,7 +97,7 @@ const CanvasContainer = () => {
   const resetCanvas = () => {
     if(!panzoomInstance) return;
     panzoomInstance.pause();
-    const initialZoom = device === "mobile" ? 0.5 : 1;
+    const initialZoom = device === MOBILE ? 0.5 : 1;
     const container = canvasContainer.current;
     if (container) {
       panzoomInstance.zoomAbs(0, 0, initialZoom);
@@ -248,7 +253,7 @@ const CanvasContainer = () => {
       };
 
       const onFingerUp = (e: PointerEvent) => {
-        if(e.pointerType === "mouse" || device !== "mobile") return;
+        if(e.pointerType === "mouse" || device !== MOBILE) return;
         if (tool === null || tool === undefined) {
           dispatch(setSnackbarOpen());
         }
@@ -276,7 +281,7 @@ const CanvasContainer = () => {
   }, [color, setPixel, tool, panzoomInstance, rgbToHex, isSnackbarOpen]);
 
   return (
-    <div className={device === "mobile" ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
+    <div className={device === MOBILE ? "w-full h-[48%]" : "col-span-3 w-full max-h-full"}>
       {!socket && (
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Not connected</span>
@@ -292,8 +297,8 @@ const CanvasContainer = () => {
         </div>
       )}
       {socket && (
-        <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === "mobile" ? mobileClass : pcClass)}>
-          { device === "mobile" ? null : 
+        <div ref={canvasContainer} className={"w-full flex flex-col items-center" + (device === MOBILE ? CANVAS_MOBILE_CLASS : CANVAS_PC_CLASS)}>
+          { device === MOBILE ? null : 
           <div className="text-mainColor w-full text-center flex justify-center items-center">
             <div className="mr-8">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
             <div className="cursor-pointer" onClick={() => resetCanvas()}>캔버스 원위치</div>

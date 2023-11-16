@@ -5,6 +5,7 @@ import { RootState } from "@/store";
 import BrowserTutorial from "./browserTutorial";
 import { setDevice } from "@/store/slices/deviceSlice";
 import MobileTutorial from "./mobileTutorial";
+import { MOBILE } from "@/constants/constants";
 
 export default function Tutorials () {
   const dispatch = useDispatch();
@@ -32,6 +33,6 @@ export default function Tutorials () {
   }, []);
 
   return (
-    device == "mobile" ? <MobileTutorial /> : <BrowserTutorial />
+    device == MOBILE ? <MobileTutorial /> : <BrowserTutorial />
   );
 };
