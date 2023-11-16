@@ -130,7 +130,7 @@ const UserInfoAccordion = () => {
             disabled={!isEdit}
           />
           <span className="text-xs text-gray-300 opacity-75 mt-2">
-            입력 예시1: https://commitpixel.com<br/>
+            입력 예시: https://commitpixel.com<br/>
             http도 가능합니다.
           </span>
         </div>
