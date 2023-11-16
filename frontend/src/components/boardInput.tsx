@@ -1,14 +1,15 @@
 import { Box, Button, FormControl, InputAdornment, MenuItem, Modal, Select, SelectChangeEvent, TextField } from "@mui/material";
 import Loading from "./loading";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { IBoardInputProps } from "@/interfaces/browser";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
+import { BOARD_AUTHORIZED_URL, BOARD_NO_INPUT, BOARD_SUBMIT_ERROR, BOARD_SUBMIT_SUCCESS, BOARD_UNEXPECTED_ERROR } from "@/constants/message";
 
 const BoardInput = ({open, setOpen}: IBoardInputProps) => {
 
-    const customFetch = useFetchWithAuth();
+    const customFetch = useFetchAuth();
     const dispatch = useDispatch();
     const [type, setType] = useState(0);
     const [content, setContent] = useState("");
@@ -32,27 +33,27 @@ const BoardInput = ({open, setOpen}: IBoardInputProps) => {
     };
     const handleSubmit = async () => {
       if (content.trim().length === 0) {
-        window.alert("내용을 입력해주세요!");
+        window.alert(BOARD_NO_INPUT);
         return;
       }
   
       setLoading(true);
       try {
-        const data = await customFetch("/user/board", {
+        await customFetch("/user/board", {
           method: "POST",
           body: JSON.stringify({ type: type, content: content }),
         });
         setOpen(false);
-        window.alert("건의사항이 제출되었습니다!!");
+        window.alert(BOARD_SUBMIT_SUCCESS);
       } catch (err: unknown) {
         if (err instanceof Error) {
-          console.error("Caught error message:", err.message);
+          console.error(BOARD_SUBMIT_ERROR, err.message);
           const status = parseInt(err.message, 10);
           if (status) {
-            window.alert("인가된 url을 입력하셨습니다!");
+            window.alert(BOARD_AUTHORIZED_URL);
           }
         } else {
-          console.error("기대하지 않은 에러 발생:");
+          console.error(BOARD_UNEXPECTED_ERROR);
           console.error(err);
         }
       } finally {

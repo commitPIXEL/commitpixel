@@ -2,10 +2,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { apiUrl } from '@/app/browser/config';
 
-const useFetchWithAuth = () => {
+const useFetchAuth = () => {
   const authorization = useSelector((state: RootState) => state.authorization.authorization);
 
-  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const fetchAuth = async (url: string, options: RequestInit = {}) => {
     const headers = {
       ...options.headers,
       "Content-Type": "application/json",
@@ -21,7 +21,7 @@ const useFetchWithAuth = () => {
     return response;
   };
 
-  return fetchWithAuth;
+  return fetchAuth;
 };
 
-export default useFetchWithAuth;
+export default useFetchAuth;

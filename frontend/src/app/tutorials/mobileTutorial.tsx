@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MobileNav from "../mobile/mobileNav";
 import PatchNote from "./patchNote";
 import TutorialDesc from "./tutorialDescription";

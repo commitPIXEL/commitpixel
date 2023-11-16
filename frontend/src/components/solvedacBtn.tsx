@@ -6,15 +6,16 @@ import TextField from "@mui/material/TextField";
 import CampaignIcon from '@mui/icons-material/Campaign';
 import InputAdornment from "@mui/material/InputAdornment";
 import Loading from "./loading";
-import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import useFetchAuth from "@/hooks/useFetchAuth";
 import { IResSolvedAC } from "@/interfaces/browser";
 import { useDispatch } from "react-redux";
 import { connectSolvedAC } from "@/store/slices/userSlice";
 import { setUrlInputOff, setUrlInputOn } from "@/store/slices/urlInputSlice";
+import { SOLVED_ERROR, SOLVED_FAILURE, SOLVED_NO_ID, SOLVED_SUCCESS } from "@/constants/message";
 
 const SolvedacBtn = () => {
   const dispatch = useDispatch();
-  const customFetch = useFetchWithAuth();
+  const customFetch = useFetchAuth();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -36,7 +37,7 @@ const SolvedacBtn = () => {
 
   const handleSubmit = async () => {
     if (id.trim().length === 0) {
-        window.alert("ID를 입력해주세요!");
+        window.alert(SOLVED_NO_ID);
         return;
     }
 
@@ -47,11 +48,11 @@ const SolvedacBtn = () => {
       });
       const dataPixel: IResSolvedAC = await resPixel.json();
       dispatch(connectSolvedAC(dataPixel));
-      window.alert("solvedac 연동 성공!!");
+      window.alert(SOLVED_SUCCESS);
     } catch (err) {
-        console.error("solvedac/auth에서 에러 발생:");
+        console.error(SOLVED_ERROR);
         console.error(err);
-        window.alert("solvedac 연동 실패!!");
+        window.alert(SOLVED_FAILURE);
     } finally {
       setLoading(false);
       setOpen(false);
