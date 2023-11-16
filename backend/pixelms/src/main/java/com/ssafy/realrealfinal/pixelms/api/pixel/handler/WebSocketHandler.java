@@ -93,12 +93,11 @@ public class WebSocketHandler {
             return;
         }
 
-        // 접속한 클라이언트에 대한 토큰 버킷 생성, 초기 생성시 토큰 50개, 5초 마다 최대 50개까지 다시 리필
-        Bucket bucket = Bucket.builder()
-            .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofSeconds(5)))).build();
-
         // 버켓이 할당되지 않은 사용자라면 버켓 할당
         if (!BUCKETS.containsKey(providerId)) {
+            // 접속한 클라이언트에 대한 토큰 버킷 생성, 초기 생성시 토큰 50개, 5초 마다 최대 50개까지 다시 리필
+            Bucket bucket = Bucket.builder()
+                .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofSeconds(5)))).build();
             BUCKETS.put(providerId, bucket);
         }
 
