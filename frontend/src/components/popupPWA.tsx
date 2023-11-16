@@ -44,8 +44,8 @@ const PopupPWA = () => {
 
   if(!isIOS && isShown) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-600 bg-opacity-50 h-full w-full flex justify-center items-end">
-        <div className="mx-auto mb-10 p-5 border w-full shadow-lg bg-white">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-600 bg-opacity-50 h-full w-full flex justify-center items-end z-50">
+        <div className="mx-auto p-5 border w-full shadow-lg bg-white rounded-t-lg">
           <div className="flex justify-center mb-4">
             <Image
               src="/static/images/pixelFox.png"
