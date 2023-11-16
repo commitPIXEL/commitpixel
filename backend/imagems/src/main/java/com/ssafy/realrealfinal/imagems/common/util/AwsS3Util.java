@@ -57,7 +57,7 @@ public class AwsS3Util {
                 return ImageIO.read(inputStream);
             }
         } catch (IOException e) {
-            log.warn("readImageFromS3 mid: failed to fetch image from S3 - " + fileName, e);
+            log.warn("readImageFromS3 mid: failed to fetch image from S3 - " + fileName);
             return null; // 이제 예외 발생 시 null을 반환합니다.
         }
 
@@ -86,7 +86,6 @@ public class AwsS3Util {
             amazonS3.putObject(new PutObjectRequest(bucket, fileKey, tempFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            e.printStackTrace();
             throw new S3Exception();
         } finally {
             // 임시 파일 정리
