@@ -1,9 +1,77 @@
-[![](https://lh3.google.com/u/0/d/11kJc0UgNctIIdEQV2V07X-GW_v7B7Fd1=w1008-h892-iv1)](https://user-images.githubusercontent.com/72757829/114306905-615df500-9b18-11eb-80dc-e1bfc0a8e33c.png)  
-commit 기반 URL 홍보 사이트
+[![commit Pixel](https://lh3.google.com/u/0/d/11kJc0UgNctIIdEQV2V07X-GW_v7B7Fd1=w1008-h892-iv1)](https://user-images.githubusercontent.com/72757829/114306905-615df500-9b18-11eb-80dc-e1bfc0a8e33c.png)
 
-> 서비스명: commit Pixel
-> 팀명: 진짜_진짜_최종_팀
+### commit 기반 URL 홍보 사이트
+
+> 서비스명: commit Pixel<br/>
+> 팀명: 진짜_진짜_최종_팀<br/>
 > 개발 기간: 2023.10.10 ~ 2023.11.17 (약 6주)
+
+<br/>
+
+## [🚩 목차]
+
+1. [서비스 소개](#commit-기반-url-홍보-사이트)
+2. [목차](#-목차)
+2. [STACKS](#-stacks)
+3. [UCC영상](#-ucc영상)
+4. [문서](#-문서)
+5. [팀원 역할](#-팀원-역할)
+7. [주요 기능](#-주요-기능)
+8. [Git 컨벤션](#-git-컨벤션)
+9. [Code 컨벤션](#-code-컨벤션)
+10. [프로젝트 구조](#-프로젝트-구조)
+11. [주요 기능 미리보기](#-주요-기능-미리보기)
+12. [산출물](#-산출물)
+
+---
+
+
+<br/>
+
+
+## [📚 STACKS]
+
+<div align=center> 
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"> 
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
+  <img src="https://img.shields.io/badge/React Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+  <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white">
+  <br/>
+
+  <img src="https://img.shields.io/badge/Tailwind Css-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> 
+  <img src="https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Font Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=black">
+  <br/>
+
+  <img src="https://img.shields.io/badge/PWA-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white"> 
+  <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black">
+  <img src="https://img.shields.io/badge/.ENV-ECD53F?style=for-the-badge&logo=dotenv&logoColor=black">
+  <br/>
+  <br/>
+
+  
+  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/MySql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
+  <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
+  <br/>
+
+  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"> 
+  <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+  <img src="https://img.shields.io/badge/apache Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white">
+  <br/>
+  
+  <img src="https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+  <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white">
+  <br/>
+</div>
+
+
+<br/>
+
 
 ### [🎬UCC영상]
 
@@ -209,16 +277,12 @@ be/userms/feature/기능명
 ![erd](https://lh3.google.com/u/0/d/13Is2YSI9s_SEFKFVtKivWxtR95hbKo73=w2000-h7200-iv1)
 
 
----
-
-
 <br/>
 
 
-
-### 목업
-![슬라이드1](https://lh3.google.com/u/0/d/10_2iK1SMvIwvQ-ihwImxnkPy96CCsd5S=w2560-h1346-iv1)
-![슬라이드2](https://lh3.google.com/u/0/d/1EeL_Bjq22PEjsdg2A2AS5q3YoHvBir7f=w2560-h1346-iv1)
-![슬라이드3](https://lh3.google.com/u/0/d/1g2oPyzzfx5zPwmQqeo2IilYSo4nMrGQh=w2560-h1346-iv1)
-![슬라이드4](https://lh3.google.com/u/0/d/1dB2XpTUZPOD6IzkfDO28V0WrR_RqfuPg=w2560-h1346-iv1)
-![슬라이드5](https://lh3.google.com/u/0/d/1oxWXtnjtTtDfXNMUgFahxrYuxXB8GSna=w1250-h1250-iv1)
+### ✔ 목업
+<img src="https://lh3.google.com/u/0/d/10_2iK1SMvIwvQ-ihwImxnkPy96CCsd5S=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1EeL_Bjq22PEjsdg2A2AS5q3YoHvBir7f=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1g2oPyzzfx5zPwmQqeo2IilYSo4nMrGQh=w2560-h1346-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1yiP_8rCzXxrGsAMfjjBjM_UeTf5mJA8l=w1920-h953-iv1" width="300" height="300">
+<img src="https://lh3.google.com/u/0/d/1oxWXtnjtTtDfXNMUgFahxrYuxXB8GSna=w1250-h1250-iv1" width="300" height="300">
