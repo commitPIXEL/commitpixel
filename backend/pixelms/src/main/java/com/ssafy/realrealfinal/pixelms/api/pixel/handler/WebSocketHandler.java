@@ -97,7 +97,9 @@ public class WebSocketHandler {
         Bucket bucket = Bucket.builder()
             .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofSeconds(5)))).build();
 
-        BUCKETS.put(providerId, bucket);
+        if (!BUCKETS.containsKey(providerId)) {
+            BUCKETS.put(providerId, bucket);
+        }
 
         CLIENTS.put(sessionId, new SocketClientInfo(providerId, client));
         // id-name redis 업데이트
