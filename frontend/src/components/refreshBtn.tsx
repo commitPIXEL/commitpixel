@@ -8,6 +8,7 @@ import { updateUserPixel } from "@/store/slices/userSlice";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { NOT_PASS_ENOUGH_TIME } from "@/constants/message";
 
 const RefreshBtn = () => {
 
@@ -21,7 +22,7 @@ const RefreshBtn = () => {
         const pixelData: IUserPixel = await resPixel.json();
 
         if(pixelData.githubNickname === null) {
-          window.alert("로그인 혹은 마지막 갱신 이후 15분이 지나지 않았습니다.")
+          window.alert(NOT_PASS_ENOUGH_TIME)
         }
         dispatch(updateUserPixel(pixelData));
       } catch (err) {
