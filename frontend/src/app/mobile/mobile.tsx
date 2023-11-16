@@ -7,12 +7,14 @@ import MobileNav from "./mobileNav";
 import MobilePicker from "./mobilePicker";
 import { RootState } from "@/store";
 import LoginBtn from "@/components/loginBtn";
+import PopupPWA from "@/components/popupPWA";
 
 const Mobile = () => {
   const user = useSelector((state: RootState) => state.user);
 
   return(
   <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">
+    <PopupPWA />
     <MobileNav />
     <CanvasContainer />
     {user?.githubNickname !== "" ? <Menu /> : null}
