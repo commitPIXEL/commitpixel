@@ -55,8 +55,8 @@ public class PixelServiceImpl implements PixelService {
         String r = String.valueOf(pixelInfo.get(2));
         String g = String.valueOf(pixelInfo.get(3));
         String b = String.valueOf(pixelInfo.get(4));
-        String url = (String) pixelInfo.get(5);
-        String githubNickname = (String) pixelInfo.get(6);
+        String githubNickname = (String) pixelInfo.get(5);
+        String url = (String) pixelInfo.get(6);
         // (x * SCALE + y) 인덱스
         String index = String.valueOf(x * SCALE + y);
         // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
