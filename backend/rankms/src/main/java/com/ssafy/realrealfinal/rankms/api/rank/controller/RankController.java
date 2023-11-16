@@ -31,7 +31,7 @@ public class RankController {
         log.info("getRank start");
         RankRes rankRes = rankService.getRankFromRedis(accessToken);
 
-        log.info("getRank end: " + rankRes);
+        log.info("getRank end");
         return ResponseEntity.ok().body(rankRes);
     }
 
