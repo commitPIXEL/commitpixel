@@ -43,7 +43,7 @@ public class WebSocketHandler {
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
     private static final ConcurrentHashMap<UUID, SocketClientInfo> CLIENTS = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<UUID, Bucket> BUCKETS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Bucket> BUCKETS = new ConcurrentHashMap<>();
 
     /**
      * 스프링 애플리케이션 컨텍스트가 초기화되거나 새로 고쳐질 때 서버를 시작
@@ -76,12 +76,6 @@ public class WebSocketHandler {
             return;
         }
 
-        // 접속한 클라이언트에 대한 토큰 버킷 생성, 초기 생성시 토큰 280개, 1분 마다 최대 280개까지 다시 리필
-        Bucket bucket = Bucket.builder()
-            .addLimit(Bandwidth.classic(280, Refill.greedy(280, Duration.ofSeconds(30)))).build();
-
-        BUCKETS.put(sessionId, bucket);
-
         String accessToken = client.getHandshakeData().getSingleUrlParam("Authorization");
         // 닉네임이 바뀌는 경우는 이미 새롭게 로그인을 하고 프론트에 새로운 닉네임이 있는 상태
         // 그 닉네임을 최초 연결 때 보내주는 것이기 때문에 idNameMap에 put할 때 replace 된다
@@ -94,9 +88,17 @@ public class WebSocketHandler {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
         }
+        // 밴유저일 경우 접속 불가
         if (redisUtil.getData(providerId + ":ban") != null) {
             return;
         }
+
+        // 접속한 클라이언트에 대한 토큰 버킷 생성, 초기 생성시 토큰 50개, 5초 마다 최대 50개까지 다시 리필
+        Bucket bucket = Bucket.builder()
+            .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofSeconds(5)))).build();
+
+        BUCKETS.put(providerId, bucket);
+
         CLIENTS.put(sessionId, new SocketClientInfo(providerId, client));
         // id-name redis 업데이트
         redisUtil.setData(providerId + ":name", githubNickname);
@@ -132,12 +134,12 @@ public class WebSocketHandler {
             return;
         }
 
-        Bucket bucket = BUCKETS.get(sessionId);
+        Bucket bucket = BUCKETS.get(providerId);
 
         if (bucket == null || !bucket.tryConsume(1)) {
             // 토큰이 없으면 요청 거부
             client.sendEvent(TOO_FREQUENT);
-            redisUtil.setTemporaryData(providerId + ":ban", "malicious user", 5);
+            redisUtil.setTemporaryData(providerId + ":ban", "malicious user", 3);
             client.disconnect();
             return;
         }
@@ -187,8 +189,9 @@ public class WebSocketHandler {
     @OnDisconnect
     public void onDisconnectEvent(SocketIOClient client) {
         UUID sessionId = client.getSessionId();
+        Integer providerId = CLIENTS.get(sessionId).getProviderId();
         log.info("Client disconnected: {}", sessionId.toString());
-        BUCKETS.remove(sessionId);
+        BUCKETS.remove(providerId);
         CLIENTS.remove(sessionId);
     }
 }
