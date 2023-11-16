@@ -7,7 +7,6 @@ import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
-import PopupPWA from "@/components/popupPWA";
 
 const Browser = () => {
   const dispatch = useDispatch();
@@ -40,7 +39,6 @@ const Browser = () => {
         <CanvasContainer />
         <Sidebar />
       </div>
-      <PopupPWA />
     </main>
   );
 };
