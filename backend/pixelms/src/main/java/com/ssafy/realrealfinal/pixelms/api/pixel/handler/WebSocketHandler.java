@@ -40,6 +40,7 @@ public class WebSocketHandler {
     private static final String IS_NOT_USER = "isNotUser";
     private static final String AVAILABLE_CREDIT = "availableCredit";
     private static final String URL = "url";
+    private static final String BAN_USER = "banUser";
 
     // 연결된 클라이언트의 Websocket 세션이 key, {providerId, SocketIoClient}가 value
     private static final ConcurrentHashMap<UUID, SocketClientInfo> CLIENTS = new ConcurrentHashMap<>();
@@ -127,7 +128,7 @@ public class WebSocketHandler {
 
         // 밴유저일 경우 픽셀 찍기 불가
         if (redisUtil.getData(providerId + ":ban") != null) {
-            client.sendEvent(TOO_FREQUENT);// 테스트
+            client.sendEvent(BAN_USER);
             return;
         }
 
