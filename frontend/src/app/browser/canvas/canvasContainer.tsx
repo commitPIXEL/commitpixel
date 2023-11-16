@@ -103,6 +103,10 @@ const CanvasContainer = () => {
     panzoomInstance.resume();
   };
 
+  useEffect(() => {
+    console.log("socket 변경됨!");
+  }, [socket]);
+
   // 웹소켓으로 pixel 받기
   useEffect(() => {
     if (socket && ctx) {
@@ -292,10 +296,10 @@ const CanvasContainer = () => {
           { device === "mobile" ? null : 
           <div className="text-mainColor w-full text-center flex justify-center items-center">
             <div className="mr-8">{`( ${cursorPos.x} , ${cursorPos.y} )`}</div>
-            <div onClick={() => resetCanvas()} className={`cursor-${!tool ? "pointer" : tool}`}>캔버스 원위치</div>
+            <div className="cursor-pointer" onClick={() => resetCanvas()}>캔버스 원위치</div>
           </div>}
           <div
-            className="overflow-hidden w-full h-full">
+            className={`overflow-hidden w-full h-full cursor-${!tool ? "pointer" : tool}`}>
             <div className="w-max cursor-pointer" ref={ref}>
               <div style={{ padding: 0.5 }} ref={canvasWrapper} >
                 <canvas

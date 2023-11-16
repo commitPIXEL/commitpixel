@@ -21,7 +21,6 @@ const ImageToPixelModal = () => {
       return;
     }
     setIsLoading(true);
-    const file = e.target.files[0];
     let formData = new FormData();
     formData.append("file", e?.target.files[0]);
 

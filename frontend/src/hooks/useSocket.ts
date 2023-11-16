@@ -12,11 +12,7 @@ const useSocket = () => {
   const setUser = useFetchUser();
 
   const connectToSocket = () => {
-    if(accessToken && !userNickname) {
-      setUser;
-      console.log("어세스토큰이 있지만 닉네임이 없음 from useSocket");
-    }
-    if(true && socketUrl) {
+    if(socketUrl) {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         reconnection: false,

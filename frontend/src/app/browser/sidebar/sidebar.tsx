@@ -19,7 +19,7 @@ const Sidebar = () => {
   const [userRank, setUserRank] = useState<any>(null);
   const [urlRank, setUrlRank] = useState<any>(null);
   const [myRank, setMyRank] = useState<any>(null);
-  const { isLoading, error } = useQuery(
+  const { isLoading } = useQuery(
     ["ranking-list"],
     async () => {
       const response = await axios.get(apiUrl + "/rank", {
@@ -58,10 +58,8 @@ const Sidebar = () => {
     </div>
   ) : (
     <div className="no-scrollbar pb-20 flex flex-col col-span-1 bg-bgColor w-full h-full pr-10 overflow-y-scroll">
-      {/* TODO: dev 테스트 용 */}
-      {/* <UserInfoAccordion /> */}
       <LoginBtn />
-      {/* <PickerAccordion /> */}
+      <UserInfoAccordion />
       <div className="mb-6 mt-6 w-full min-h-[40px] flex justify-between items-center">
         <ImageToPixel />
         <TimelapseModal />

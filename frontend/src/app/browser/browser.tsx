@@ -7,25 +7,12 @@ import CanvasContainer from "./canvas/canvasContainer";
 import Nav from "./nav/nav";
 import Sidebar from "./sidebar/sidebar";
 import { setTool } from "@/store/slices/toolSlice";
-import useFetchUser from "@/hooks/useFetchUser";
 
 const Browser = () => {
   const dispatch = useDispatch();
-  const setUser = useFetchUser();
-  const user = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector(
-    (state: RootState) => state.authorization.authorization
-  );
   const isUrlInput = useSelector(
     (state: RootState) => state.urlInput.isUrlInput
   );
-  
-  useEffect(() => {
-    if (accessToken && !user.githubNickname) {
-      setUser;
-      console.log("어세스토큰이 있지만 닉네임이 없음 from Browser.tsx");
-    }
-  }, [accessToken]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -49,7 +36,6 @@ const Browser = () => {
     <main className="w-screen h-screen bg-bgColor">
       <Nav />
       <div className="grid grid-cols-4 w-full h-[92%] place-items-stretch p-4">
-        {/* TODO: 개발 버전과 Test버전 캔버스 잘 구별하기 */}
         <CanvasContainer />
         <Sidebar />
       </div>
