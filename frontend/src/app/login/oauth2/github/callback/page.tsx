@@ -7,6 +7,7 @@ import { login } from "@/store/slices/authorizationSlice";
 import { apiUrl } from "@/app/browser/config";
 import useFetchUser from "@/hooks/useFetchUser";
 import { RootState } from "@/store";
+import { FAIL_TO_GET_TOKEN } from "@/constants/message";
 
 export default function LoginHandler() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function LoginHandler() {
         })
         .catch((err) => {
           console.log(err);
-          alert("토큰 받기 실패!");
+          alert(FAIL_TO_GET_TOKEN);
         });
     }
   }, []);
@@ -48,8 +49,8 @@ export default function LoginHandler() {
   }, [accessToken]);
 
   return (
-    <>
-      <p>로그인 중~~</p>
-    </>
+    <div className="w-full h-full bg-mainColor flex justify-center items-center">
+      <p className="text-bgColor">로그인 중~~</p>
+    </div>
   );
 }
