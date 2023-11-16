@@ -4,6 +4,7 @@ import { apiUrl } from "../config";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import CircularProgress from "@mui/material/CircularProgress";
+import { TIMELAPSE_FAILURE } from "@/constants/message";
 
 const TimelapseModal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +21,8 @@ const TimelapseModal = () => {
       setOpen(true);
       setIsLoading(false);
     }).catch((err) => {
+      alert(TIMELAPSE_FAILURE);
       console.error(err);
-      alert("타임랩스 가져오기 실패!");
       setIsLoading(false);
     });
   };

@@ -28,6 +28,10 @@ const config: Config = {
           'to': { transform: 'rotate(360deg)' },
         },
       },
+      cursor: {
+        "painting": "url('/static/images/pencil.png'), auto",
+        "copying": "url('/static/images/spoid.png'), auto",
+      },
     },
   },
   plugins: [],

@@ -3,6 +3,7 @@ import { socketUrl} from "../app/config";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { SOCKET_CONNECTION_ERROR, SOCKET_DISCONNECTED, SOCKET_NOT_USER, SOCKET_URL_ERROR, VISITOR } from "@/constants/message";
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
@@ -10,32 +11,37 @@ const useSocket = () => {
   const accessToken = useSelector((state: RootState) => state.authorization.authorization);
 
   const connectToSocket = () => {
-    if(true && socketUrl) {
+    if(socketUrl) {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         reconnection: false,
         query: {
           "Authorization": accessToken || "",
-          "githubNickname": userNickname || "Visitor",
+          "githubNickname": userNickname || VISITOR,
         },
       });
       
       socket.on("connect", () => {
         setSocket(socket);
       });
+
+      socket.on("isNotUser", () => {
+        setSocket(undefined);
+        alert(SOCKET_NOT_USER);
+      });
       
       socket.on("disconnect", (error) => {
         setSocket(undefined);
-        alert("소켓 연결 해제: " + error);
+        alert(SOCKET_DISCONNECTED + error);
       });
       
       socket.on("connect_error", (error) => {
         setSocket(undefined);
-        alert("소켓 연결 에러");
+        alert(SOCKET_CONNECTION_ERROR + error);
       });
       return socket;
     } else {
-      alert("소켓 URL이 올바르지 않음");
+      alert(SOCKET_URL_ERROR);
     }
   }
     
