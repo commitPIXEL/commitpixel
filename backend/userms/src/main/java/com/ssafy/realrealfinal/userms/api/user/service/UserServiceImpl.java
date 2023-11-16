@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
         // 최초 가입자는 +500
         if (lastUpdateStatus == 0) {
-            additionalCredit += 500;
+            additionalCredit += 5000;
         }
 
         // pixelms와 feign으로 통신 후 프론트로 {totalCredit, availablePixel, githubNickname} 보내기
