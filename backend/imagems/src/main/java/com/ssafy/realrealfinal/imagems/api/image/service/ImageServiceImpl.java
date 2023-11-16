@@ -88,14 +88,14 @@ public class ImageServiceImpl implements ImageService {
         LocalDateTime twentyFourHoursAgo = now.minusHours(24);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String startFolder = twentyFourHoursAgo.format(formatter);
-        String endFolder = now.format(formatter);
+        String endFolder = twentyFourHoursAgo.plusDays(1).format(formatter);
         //startFolder에서는 이 시간부터, endFolder에서는 이 시간까지 file 가져오기.
         LocalDateTime startTime = getRoundedHoursAgo(now, 24);
         DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("HH.mm");
         String startTimeFormatted = startTime.format(fileFormatter);
         String fullPath = startFolder + "/" + startTimeFormatted + ".png";
 
-        String[] filePaths = generateFilePaths(startFolder, endFolder, startTime);
+        String[] filePaths = generateFilePaths(endFolder, startTime);
 
         // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
         try {
@@ -249,20 +249,19 @@ public class ImageServiceImpl implements ImageService {
     /**
      * 시작 폴더와 종료 폴더에 대해 파일 경로를 생성
      *
-     * @param startFolder 시작 폴더의 이름
      * @param endFolder   종료 폴더의 이름
      * @param startTime   시작 시간
      * @return 생성된 파일 경로의 배열
      */
-    public static String[] generateFilePaths(String startFolder, String endFolder,
+    public static String[] generateFilePaths(String endFolder,
         LocalDateTime startTime) {
         List<String> filePaths = new ArrayList<>();
         LocalDateTime time = startTime;
 
         while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
             if (!(time.getHour() >= 1 && time.getHour() < 8)) {
-                String filePath = createFilePath(time.getHour() < 24 ? startFolder : endFolder,
-                    time);
+                String currentFolder = time.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String filePath = createFilePath(currentFolder, time);
                 filePaths.add(filePath + ".png");  // ".png" 확장자 추가
             }
             time = time.plusMinutes(10);
