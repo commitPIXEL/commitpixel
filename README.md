@@ -83,6 +83,8 @@ commit 기반 URL 홍보 사이트
     > b. Pixel랭킹: 사용자가 픽셀 색칠한 수에 대한 랭킹을 제공한다. 
     > 
     > c. 이를 통해서 추가적인 홍보 효과를 제공하고 사용자 참여를 유도한다.
+    >
+    > d. nav에 있는 Flourish 아이콘을 클릭하여 변화를 확인할 수 있다.
   
 -   **앱 기능**
     
@@ -110,7 +112,7 @@ be/userms/feature/기능명
 <br/>
 
 ## ✔프로젝트 구조  
-![프로젝트구조](https://lh3.google.com/u/0/d/1s4qt_fzLrmHP-NS4TaRS8w4flYxxxsWi=w2000-h2736-iv1)
+![프로젝트구조](https://lh3.google.com/u/0/d/1zUlW2vGsm-OXGSwkifzxHn8HQoqQYEP5=w1920-h922-iv1)
 
 <br/>
 
@@ -184,7 +186,12 @@ be/userms/feature/기능명
 - whitelist 추가 요청을 할 수 있습니다. (이미 인가된 url이면 등록되지 않습니다.)
 
 
-### 11. 앱 다운로드           
+### 11. Flourish           
+
+![Flourish](https://lh3.google.com/u/0/d/1nC9OeBZmi0SYQ-APfBU4akdRgDl9URzG=w1920-h922-iv1)
+- 랭킹의 변화를 시각적으로 확인할 수 있다.
+
+### 12. 앱 다운로드           
 
 ![앱 다운로드](https://lh3.google.com/u/0/d/1GVhSBEaH4aUFgC81x4kxXLcxHveA8E8G=w960-h930-iv1)
 - PWA를 적용하여 앱으로 다운로드 할 수 있습니다.
