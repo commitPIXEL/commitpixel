@@ -10,10 +10,12 @@ public class TokenRes {
 
     private final String jwtAccessToken;
     private final String jwtRefreshToken;
+    private String nickname;
 
     @Builder
-    public TokenRes(String jwtAccessToken, String jwtRefreshToken) {
+    public TokenRes(String jwtAccessToken, String jwtRefreshToken, String nickname) {
         this.jwtAccessToken = jwtAccessToken;
         this.jwtRefreshToken = jwtRefreshToken;
+        this.nickname = nickname;
     }
 }
