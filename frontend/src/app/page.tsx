@@ -17,7 +17,7 @@ export default function Home() {
   const handleResize = () => {
     if (window.innerWidth < 769 && window.innerWidth <= window.innerHeight) {
       dispatch(setDevice("mobile"));
-    } else if (window.innerHeight < 769 && window.innerWidth < 1032 && window.innerWidth > window.innerHeight) {
+    } else if (window.innerHeight < 769 && window.innerWidth < 1132 && window.innerWidth > window.innerHeight) {
       dispatch(setDevice("mobile-warning"));
     } else if (window.innerHeight >= 769 && window.innerWidth < window.innerHeight) { 
       dispatch(setDevice("browser-warning"));
