@@ -88,10 +88,6 @@ public class WebSocketHandler {
             // header로 온 accessToken을 auth로 feign 요청을 보내서 providerId를 얻음
             providerId = authFeignClient.withQueryString(accessToken);
         }
-        // 밴유저일 경우 접속 불가
-        if (redisUtil.getData(providerId + ":ban") != null) {
-            return;
-        }
 
         // 버켓이 할당되지 않은 사용자라면 버켓 할당
         if (!BUCKETS.containsKey(providerId)) {
@@ -126,6 +122,12 @@ public class WebSocketHandler {
 
         // 비회원이면 return
         if (providerId == -1) {
+            return;
+        }
+
+        // 밴유저일 경우 픽셀 찍기 불가
+        if (redisUtil.getData(providerId + ":ban") != null) {
+            client.sendEvent(TOO_FREQUENT);// 테스트
             return;
         }
 
