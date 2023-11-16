@@ -97,6 +97,7 @@ public class WebSocketHandler {
         Bucket bucket = Bucket.builder()
             .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofSeconds(5)))).build();
 
+        // 버켓이 할당되지 않은 사용자라면 버켓 할당
         if (!BUCKETS.containsKey(providerId)) {
             BUCKETS.put(providerId, bucket);
         }
