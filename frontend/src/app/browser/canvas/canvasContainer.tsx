@@ -124,11 +124,15 @@ const CanvasContainer = () => {
       socket.on("availableCredit", (availablePixel) => {
         handleAvailableCredit(availablePixel);
       });
+      socket.on("banUser", () => {
+        alert("부정한 움직임이 감지되어 3분간 픽셀을 찍을 수 없습니다!");
+      });
 
       return () => {
         socket.off("pixel", handlePixel);
         socket.off("url", handleUrl);
         socket.off("availableCredit", handleAvailableCredit);
+        socket.off("banUser");
       };
     }
   }, [socket, ctx]);
