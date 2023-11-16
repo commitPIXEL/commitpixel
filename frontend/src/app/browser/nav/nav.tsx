@@ -7,7 +7,7 @@ import {resetUser} from "@/store/slices/userSlice"
 import { logout } from "@/store/slices/authorizationSlice";
 import Button from '@mui/material/Button';
 import { useRouter } from "next/navigation";
-import { FlourishBtn, TutorialsBtn } from "./navBtn";
+import { FlourishBtn, InstallPWA, TutorialsBtn } from "./navBtn";
 
 const Nav = () => {
   const dispatch = useDispatch();
@@ -93,6 +93,7 @@ const Nav = () => {
       <div className="flex items-center justify-end w-[10%]">
         <TutorialsBtn />
         <FlourishBtn />
+        <InstallPWA />
       </div>
     </div>
   );
