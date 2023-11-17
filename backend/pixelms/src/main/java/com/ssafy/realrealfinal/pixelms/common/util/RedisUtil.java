@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -156,5 +156,16 @@ public class RedisUtil {
                 return null; // executePipelined가 결과를 자동으로 반환하므로 여기서는 null을 반환
             }
         });
+    }
+
+    /**
+     * Redis value를 설정하고, 지정된 시간 후에 만료되도록 하는 메서드
+     *
+     * @param key     Key
+     * @param value   String 값
+     * @param timeout 만료 시간 (단위: 분)
+     */
+    public void setTemporaryData(String key, String value, long timeout) {
+        stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MINUTES);
     }
 }
