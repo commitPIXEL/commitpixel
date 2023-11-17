@@ -26,3 +26,13 @@ export interface IBoardInputProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
+
+export interface IBeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed', platform: string }>;
+  prompt(): Promise<void>;
+}
+
+export interface IBeforeInstallPromptEventListener {
+  (evt: IBeforeInstallPromptEvent): void;
+}

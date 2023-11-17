@@ -7,7 +7,6 @@ import com.ssafy.realrealfinal.pixelms.api.pixel.response.CreditRes;
 import com.ssafy.realrealfinal.pixelms.api.pixel.response.PixelInfoRes;
 import com.ssafy.realrealfinal.pixelms.common.exception.pixel.JsonifyException;
 import com.ssafy.realrealfinal.pixelms.common.model.pixel.RedisNotFoundException;
-import com.ssafy.realrealfinal.pixelms.common.util.IdNameUtil;
 import com.ssafy.realrealfinal.pixelms.common.util.RedisUtil;
 
 import java.awt.Color;
@@ -34,7 +33,6 @@ import java.util.TreeMap;
 public class PixelServiceImpl implements PixelService {
 
     private final RedisUtil redisUtil;
-    private final IdNameUtil idNameUtil;
     private final KafkaTemplate<String, String> rankKafkaTemplate;
     private final String TOTAL_CREDIT_KEY = "total";
     private final String USED_PIXEL_KEY = "used";
@@ -57,8 +55,8 @@ public class PixelServiceImpl implements PixelService {
         String r = String.valueOf(pixelInfo.get(2));
         String g = String.valueOf(pixelInfo.get(3));
         String b = String.valueOf(pixelInfo.get(4));
-        String url = (String) pixelInfo.get(5);
-        String githubNickname = (String) pixelInfo.get(6);
+        String githubNickname = (String) pixelInfo.get(5);
+        String url = (String) pixelInfo.get(6);
         // (x * SCALE + y) 인덱스
         String index = String.valueOf(x * SCALE + y);
         // 이전 pixel url, providerId 정보 Redis에서 검색 (없으면 null)
@@ -78,8 +76,7 @@ public class PixelServiceImpl implements PixelService {
         String prevGithubNickname = null;
         if (prevPixelRankInfo.get(0) != null && prevPixelRankInfo.get(1) != null) {
             prevUrl = (String) prevPixelRankInfo.get(0);
-            prevGithubNickname = idNameUtil.getNameById(Integer.valueOf(
-                    (String) prevPixelRankInfo.get(1)));
+            prevGithubNickname = redisUtil.getData(prevPixelRankInfo.get(1) + ":name");
         }
 
         try {
@@ -152,7 +149,7 @@ public class PixelServiceImpl implements PixelService {
         log.info("updateUsedPixel start: " + providerId);
 
         Integer usedPixel = redisUtil.getData(String.valueOf(providerId), USED_PIXEL_KEY);
-        redisUtil.setData(String.valueOf(providerId), USED_PIXEL_KEY, usedPixel + 1);
+        redisUtil.setData(String.valueOf(providerId) , USED_PIXEL_KEY, usedPixel + 1);
 
         log.info("updateUsedPixel end");
     }
@@ -208,7 +205,7 @@ public class PixelServiceImpl implements PixelService {
         String githubNickname = null;
         String providerId = redisUtil.getData(index + ":id");
         if (providerId != null) {
-            githubNickname = idNameUtil.getNameById(Integer.valueOf(providerId));
+            githubNickname = redisUtil.getData(providerId + ":name");
         }
 
         PixelInfoRes pixelInfoRes = new PixelInfoRes(url, githubNickname);
