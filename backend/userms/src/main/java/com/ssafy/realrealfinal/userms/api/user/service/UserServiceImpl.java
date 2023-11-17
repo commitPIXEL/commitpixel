@@ -110,11 +110,19 @@ public class UserServiceImpl implements UserService {
 
         }
         // github 커밋 수 가져오기(마지막 업데이트 시점으로부터 지금까지의 변동 사항만)
-        Integer commitNum = githubUtil.getCommit(githubAccessToken, githubNickname,
+        Integer commitNum = githubUtil.getCommit(githubNickname,
             lastUpdateStatus, lastUpdateTime);
+
         // solved.ac 문제 가져오기(연동을 안 했다면 0 리턴)
         Integer solvedNum = solvedAcNewSolvedProblem(providerId);
-        Integer additionalCredit = commitNum + solvedNum;
+
+        // *10 해서 주기
+        Integer additionalCredit = (commitNum + solvedNum) * 10;
+
+        // 최초 가입자는 +500
+        if (lastUpdateStatus == 0) {
+            additionalCredit += 5000;
+        }
 
         // pixelms와 feign으로 통신 후 프론트로 {totalCredit, availablePixel, githubNickname} 보내기
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
@@ -122,6 +130,7 @@ public class UserServiceImpl implements UserService {
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         RefreshedInfoRes refreshedInfoRes = UserMapper.INSTANCE.toRefreshedInfoRes(creditRes,
             githubNickname);
+
         // 마지막 크레딧 업데이트 시간 갱신
         lastUpdateCheckUtil.updateTime(providerId);
         log.info("refreshInfo end: " + refreshedInfoRes);
@@ -226,7 +235,7 @@ public class UserServiceImpl implements UserService {
         String key = "solvedProblem" + providerId;
         redisUtil.setData(key, solvedAcId, solvedCount);
         AdditionalCreditReq additionalCreditReq = UserMapper.INSTANCE.toAdditionalCreditReq(
-            providerId, solvedCount);
+            providerId, solvedCount * 10);
         CreditRes creditRes = pixelFeignClient.updateAndSendCredit(additionalCreditReq);
         log.info("authSolvedAc end: " + creditRes);
         return creditRes;

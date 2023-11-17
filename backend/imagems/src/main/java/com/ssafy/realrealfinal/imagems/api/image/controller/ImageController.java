@@ -21,16 +21,14 @@ public class ImageController {
     private final S3UploadUtil s3UploadUtil;
 
     @PostMapping("/convert")
-    public ResponseEntity<byte[]> convertImage(
-        @RequestHeader(name = "accesstoken") String accessToken,
-        @RequestParam(name = "file") MultipartFile file, @RequestParam Integer type) {
+    public ResponseEntity<byte[]> convertImage(@RequestParam(name = "file") MultipartFile file,
+        @RequestParam Integer type) {
         log.info("convertImage start: " + type);
-        byte[] convertedImage = imageService.convertImage(accessToken, file, type);
+        byte[] convertedImage = imageService.convertImage(file, type);
         log.info("convertImage end: 이미지 변환 완료");
         return ResponseEntity
             .ok()
             .contentType(MediaType.IMAGE_JPEG)
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=pixelated-image.jpg")
             .body(convertedImage);
     }
 
@@ -51,12 +49,23 @@ public class ImageController {
             .body(gifBytes);
     }
 
+    @GetMapping("/timelapse/all")
+    public ResponseEntity<byte[]> timelapseAll() {
+        log.info("timelapseAll start");
+        byte[] gifBytes = imageService.getAllGif();
+        log.info("timelapseAll end: SUCCESS");
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        log.info("test start");
-        s3UploadUtil.S3Upload();
-        log.info("test end");
-        return ResponseEntity.ok().build();
+        // 바이트 배열을 HTTP 응답 본문으로 설정하고 응답을 반환.
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_GIF) // 컨텐츠 타입을 GIF로 설정
+            .body(gifBytes);
     }
+
+//    @GetMapping("/test")
+//    public ResponseEntity<?> test() {
+//        log.info("test start");
+//        s3UploadUtil.S3Upload();
+//        log.info("test end");
+//        return ResponseEntity.ok().build();
+//    }
 }
