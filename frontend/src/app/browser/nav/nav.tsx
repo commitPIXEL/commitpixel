@@ -52,6 +52,7 @@ const Nav = () => {
       <div className="w-[20%] flex items-center justify-end">
         <TutorialsBtn />
         <FlourishBtn />
+        <InstallPWA />
         <div>
           <Button
             variant="text"
