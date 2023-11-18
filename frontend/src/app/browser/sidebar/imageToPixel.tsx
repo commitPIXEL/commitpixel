@@ -3,6 +3,7 @@ import axios from "axios";
 import { Rnd } from "react-rnd";
 import { apiUrl } from "../config";
 import CircularProgress from "@mui/material/CircularProgress";
+import BlurOnIcon from '@mui/icons-material/BlurOn';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import LockIcon from "@mui/icons-material/Lock";
@@ -58,14 +59,21 @@ const ImageToPixelModal = () => {
     setIsLocked(!isLocked); // 고정 상태 토글
   };
 
+  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+
   return (
     <>
-      <label
+      {isMobileView ? (<label
+        htmlFor="image_to_pixel"
+        className="cursor-pointer"
+      >
+        <BlurOnIcon />
+      </label>) : (<label
         htmlFor="image_to_pixel"
         className="cursor-pointer drop-shadow-md w-[45%] bg-mainColor rounded min-h-[40px] flex justify-center items-center"
       >
         {isLoading ? <CircularProgress className="p-2" /> : "이미지 픽셀화"}
-      </label>
+      </label>)}
       <input
         className="hidden"
         ref={inputRef}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { apiUrl } from "../config";
+import TimelapseIcon from '@mui/icons-material/Timelapse';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import CircularProgress from "@mui/material/CircularProgress";
@@ -32,11 +33,24 @@ const TimelapseModal = () => {
     window.URL.revokeObjectURL(gifSrc);
   };
 
+  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+
   return (
     <>
-      <button onClick={handleTimelapseClick} className="drop-shadow-md w-[45%] bg-mainColor rounded min-h-[40px] flex justify-center items-center" type="button">
-        {isLoading ? <CircularProgress className="p-2" /> : "타임랩스 보기"}
-      </button>
+      {isMobileView ? (
+        <button className="rounded-full" onClick={handleTimelapseClick}>
+          {isLoading ? <CircularProgress /> : <TimelapseIcon />}
+        </button>
+      ) : (
+        <button
+          onClick={handleTimelapseClick}
+          className="drop-shadow-md w-[45%] bg-mainColor rounded min-h-[40px] flex justify-center items-center"
+          type="button"
+        >
+          {isLoading ? <CircularProgress className="p-2" /> : "타임랩스 보기"}
+        </button>
+      )}
+
       <Modal
         open={open}
         onClose={handleClose}

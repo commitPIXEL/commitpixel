@@ -36,3 +36,7 @@ export interface IBeforeInstallPromptEvent extends Event {
 export interface IBeforeInstallPromptEventListener {
   (evt: IBeforeInstallPromptEvent): void;
 }
+
+export interface ISpeedDialProps {
+  hidden: boolean;
+}

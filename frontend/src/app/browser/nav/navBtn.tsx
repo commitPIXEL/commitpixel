@@ -55,6 +55,8 @@ export const InstallPWA = () => {
     };
   }, []);
 
+  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+
   const handleInstallClick = async () => {
     if (installPrompt) {
       await installPrompt.prompt();
@@ -70,13 +72,17 @@ export const InstallPWA = () => {
 
   if (!installPrompt) return null;
 
-  return (
+  return isMobileView ? (
+    <button className="rounded-full" onClick={handleInstallClick}>
+      <InstallDesktopIcon />
+    </button>
+  ) : (
     <div
       onClick={handleInstallClick}
       className="text-bgColor cursor-pointer text-lg flex flex-col justify-center items-center hover:text-gray-100 ease-in-out"
     >
       <Tooltip arrow title="App 설치하기">
-        <InstallDesktopIcon className="!w-[30px] !h-[30px]" />
+        <InstallDesktopIcon className="w-[30px] h-[30px]" />
       </Tooltip>
     </div>
   );

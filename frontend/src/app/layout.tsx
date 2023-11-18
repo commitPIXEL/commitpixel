@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     { name: "김인범" },
     { name: "이예린" },
   ],
-  manifest: `${process.env.NEXT_PUBLIC_SITE_URL}/manifest/manifest.json`,
+  manifest: `/manifest/manifest.json`,
   icons: {
-    icon: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
-    apple: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
+    icon: `/static/images/pixelFox.png`,
+    apple: `/static/images/pixelFox.png`,
   },
   themeColor: '#FFBC00',
   generator: "Next.js",

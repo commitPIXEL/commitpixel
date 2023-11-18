@@ -8,21 +8,46 @@ import MobilePicker from "./mobilePicker";
 import { RootState } from "@/store";
 import LoginBtn from "@/components/loginBtn";
 import PopupPWA from "@/components/popupPWA";
+import ControlSpeedDial from "./controlSpeedDial";
+import { Switch } from "@mui/material";
+import { useState } from "react";
 
 const Mobile = () => {
   const user = useSelector((state: RootState) => state.user);
+  const [hidden, setHidden] = useState(true);
 
-  return(
-  <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">
-    <PopupPWA />
-    <MobileNav />
-    <CanvasContainer />
-    {user?.githubNickname !== "" ? <Menu /> : null}
-    {user?.githubNickname !== "" ? <MobilePicker /> : null}
-    {user?.githubNickname === "" ? <div className="mt-10"> 로그인 시 캔버스 색칠 해금!</div> : null}
-    {user?.githubNickname === "" ? <LoginBtn /> : null}
-  </div>
-  )
+   const handleHiddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setHidden(event.target.checked);
+  };
+
+  return (
+    <>
+      <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">
+        <PopupPWA />
+        <MobileNav />
+        <CanvasContainer />
+        <div className="flex justify-between items-center">
+          {user?.githubNickname !== "" ? <Menu /> : null}
+          <Switch
+            checked={hidden}
+            onChange={handleHiddenChange}
+            color="default"
+            sx={{
+              "& .MuiSwitch-track": {
+                backgroundColor: hidden ? "darkgrey" : undefined,
+              },
+            }}
+          />
+        </div>
+        {user?.githubNickname !== "" ? <MobilePicker /> : null}
+        {user?.githubNickname === "" ? (
+          <div className="mt-10"> 로그인 시 캔버스 색칠 해금!</div>
+        ) : null}
+        {user?.githubNickname === "" ? <LoginBtn /> : null}
+      </div>
+      {user?.githubNickname !== "" && <ControlSpeedDial hidden={hidden} />}
+    </>
+  );
 }
 
 export default Mobile;
