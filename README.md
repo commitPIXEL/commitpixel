@@ -70,17 +70,27 @@
 </div>
 
 
-<br/>
+<br/><br/>
 
 
 ### [🎬UCC영상]
 
-[ UCC 바로가기](https://www.youtube.com/shorts/_tgeXkGApKQ)
+[ UCC 바로가기](https://youtu.be/sAV3ZN6DmWI)
+
+
+<br/>
+
 
 ### [📃문서]
 
-> [기획 문서](https://www.notion.so/PJT-2a4c024fa30c4c919aee328b7e09e64c)  
-> [1️⃣SubPJT_기획문서](https://naver.com),  [2️⃣SubPJT2_학습 및 개발기본 문서](https://naver.com),  [3️⃣SubPJT3_심화 및 마무리 문서](https://naver.com)
+> [1️⃣ 주제 아이디어](https://www.notion.so/realrealfinal/7e3c170d14ae43c380244b55083f0ecf?pvs=4) <br/>
+> [2️⃣ 학습 공유](https://www.notion.so/realrealfinal/07e610411009431ba548f7b2c383515a?pvs=4) <br/>
+> [3️⃣ 기능 명세서](https://www.notion.so/realrealfinal/477dde150f444b49b61818a020e4959e?pvs=4) <br/>
+> [4️⃣ API 명세서](https://www.notion.so/realrealfinal/API-130fa77afd73449d8b208f7f59777d4a?pvs=4)
+
+
+<br/>
+
 
 ## [👨 팀원 역할]
 |팀원|역할|비고|
@@ -92,7 +102,9 @@
 |김인범|팀원|인증/인가(front), 건의사항, URL 입력 및 승인, 유저 정보 연동|
 |이예린|팀원|캔버스 구현, 그림 툴 구현, Image 서비스 연동, Pixel 서비스 연동|
 
-  
+
+<br/>
+
 
 ## [📑 주요 기능]()
 
@@ -160,7 +172,9 @@
     > 
     > b. 데탑, 모바일에서 앱을 다운받아 사용할 수 있다. 
 
+
     <br/>
+
 
 ## ✔Git 컨벤션
 ```bash
@@ -171,18 +185,24 @@ be/userms/feature/기능명
 ```
 [ Git 컨벤션 바로가기](https://www.notion.so/realrealfinal/Git-Convention-d9d8def33b8949bda41eb3ad35b2e512?pvs=4)
 
+
 <br/>
+
 
 ## ✔Code 컨벤션
 [ Front-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/FE-Convention-f02a40ecac62456d9c21af06a29aaea7?pvs=4)
 [ Back-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/BE-Convention-6ed36c69f77847f68cac762d62cdc551?pvs=4)
 
+
 <br/>
+
 
 ## ✔프로젝트 구조  
 ![프로젝트구조](https://lh3.google.com/u/0/d/1zUlW2vGsm-OXGSwkifzxHn8HQoqQYEP5=w1920-h922-iv1)
 
+
 <br/>
+
 
 ## 💻 주요 기능 미리보기    
 ![서비스소개](https://lh3.google.com/u/0/d/1gQ5r_W1hjhwzUgKT9Gr17ETcKkprgfEQ=w1910-h870-iv1)
@@ -264,6 +284,7 @@ be/userms/feature/기능명
 ![앱 다운로드](https://lh3.google.com/u/0/d/1GVhSBEaH4aUFgC81x4kxXLcxHveA8E8G=w960-h930-iv1)
 - PWA를 적용하여 앱으로 다운로드 할 수 있습니다.
 - 모바일 뷰를 적용하여 모바일에서도 이용할 수 있습니다.
+
 
 <br/>
 
