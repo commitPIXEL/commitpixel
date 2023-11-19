@@ -25,9 +25,11 @@ const Mobile = () => {
     <>
       <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">
         <PopupPWA />
-        <ToPixelImg />
         <MobileNav />
         <CanvasContainer />
+        <div className="relative z-10">
+          <ToPixelImg />
+        </div>
         <div className="flex justify-between items-center">
           {user?.githubNickname !== "" ? <Menu /> : null}
           {user?.githubNickname !== "" ? (

@@ -6,8 +6,12 @@ import SpeedDialAction from "@mui/material/SpeedDialAction";
 import TimelapseModal from "../browser/sidebar/timelapse";
 import KakaoShare from "@/components/kakaoShare";
 import BoardBtn from "@/components/boardBtn";
-import { useState } from "react";
-import { ISpeedDialProps } from "@/interfaces/browser";
+import { useEffect, useState } from "react";
+import {
+  IBeforeInstallPromptEvent,
+  IBeforeInstallPromptEventListener,
+  ISpeedDialProps,
+} from "@/interfaces/browser";
 import { InstallPWA } from "../browser/nav/navBtn";
 import ToPixelBtn from "@/components/toPixelBtn";
 
@@ -24,6 +28,33 @@ const actions = [
 
 const ControlSpeedDial = ({ hidden }: ISpeedDialProps) => {
   const [open, setOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] =
+    useState<IBeforeInstallPromptEvent | null>(null);
+  const [isIOS, setIsIOS] = useState(false);
+
+  useEffect(() => {
+    const isDeviceIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    setIsIOS(isDeviceIOS);
+
+    const handleBeforeInstallPrompt: IBeforeInstallPromptEventListener = (
+      e
+    ) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt as EventListener
+      );
+    };
+  }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -56,15 +87,20 @@ const ControlSpeedDial = ({ hidden }: ISpeedDialProps) => {
         onOpen={handleOpen}
         open={open}
       >
-        {actions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            tooltipOpen
-            className="!bg-white !text-black"
-          />
-        ))}
+        {actions.map((action) => {
+          if (action.name === "App 다운" && (installPrompt === null || isIOS)) {
+            return null; // 조건을 만족할 경우 렌더링하지 않음
+          }
+          return (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              tooltipOpen
+              className="!bg-white !text-black"
+            />
+          );
+        })}
       </SpeedDial>
     </Box>
   );
