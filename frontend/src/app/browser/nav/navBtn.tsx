@@ -2,9 +2,12 @@ import { faChartColumn, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip } from "@mui/material";
 import { useRouter } from "next/navigation";
-import InstallDesktopIcon from '@mui/icons-material/InstallDesktop';
-import React, { useEffect, useState } from 'react';
-import { IBeforeInstallPromptEvent, IBeforeInstallPromptEventListener } from '@/interfaces/browser';
+import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
+import React, { useEffect, useState } from "react";
+import {
+  IBeforeInstallPromptEvent,
+  IBeforeInstallPromptEventListener,
+} from "@/interfaces/browser";
 
 export const TutorialsBtn = () => {
   const router = useRouter();
@@ -25,7 +28,11 @@ export const TutorialsBtn = () => {
 
 export const FlourishBtn = () => {
   const handleFlourishClick = () => {
-    window.open("https://public.flourish.studio/visualisation/15619978/", "_blank", "noopener,noreferrer");
+    window.open(
+      "https://public.flourish.studio/visualisation/15619978/",
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
   return (
     <div
@@ -40,32 +47,46 @@ export const FlourishBtn = () => {
 };
 
 export const InstallPWA = () => {
-  const [installPrompt, setInstallPrompt] = useState<IBeforeInstallPromptEvent | null>(null);
+  const [installPrompt, setInstallPrompt] =
+    useState<IBeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt: IBeforeInstallPromptEventListener = (e) => {
+    const handleBeforeInstallPrompt: IBeforeInstallPromptEventListener = (
+      e
+    ) => {
       e.preventDefault();
       setInstallPrompt(e);
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt as EventListener
+    );
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt as EventListener
+      );
     };
   }, []);
 
-  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+  const isMobileView =
+    window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
 
   const handleInstallClick = async () => {
     if (installPrompt) {
       await installPrompt.prompt();
       const choiceResult = await installPrompt.userChoice;
       if (choiceResult.outcome === "accepted") {
-        console.log("사용자가 설치 승인");
         setInstallPrompt(null);
       } else {
-        console.log("사용자가 설치 거절");
+        const oneMinutesLater = new Date();
+        oneMinutesLater.setMinutes(oneMinutesLater.getMinutes() + 1);
+        localStorage.setItem(
+          "disablePopupUntil",
+          oneMinutesLater.toISOString()
+        );
       }
     }
   };
@@ -86,4 +107,4 @@ export const InstallPWA = () => {
       </Tooltip>
     </div>
   );
-}
+};

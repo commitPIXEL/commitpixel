@@ -16,7 +16,7 @@ const Mobile = () => {
   const user = useSelector((state: RootState) => state.user);
   const [hidden, setHidden] = useState(true);
 
-   const handleHiddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHiddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHidden(event.target.checked);
   };
 
@@ -28,16 +28,18 @@ const Mobile = () => {
         <CanvasContainer />
         <div className="flex justify-between items-center">
           {user?.githubNickname !== "" ? <Menu /> : null}
-          <Switch
-            checked={hidden}
-            onChange={handleHiddenChange}
-            color="default"
-            sx={{
-              "& .MuiSwitch-track": {
-                backgroundColor: hidden ? "darkgrey" : undefined,
-              },
-            }}
-          />
+          {user?.githubNickname !== "" ? (
+            <Switch
+              checked={hidden}
+              onChange={handleHiddenChange}
+              color="default"
+              sx={{
+                "& .MuiSwitch-track": {
+                  backgroundColor: hidden ? "darkgrey" : undefined,
+                },
+              }}
+            />
+          ) : null}
         </div>
         {user?.githubNickname !== "" ? <MobilePicker /> : null}
         {user?.githubNickname === "" ? (
@@ -48,6 +50,6 @@ const Mobile = () => {
       {user?.githubNickname !== "" && <ControlSpeedDial hidden={hidden} />}
     </>
   );
-}
+};
 
 export default Mobile;
