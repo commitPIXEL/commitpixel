@@ -24,12 +24,12 @@ export const metadata: Metadata = {
     { name: "김인범" },
     { name: "이예린" },
   ],
-  manifest: `/manifest/manifest.json`,
+  manifest: `${process.env.NEXT_PUBLIC_SITE_URL}/manifest/manifest.json`,
   icons: {
-    icon: `/static/images/pixelFox.png`,
-    apple: `/static/images/pixelFox.png`,
+    icon: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
+    apple: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
   },
-  themeColor: '#FFBC00',
+  themeColor: "#FFBC00",
   generator: "Next.js",
   keywords: [
     "commit Pixel",
