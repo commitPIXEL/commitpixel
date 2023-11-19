@@ -1,5 +1,6 @@
 "use client";
 
+import ShareIcon from '@mui/icons-material/Share';
 import Image from "next/image";
 
 declare const window: Window & typeof globalThis & {
@@ -23,20 +24,31 @@ const KakaoShare = ({color}: {
     }
   };
 
+  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+
   return (
     <>
-      <button
-        className={`flex justify-around items-center mb-6 space-x-4 font-bold text-bgColor ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 p-3`}
+      {isMobileView ? (
+        <button
+        className="rounded-full"
         onClick={handleKakaoShare}
       >
-        <Image
-          src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
-          alt="카카오톡 공유 보내기 버튼 "
-          width={24}
-          height={24}
-        />
-        <p className="flex-1">Kakao Share</p>
+        <ShareIcon />
       </button>
+      ) : (
+        <button
+          className={`flex justify-around items-center mb-6 space-x-4 font-bold text-bgColor ${color === "main" ? " bg-mainColor " : " bg-white "} rounded h-12 mt-6 p-3`}
+          onClick={handleKakaoShare}
+        >
+          <Image
+            src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+            alt="카카오톡 공유 보내기 버튼 "
+            width={24}
+            height={24}
+          />
+          <p className="flex-1">Kakao Share</p>
+        </button>
+      )}
     </>
   );
 };
