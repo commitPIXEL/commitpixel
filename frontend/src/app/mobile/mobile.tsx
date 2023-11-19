@@ -11,6 +11,7 @@ import PopupPWA from "@/components/popupPWA";
 import ControlSpeedDial from "./controlSpeedDial";
 import { Switch } from "@mui/material";
 import { useState } from "react";
+import ToPixelImg from "@/components/toPixelImg";
 
 const Mobile = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -24,6 +25,7 @@ const Mobile = () => {
     <>
       <div className="w-screen h-screen items-center flex flex-col bg-bgColor text-white">
         <PopupPWA />
+        <ToPixelImg />
         <MobileNav />
         <CanvasContainer />
         <div className="flex justify-between items-center">
