@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { apiUrl } from "../config";
-import TimelapseIcon from '@mui/icons-material/Timelapse';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
+import TimelapseIcon from "@mui/icons-material/Timelapse";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { TIMELAPSE_FAILURE } from "@/constants/message";
 
@@ -14,18 +14,23 @@ const TimelapseModal = () => {
 
   const handleTimelapseClick = () => {
     setIsLoading(true);
-    axios.get(apiUrl + "/image/timelapse", {
-      responseType: "blob"
-    }).then((res) => {
-      const url = window.URL.createObjectURL(new Blob([res.data], { type: "image/gif" }));
-      setGifSrc(url);
-      setOpen(true);
-      setIsLoading(false);
-    }).catch((err) => {
-      alert(TIMELAPSE_FAILURE);
-      console.error(err);
-      setIsLoading(false);
-    });
+    axios
+      .get(apiUrl + "/image/timelapse", {
+        responseType: "blob",
+      })
+      .then((res) => {
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], { type: "image/gif" })
+        );
+        setGifSrc(url);
+        setOpen(true);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        alert(TIMELAPSE_FAILURE);
+        console.error(err);
+        setIsLoading(false);
+      });
   };
 
   const handleClose = () => {
@@ -33,13 +38,18 @@ const TimelapseModal = () => {
     window.URL.revokeObjectURL(gifSrc);
   };
 
-  const isMobileView = window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
+  const isMobileView =
+    window.innerWidth < 769 && window.innerWidth <= window.innerHeight;
 
   return (
     <>
       {isMobileView ? (
         <button className="rounded-full" onClick={handleTimelapseClick}>
-          {isLoading ? <CircularProgress /> : <TimelapseIcon />}
+          {isLoading ? (
+            <CircularProgress className="align-middle" />
+          ) : (
+            <TimelapseIcon />
+          )}
         </button>
       ) : (
         <button
@@ -58,7 +68,11 @@ const TimelapseModal = () => {
         aria-describedby="timelapse-modal-description"
         className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-25"
       >
-        <Box className="bg-white rounded-lg shadow-xl h-[95%] aspect-square overflow-auto">
+        <Box
+          className={`bg-white rounded-lg shadow-xl ${
+            isMobileView ? `h-[75%]` : `h-[95%]`
+          } aspect-square overflow-auto`}
+        >
           {isLoading ? (
             <CircularProgress />
           ) : (

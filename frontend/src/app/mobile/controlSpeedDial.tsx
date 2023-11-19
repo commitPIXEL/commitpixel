@@ -3,17 +3,17 @@ import Backdrop from "@mui/material/Backdrop";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import ImageToPixelModal from "../browser/sidebar/imageToPixel";
 import TimelapseModal from "../browser/sidebar/timelapse";
 import KakaoShare from "@/components/kakaoShare";
 import BoardBtn from "@/components/boardBtn";
 import { useState } from "react";
 import { ISpeedDialProps } from "@/interfaces/browser";
 import { InstallPWA } from "../browser/nav/navBtn";
+import ToPixelBtn from "@/components/toPixelBtn";
 
 const actions = [
   {
-    icon: <ImageToPixelModal key="ImageToPixelModal" />,
+    icon: <ToPixelBtn key="ToPixelBtn" />,
     name: "이미지 픽셀화",
   },
   { icon: <TimelapseModal key="TimelapseModal" />, name: "타입랩스" },
