@@ -168,6 +168,41 @@ public class ImageServiceImpl implements ImageService {
             "2023-11-13/11.0.png",
             "2023-11-13/11.5.png",
             "2023-11-13/12.5.png",
+            "2023-11-13/17.00.png",
+            "2023-11-13/17.10.png",
+            "2023-11-14/09.20.png",
+            "2023-11-14/09.30.png",
+            "2023-11-14/09.40.png",
+            "2023-11-14/09.50.png",
+            "2023-11-14/10.00.png",
+            "2023-11-14/10.20.png",
+            "2023-11-14/11.20.png",
+            "2023-11-14/12.00.png",
+            "2023-11-14/12.20.png",
+            "2023-11-14/14.20.png",
+            "2023-11-15/09.00.png",
+            "2023-11-15/09.20.png",
+            "2023-11-15/09.40.png",
+            "2023-11-15/10.00.png",
+            "2023-11-15/11.00.png",
+            "2023-11-15/16.00.png",
+            "2023-11-15/19.00.png",
+            "2023-11-16/12.00.png",
+            "2023-11-16/16.00.png",
+            "2023-11-16/17.00.png",
+            "2023-11-16/17.40.png",
+            "2023-11-16/18.00.png",
+            "2023-11-16/19.00.png",
+            "2023-11-16/23.00.png",
+            "2023-11-16/23.30.png",
+            "2023-11-16/23.40.png",
+            "2023-11-16/23.40.png",
+            "2023-11-17/00.00.png",
+            "2023-11-17/09.00.png",
+            "2023-11-17/19.00.png",
+            "2023-11-19/00.00.png",
+            "2023-11-19/20.00.png",
+            "2023-11-20/08.00.png"
         };
 
         // 첫 번째 이미지를 읽고 BufferedImage 객체로 로드.
@@ -180,7 +215,7 @@ public class ImageServiceImpl implements ImageService {
             ImageOutputStream output = new MemoryCacheImageOutputStream(baos);
 
             // GifImageUtil 객체를 생성. 이 객체는 GIF 이미지 시퀀스를 작성하는 데 사용됨.
-            GifImageUtil writer = new GifImageUtil(output, first.getType(), 250, true);
+            GifImageUtil writer = new GifImageUtil(output, first.getType(), 100, true);
 
             // 첫 번째 이미지를 GIF 시퀀스에 작성.
             writer.writeToSequence(first);
@@ -249,8 +284,8 @@ public class ImageServiceImpl implements ImageService {
     /**
      * 시작 폴더와 종료 폴더에 대해 파일 경로를 생성
      *
-     * @param endFolder   종료 폴더의 이름
-     * @param startTime   시작 시간
+     * @param endFolder 종료 폴더의 이름
+     * @param startTime 시작 시간
      * @return 생성된 파일 경로의 배열
      */
     public static String[] generateFilePaths(String endFolder,
@@ -260,7 +295,8 @@ public class ImageServiceImpl implements ImageService {
 
         while (!time.toLocalDate().isAfter(LocalDate.parse(endFolder))) {
             if (!(time.getHour() >= 1 && time.getHour() < 8)) {
-                String currentFolder = time.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String currentFolder = time.toLocalDate()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String filePath = createFilePath(currentFolder, time);
                 filePaths.add(filePath + ".png");  // ".png" 확장자 추가
             }
