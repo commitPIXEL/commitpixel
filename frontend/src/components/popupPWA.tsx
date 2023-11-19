@@ -11,20 +11,18 @@ const PopupPWA = () => {
     useState<IBeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isShown, setIsShown] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); // 일주일간 보지 않기
 
   useEffect(() => {
     const isDeviceIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(isDeviceIOS);
+    if (isDeviceIOS) {
+      setIsShown(true);
+    }
 
     const handleBeforeInstallPrompt: IBeforeInstallPromptEventListener = (
       e
     ) => {
-      const disableUntil = localStorage.getItem("disablePopupUntil");
-      if (disableUntil && new Date() < new Date(disableUntil)) {
-        return;
-      }
-
       e.preventDefault();
       setInstallPrompt(e);
       setIsShown(true);
@@ -34,6 +32,11 @@ const PopupPWA = () => {
       "beforeinstallprompt",
       handleBeforeInstallPrompt as EventListener
     );
+
+    const disableUntil = localStorage.getItem("disablePopupUntil");
+    if (disableUntil && new Date() < new Date(disableUntil)) {
+      setIsShown(false);
+    }
 
     return () => {
       window.removeEventListener(
@@ -125,7 +128,7 @@ const PopupPWA = () => {
     );
   }
 
-  if (isIOS && isShown) {
+  if (isIOS) {
     return (
       <div className="fixed bottom-0 left-0 right-0 bg-gray-600 bg-opacity-50 h-full w-full flex justify-center items-end">
         <div className="mx-auto mb-10 p-5 border w-full shadow-lg bg-white">
@@ -158,6 +161,17 @@ const PopupPWA = () => {
             >
               닫기
             </button>
+          </div>
+          <div className="flex justify-end mt-2">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+                className="form-checkbox text-blue-500"
+              />
+              <span className="text-sm text-gray-700">일주일간 보지 않기</span>
+            </label>
           </div>
         </div>
       </div>

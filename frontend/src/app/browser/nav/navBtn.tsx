@@ -95,7 +95,7 @@ export const InstallPWA = () => {
 
   return isMobileView ? (
     <button className="rounded-full" onClick={handleInstallClick}>
-      <InstallDesktopIcon />
+      <InstallDesktopIcon className="w-[30px] h-[30px]" />
     </button>
   ) : (
     <div
