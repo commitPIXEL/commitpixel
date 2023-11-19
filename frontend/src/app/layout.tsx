@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     icon: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
     apple: `${process.env.NEXT_PUBLIC_SITE_URL}/static/images/pixelFox.png`,
   },
-  themeColor: '#FFBC00',
+  themeColor: "#FFBC00",
   generator: "Next.js",
   keywords: [
     "commit Pixel",
