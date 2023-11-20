@@ -128,9 +128,9 @@ const PopupPWA = () => {
     );
   }
 
-  if (isIOS) {
+  if (isIOS && isShown) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-600 bg-opacity-50 h-full w-full flex justify-center items-end">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-600 bg-opacity-50 h-full w-full flex justify-center items-end z-50">
         <div className="mx-auto mb-10 p-5 border w-full shadow-lg bg-white">
           <div className="flex justify-center mb-4">
             <Image
@@ -150,13 +150,7 @@ const PopupPWA = () => {
           </p>
           <div className="flex justify-center">
             <button
-              onClick={handleInstallClick}
-              className="py-2 px-4 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold"
-            >
-              설치하기
-            </button>
-            <button
-              onClick={() => setIsShown(false)}
+              onClick={handleClose}
               className="py-2 px-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold"
             >
               닫기

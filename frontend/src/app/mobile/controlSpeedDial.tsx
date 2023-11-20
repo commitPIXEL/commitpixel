@@ -88,7 +88,7 @@ const ControlSpeedDial = ({ hidden }: ISpeedDialProps) => {
         open={open}
       >
         {actions.map((action) => {
-          if (action.name === "App 다운" && (installPrompt === null || isIOS)) {
+          if (action.name === "App 다운" && (!installPrompt || isIOS)) {
             return null; // 조건을 만족할 경우 렌더링하지 않음
           }
           return (

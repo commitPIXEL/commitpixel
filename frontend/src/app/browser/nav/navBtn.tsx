@@ -95,7 +95,7 @@ export const InstallPWA = () => {
 
   return isMobileView ? (
     <button className="rounded-full" onClick={handleInstallClick}>
-      <InstallDesktopIcon className="w-[30px] h-[30px]" />
+      <InstallDesktopIcon className="!w-[30px] !h-[30px]" />
     </button>
   ) : (
     <div
@@ -103,7 +103,7 @@ export const InstallPWA = () => {
       className="text-bgColor cursor-pointer text-lg flex flex-col justify-center items-center hover:text-gray-100 ease-in-out"
     >
       <Tooltip arrow title="App 설치하기">
-        <InstallDesktopIcon className="w-[30px] h-[30px]" />
+        <InstallDesktopIcon className="!w-[30px] !h-[30px]" />
       </Tooltip>
     </div>
   );
