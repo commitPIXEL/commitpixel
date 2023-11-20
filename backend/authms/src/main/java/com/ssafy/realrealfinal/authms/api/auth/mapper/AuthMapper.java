@@ -10,6 +10,7 @@ public interface AuthMapper {
 
     AuthMapper INSTANCE = Mappers.getMapper(AuthMapper.class);
 
-    TokenRes toTokenRes(String jwtAccessToken, String jwtRefreshToken) throws MapperException;
+    TokenRes toTokenRes(String jwtAccessToken, String jwtRefreshToken, String nickname)
+        throws MapperException;
 
 }
