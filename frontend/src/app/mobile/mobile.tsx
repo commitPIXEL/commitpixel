@@ -27,9 +27,7 @@ const Mobile = () => {
         <PopupPWA />
         <MobileNav />
         <CanvasContainer />
-        <div className="relative z-10">
-          <ToPixelImg />
-        </div>
+        <ToPixelImg />
         <div className="flex justify-between items-center">
           {user?.githubNickname !== "" ? <Menu /> : null}
           {user?.githubNickname !== "" ? (
