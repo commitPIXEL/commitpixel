@@ -22,6 +22,7 @@
 10. [프로젝트 구조](#-프로젝트-구조)
 11. [주요 기능 미리보기](#-주요-기능-미리보기)
 12. [산출물](#-산출물)
+13. [Awards](#-awards)
 
 ---
 
@@ -73,7 +74,7 @@
 <br/><br/>
 
 
-### [🎬UCC영상]
+### [🎬 UCC영상]
 
 [ UCC 바로가기](https://youtu.be/sAV3ZN6DmWI)
 
@@ -81,7 +82,7 @@
 <br/>
 
 
-### [📃문서]
+### [📃 문서]
 
 > [1️⃣ 주제 아이디어](https://www.notion.so/realrealfinal/7e3c170d14ae43c380244b55083f0ecf?pvs=4) <br/>
 > [2️⃣ 학습 공유](https://www.notion.so/realrealfinal/07e610411009431ba548f7b2c383515a?pvs=4) <br/>
@@ -176,7 +177,7 @@
     <br/>
 
 
-## ✔Git 컨벤션
+## ✔ Git 컨벤션
 ```bash
 fe/feature/기능명  
 ```
@@ -189,7 +190,7 @@ be/userms/feature/기능명
 <br/>
 
 
-## ✔Code 컨벤션
+## ✔ Code 컨벤션
 [ Front-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/FE-Convention-f02a40ecac62456d9c21af06a29aaea7?pvs=4)
 [ Back-end 컨벤션 바로가기](https://www.notion.so/realrealfinal/BE-Convention-6ed36c69f77847f68cac762d62cdc551?pvs=4)
 
@@ -197,7 +198,7 @@ be/userms/feature/기능명
 <br/>
 
 
-## ✔프로젝트 구조  
+## ✔ 프로젝트 구조  
 ![아키텍쳐](https://github.com/commitPIXEL/commitpixel/assets/63138047/bfb42f37-0a9c-4fc5-9995-789cb0f8fb8a)
 
 
@@ -244,7 +245,7 @@ be/userms/feature/기능명
 
 ### 6. 이미지 픽셀화           
 
-![이미지픽셀화](https://github.com/commitPIXEL/commitpixel/assets/63138047/d6b6fbda-ccb1-408b-9895-e0b711093e91)
+![이미지 픽셀화](https://github.com/commitPIXEL/commitpixel/assets/63138047/448f381e-a0a8-46cd-bd07-56d98756a7ef)
 - 로컬에 있는 이미지를 픽셀화할 수 있습니다.
 
 	
@@ -289,7 +290,7 @@ be/userms/feature/기능명
 <br/>
 
 
-# 📑산출물  
+# 📑 산출물  
 > 1. ER 다이어그램     
 > 2. 목업   
 
@@ -307,3 +308,10 @@ be/userms/feature/기능명
 <img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/d8ccfe2c-e063-4e22-8e58-3f0214ce8aec" width="300" height="300">
 <img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/80fde1df-c311-4ee3-a828-3f9bbfea7f61" width="300" height="300">
 <img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/4cb9114d-57bc-4cce-a6fd-143a2d69b377" width="300" height="300">
+
+
+<br/>
+
+
+# 🏆 Awards
+- 🥉삼성청년SW아카데미 2학기 자율PJT 3등 수상
