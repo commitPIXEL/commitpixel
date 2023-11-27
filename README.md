@@ -1,4 +1,4 @@
-[![commit Pixel](https://lh3.google.com/u/0/d/11kJc0UgNctIIdEQV2V07X-GW_v7B7Fd1=w1008-h892-iv1)](https://user-images.githubusercontent.com/72757829/114306905-615df500-9b18-11eb-80dc-e1bfc0a8e33c.png)
+![commitFox](https://github.com/commitPIXEL/commitpixel/assets/63138047/3cbec7b3-d9f2-4f8e-a9cb-c094e75e2ec6)
 
 ### commit 기반 URL 홍보 사이트
 
@@ -198,45 +198,45 @@ be/userms/feature/기능명
 
 
 ## ✔프로젝트 구조  
-![프로젝트구조](https://lh3.google.com/u/0/d/1zUlW2vGsm-OXGSwkifzxHn8HQoqQYEP5=w1920-h922-iv1)
+![아키텍쳐](https://github.com/commitPIXEL/commitpixel/assets/63138047/bfb42f37-0a9c-4fc5-9995-789cb0f8fb8a)
 
 
 <br/>
 
 
 ## 💻 주요 기능 미리보기    
-![서비스소개](https://lh3.google.com/u/0/d/1gQ5r_W1hjhwzUgKT9Gr17ETcKkprgfEQ=w1910-h870-iv1)
+![서비스소개](https://github.com/commitPIXEL/commitpixel/assets/63138047/1bd2ecae-0917-4660-8071-109bca9d8a50)
 
 ### 1. 튜토리얼 화면           
 
-![튜토리얼 페이지](https://lh3.google.com/u/0/d/1Mus2F_ko1A-4KsKOeOEL-h82eB73rOgt=w960-h910-iv1)
+![튜토리얼](https://github.com/commitPIXEL/commitpixel/assets/63138047/2f268590-036c-419e-b305-0a1a1c2f4947)
 - 튜토리얼 화면에서는 사이트에 대한 간단한 설명, 패치노트, 사용 방법을 소개합니다.
 - 'commitPixel 하러 가기' 버튼을 눌러 메인 화면으로 이동할 수 있습니다.
 
 
 ### 2. 비로그인 메인 화면           
 
-![비로그인 메인 페이지](https://lh3.google.com/u/0/d/1esPzPrCPm9MB15idDwzT1EviQCc9s7It=w960-h930-iv1)
+![비로그인](https://github.com/commitPIXEL/commitpixel/assets/63138047/13534540-4824-4899-9fa9-3e1e9441fa64)
 - 비로그인 메인 화면에서는 칸바스, 소셜 로그인, 이미지 픽셀화, 타입랩스, 랭킹, 카카오 공유가 사이드바에 나옵니다.
 
 
 ### 3. 로그인 메인 화면           
 
-![로그인 메인 페이지](https://lh3.google.com/u/0/d/1FtE2roQqaMVazYNnWQ2dyOVYESbM7PRL=w960-h930-iv1)
+![로그인](https://github.com/commitPIXEL/commitpixel/assets/63138047/93e129e9-b023-415d-b29c-3175cc2a7c41)
 - 로그인 메인 화면에서는 사이드바에서 로그인 버튼이 사라지고 사용자 정보와, 건의하기가 나타납니다.
 
 
-### 4. 칸바스           
+### 4. 캔버스           
 
-![칸바스](https://lh3.google.com/u/0/d/1hcVq-2IH_-LsUm5h0oRmRr2G1B8azvLz=w960-h930-iv1)
-- 브러시를 사용하여 칸바스에 픽셀을 찍을 수 있습니다. 사용자 정보에서 픽셀을 사용했음을 확인할 수 있습니다.
+![픽셀](https://github.com/commitPIXEL/commitpixel/assets/63138047/dda4e197-972e-4d1f-90fa-72ea980c7ad6)
+- 브러시를 사용하여 캔버스에 픽셀을 찍을 수 있습니다. 사용자 정보에서 픽셀을 사용했음을 확인할 수 있습니다.
 - 스포이드를 사용하여 색을 복사할 수 있습니다.
 - 도구 해제 상태에서 픽셀을 클릭하여 홍보URL 확인 및 이동할 수 있습니다.
 
 
 ### 5. 사용자 정보           
 
-![사용자 정보](https://lh3.google.com/u/0/d/1MWyn13sT-VCYM6ko0_1ooh40dRfEp2EH=w960-h930-iv1)
+![사용자정보](https://github.com/commitPIXEL/commitpixel/assets/63138047/25d8af87-3dcb-460e-be58-397bcfeee133)
 - 새로고침 버튼으로 픽셀 수를 새로고침할 수 있습니다. (재사용 대기 시간 15분)
 - 펜 아이콘을 클릭하여 홍보 URL을 변경할 수 있습니다.
 - solvedAc 연동을 할 수 있다.
@@ -244,44 +244,44 @@ be/userms/feature/기능명
 
 ### 6. 이미지 픽셀화           
 
-![이미지 픽셀화](https://lh3.google.com/u/0/d/1XuNp6nQX2ejP4ZB2Yr9wWcNLTfMRsNxG=w960-h930-iv1)
+![이미지픽셀화](https://github.com/commitPIXEL/commitpixel/assets/63138047/d6b6fbda-ccb1-408b-9895-e0b711093e91)
 - 로컬에 있는 이미지를 픽셀화할 수 있습니다.
 
 	
 ### 7. 타입랩스           
 
-![타입랩스](https://lh3.google.com/u/0/d/1PFQ4704w1AifXU_tNv_2PYAjfBZTVOsc=w960-h930-iv1)
+![타임랩스](https://github.com/commitPIXEL/commitpixel/assets/63138047/9ef73e93-b467-4e02-98e9-3409e8798784)
 - 칸바스의 타입랩스를 확인할 수 있습니다.
 
 
 ### 8. 랭킹           
 
-![랭킹](https://lh3.google.com/u/0/d/14wirlABj_-JTOOrmPDVgZIHK_WL6kdcj=w960-h930-iv1)
+![랭킹](https://github.com/commitPIXEL/commitpixel/assets/63138047/25ecfb5d-47af-4564-a16e-d271a14f883b)
 - URL 랭킹과 Pixel 랭킹을 확인할 수 있고 URL을 클릭하면 해당 링크로 이동합니다.
 
 
 ### 9. 카카오 공유           
 
-![카카오 공유](https://lh3.google.com/u/0/d/1kIDPYU8U36pdg5tTqyPspcL1XdzTCrIL=w960-h930-iv1)
+![카카오공유](https://github.com/commitPIXEL/commitpixel/assets/63138047/424ec54a-487c-4f22-b213-2fec06f6d62a)
 - 카카오 공유로 카카오톡 친구에게 웹사이트를 공유할 수 있습니다.
 - Open Graph를 적용하여 링크를 복붙하면 웹사이트를 미리보기 할 수 있습니다.
 
 
 ### 10. 건의하기           
 
-![건의하기](https://lh3.google.com/u/0/d/1_RA2a_uTogUs_C8hfLrdys-Ry5rqIK-p=w960-h930-iv1)
+![건의하기](https://github.com/commitPIXEL/commitpixel/assets/63138047/201615ce-fd2a-47f7-ae06-6b0eae3d0b28)
 - 일반 건의사항을 요청할 수 있습니다.
 - whitelist 추가 요청을 할 수 있습니다. (이미 인가된 url이면 등록되지 않습니다.)
 
 
 ### 11. Flourish           
 
-![Flourish](https://lh3.google.com/u/0/d/1nC9OeBZmi0SYQ-APfBU4akdRgDl9URzG=w1920-h922-iv1)
+![Flourish](https://github.com/commitPIXEL/commitpixel/assets/63138047/d907d7b5-fca6-48c6-a134-8ad532233b00)
 - 랭킹의 변화를 시각적으로 확인할 수 있다.
 
 ### 12. 앱 다운로드           
 
-![앱 다운로드](https://lh3.google.com/u/0/d/1GVhSBEaH4aUFgC81x4kxXLcxHveA8E8G=w960-h930-iv1)
+![pwa](https://github.com/commitPIXEL/commitpixel/assets/63138047/b08c4448-3615-4a94-ab30-31e258bf7a27)
 - PWA를 적용하여 앱으로 다운로드 할 수 있습니다.
 - 모바일 뷰를 적용하여 모바일에서도 이용할 수 있습니다.
 
@@ -295,15 +295,15 @@ be/userms/feature/기능명
 
 
 ##  ER 다이어그램   
-![erd](https://lh3.google.com/u/0/d/13Is2YSI9s_SEFKFVtKivWxtR95hbKo73=w2000-h7200-iv1)
+![erd](https://github.com/commitPIXEL/commitpixel/assets/63138047/44706b51-ed5d-40a0-8039-0547023e7da0)
 
 
 <br/>
 
 
 ### ✔ 목업
-<img src="https://lh3.google.com/u/0/d/10_2iK1SMvIwvQ-ihwImxnkPy96CCsd5S=w2560-h1346-iv1" width="300" height="300">
-<img src="https://lh3.google.com/u/0/d/1EeL_Bjq22PEjsdg2A2AS5q3YoHvBir7f=w2560-h1346-iv1" width="300" height="300">
-<img src="https://lh3.google.com/u/0/d/1g2oPyzzfx5zPwmQqeo2IilYSo4nMrGQh=w2560-h1346-iv1" width="300" height="300">
-<img src="https://lh3.google.com/u/0/d/1yiP_8rCzXxrGsAMfjjBjM_UeTf5mJA8l=w1920-h953-iv1" width="300" height="300">
-<img src="https://lh3.google.com/u/0/d/1oxWXtnjtTtDfXNMUgFahxrYuxXB8GSna=w1250-h1250-iv1" width="300" height="300">
+<img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/e97572ec-9310-48a7-966e-57f2e72b875f" width="300" height="300">
+<img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/576c0f39-4350-4b18-9eb2-491692782ee7" width="300" height="300">
+<img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/d8ccfe2c-e063-4e22-8e58-3f0214ce8aec" width="300" height="300">
+<img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/80fde1df-c311-4ee3-a828-3f9bbfea7f61" width="300" height="300">
+<img src="https://github.com/commitPIXEL/commitpixel/assets/63138047/4cb9114d-57bc-4cce-a6fd-143a2d69b377" width="300" height="300">
