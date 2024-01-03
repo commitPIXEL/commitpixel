@@ -101,7 +101,7 @@
 |권도현|팀원|인프라, CI/CD, Pixel WebSocket, Image 트레이싱 툴|
 |한다솜|팀원|Github commit 연동 크레딧, Pixel WebSocket 이미지 픽셀화|
 |김인범|팀원|인증/인가(front), 건의사항, URL 입력 및 승인, 유저 정보 연동|
-|이예린|팀원|캔버스 구현, 그림 툴 구현, Image 서비스 연동, Pixel 서비스 연동|
+|이예린|팀원|캔버스 구현, 그리기 툴 구현, Image 서비스 연동, Pixel 서비스 연동|
 
 
 <br/>
